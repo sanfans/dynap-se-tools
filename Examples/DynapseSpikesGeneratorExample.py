@@ -39,14 +39,14 @@ fifthPattern.linear_freq_modulation(virtualSourceCoreId = 0, neuronAddress = 3, 
 
 # Create 1 event (neuron 6, cores 15, source core 0) with a delay of 500 ms from the last spike
 sixthPattern = spikegen.InputPattern("sixthPattern", isiBase = 900.0)
-sixthPattern.single_event(virtualSourceCoreId = 0, neuronAddress = 6, coreDest = 15, firePeriod = 500e-3)
+sixthPattern.single_event(virtualSourceCoreId = 0, neuronAddress = 4, coreDest = 15, firePeriod = 500e-3)
 
 # Encode 1 period of 1Hz sinusoid in spikes on neuron 7 and 8 (all cores (coreDest = 15), source core 0) using the encoding by threshold
 # Threshold is set to 0.05
 tSig = np.arange(0, 1, 1e-6) 
 ySig = np.sin(2 * np.pi * 1 * tSig)
 seventhPattern = spikegen.InputPattern("seventhPattern", isiBase = 900.0)
-seventhPattern.threshold_encoder(virtualSourceCoreId = 0, neuronAddressUpCH = 7, neuronAddressDwCH = 8, coreDest = 15, 
+seventhPattern.threshold_encoder(virtualSourceCoreId = 0, neuronAddressUpCH = 5, neuronAddressDwCH = 6, coreDest = 15, 
                                  threshold = 0.05, t = tSig, y = ySig, noiseVar = 0, initDelay = 0.5)
 
 # Plot patterns
