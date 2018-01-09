@@ -9,13 +9,28 @@ class Population():
     """
     
 ### ===========================================================================
-    def __init__(self, deviceParam, name):
+    def __init__(self, deviceParam, name, chip_id = 0, core_id = 0, start_neuron = 0, size = 0, neuronType = None, shape = None, neurons_id = None):
         """Return a new Population object
 
 Parameters
 ----------
 deviceParam : tuple of ints (int, int, int). Parameters of the device that is used (chipsPerDevice, coresPerChip, neuronsPerCore)
 name : string. Name of the population (useful for debug)
+chip_id : int. Chip id in which the population is located
+core_id : int. Core id in which the population is located
+start_neuron : int. Neuron id where to start allocating neurons for the population.
+size : int. Dimension of the population
+neuronType : string
+    "sInh" -> slow inhibitory (code 0)
+    "fInh" -> fast inhibitory (code 1)
+    "sExc" -> slow excitatory (code 2)
+    "fExc" -> fast excitatory (code 3)
+shape : tuple of ints (int, int). Shape of the population matrix (numRows, numColumns)
+neurons_id : Permit to specify a list of neuron id that are chosen for the population.
+    Pay attention that it will overwrite start_neuron and size
+
+All this parameters can also be not specified (except for deviceParam and name).
+Neurons can be added in a second time
 """
         
         # Set population parameters
@@ -37,6 +52,14 @@ name : string. Name of the population (useful for debug)
         
         # Create neuron list
         self.neurons = np.array([])
+
+        # If neurons are specified, generated them
+        if (size != 0) | (neurons_id != None):
+            self.add_neurons(size, chip_id, core_id, start_neuron, neuronType, neurons_id)
+
+        # If shape is specified, change shape of the neuron array
+        if shape != None:
+            self.change_population_shape(rows = shape[0], columns = shape[1])
         
 ### ===========================================================================
     def add_neurons(self, size, chip_id = None, core_id = None, start_neuron = None, neuronType = None, neurons_id = None):

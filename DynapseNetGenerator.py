@@ -11,42 +11,6 @@ from scipy.stats import bernoulli
 from DYNAPSETools.classes.Population import Population
 
 ### ===========================================================================
-def generate_population(deviceParam, name, chip_id = 0, core_id = 0, start_neuron = 0, size = 0, neuronType = None, shape = None, neurons_id = None):
-    """Return a population with certain properties
-
-Parameters
-----------
-deviceParam : tuple of ints (int, int, int). Parameters of the device that is used (chipsPerDevice, coresPerChip, neuronsPerCore)
-name : string. Name of the population (useful for debug)
-chip_id : int. Chip id in which the population is located
-core_id : int. Core id in which the population is located
-start_neuron : int. Neuron id where to start allocating neurons for the population.
-size : int. Dimension of the population
-neuronType : string
-    "sInh" -> slow inhibitory (code 0)
-    "fInh" -> fast inhibitory (code 1)
-    "sExc" -> slow excitatory (code 2)
-    "fExc" -> fast excitatory (code 3)
-shape : tuple of ints (int, int). Shape of the population matrix (numRows, numColumns)
-neurons_id : Permit to specify a list of neuron id that are chosen for the population.
-    Pay attention that it will overwrite start_neuron and size
-
-All this parameters can also be not specified (except for deviceParam and name).
-Neurons can be added in a second time
-
-Returns
--------
-population : Population type. Collections of neurons that respect the defined properties
-"""
-
-    population = Population(deviceParam, name)
-    if (size != 0) | (neurons_id != None):
-        population.add_neurons(size, chip_id, core_id, start_neuron, neuronType, neurons_id)
-        if shape != None:
-            population.change_population_shape(rows = shape[0], columns = shape[1])
-    return population
-
-### ===========================================================================
 def connect_populations(p1, p2, Plot = True, connType = 'bernoulli', **connParams):
     """Generate the connections between two different population of neurons
 
