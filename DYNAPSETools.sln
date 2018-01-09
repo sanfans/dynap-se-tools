@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DYNAPSETools", "DYNAPSETools.pyproj", "{CE044199-B1AF-47D3-A9FC-C7AA7F1EF3BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE044199-B1AF-47D3-A9FC-C7AA7F1EF3BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE044199-B1AF-47D3-A9FC-C7AA7F1EF3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E2BD2DD-C9BF-4819-BD9A-8B824C9CB934}
+	EndGlobalSection
+EndGlobal
