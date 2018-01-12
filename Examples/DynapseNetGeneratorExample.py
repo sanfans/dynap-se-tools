@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
-import DYNAPSETools.dynapseNetGenerator as netgen
+import DYNAPSETools.blaNetGenerator as netgen
 
 # Initialize random seed
 np.random.seed(1993)

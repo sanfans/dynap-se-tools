@@ -77,7 +77,7 @@ Returns
 coefficients : list of floats. Contains coefficients of the regression
 """
         
-    # Reshape to get an array in format (n, 1) --> required by sklearn for fitting
+    # Reshape to get an array in format (n, 1) --> required for fitting
     matrix = np.array(matrix)
     target = np.array(target).reshape((-1, 1))
         

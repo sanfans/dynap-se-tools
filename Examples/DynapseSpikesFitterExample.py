@@ -12,8 +12,8 @@
 ### =================== IMPORT PACKAGES ================================
 import numpy as np
 import matplotlib.pyplot as plt
-import DYNAPSETools.dynapseOutDecoder as decoder
-import DYNAPSETools.dynapseSpikesFitter as fitter
+import DYNAPSETools.blaOutDecoder as decoder
+import DYNAPSETools.blaSpikesFitter as fitter
 
 plt.close("all")
 
