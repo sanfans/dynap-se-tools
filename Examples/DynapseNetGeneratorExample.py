@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
-import DYNAPSETools.DynapseNetGenerator as netgen
+import DYNAPSETools.dynapseNetGenerator as netgen
 
 # Initialize random seed
 np.random.seed(1993)
@@ -21,7 +21,7 @@ InputDwCh = netgen.Population(deviceParam = deviceParam, name = "InputDwCh",
 
 ## RESERVOIR POPULATION
 Reservoir = netgen.Population(deviceParam = deviceParam, name = "Reservoir")
-Reservoir.add_neurons(size = 25, chip_id = 0, core_id = 1, start_neuron = 1, neuronType = None)
+Reservoir.add_neurons(size = 25, chip_id = 0, core_id = 1, start_neuron = 0, neuronType = None)
 # Shape as a rectangle of 5 by 5 neurons
 Reservoir.change_population_shape(rows = 5, columns = 5)
 # 80% excitatory, 20% inhibitory

@@ -2,6 +2,7 @@
 
 import numpy as np
 import sys
+import warnings
 from DYNAPSETools.classes.Neuron import Neuron
 
 class Population():

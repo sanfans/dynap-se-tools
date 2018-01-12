@@ -2,7 +2,7 @@
 
 ### =================== IMPORT PACKAGES ================================
 from matplotlib import pyplot as plt
-import DYNAPSETools.DynapseOutDecoder as decoder
+import DYNAPSETools.dynapseOutDecoder as decoder
 
 plt.close("all")
 

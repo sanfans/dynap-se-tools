@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import DYNAPSETools.DynapseSpikesGenerator as spikegen
+import DYNAPSETools.dynapseSpikesGenerator as spikegen
 
 plt.close("all")
 
