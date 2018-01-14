@@ -1,4 +1,6 @@
-# DESCRIPTION: functions that allows to retrieve and display output .aedat files
+"""The module contains functions that permit to create networks of neurons and write connections on a .txt file.
+This last one can be used by cAER NETPARSER module to implement them in DYNAP-se
+"""
 
 import numpy as np
 import sys
@@ -14,38 +16,43 @@ from DYNAPSETools.classes.Population import Population
 def connect_populations(p1, p2, Plot = True, connType = 'bernoulli', **connParams):
     """Generate the connections between two different population of neurons
 
-Parameters
-----------
-p1 : Population object. Source population
-p2 : Population object. Destination population
-Plot : If True the connectivity between the two population is printed
-        destination
-        n1  n2  n3  n4
-    n1  x   3   1   x
-    n2  x   x   x   x
-    n3  x   x   x   x       source
-    n4  x   3   3   3
-    The number represent the connnection dynamics (x stays for no connection):
-    "sInh" -> slow inhibitory (code 0)
-    "fInh" -> fast inhibitory (code 1)
-    "sExc" -> slow excitatory (code 2)
-    "fExc" -> fast excitatory (code 3)
-connType : string. Type of the connection
-    - "deterministic" : a specified fraction (f) of destination neurons is connected to the source neurons
-    - "bernoulli" : connection between two neurons depend on a certain specified probability (p)
-    - "gaussian" : connection between two neurons has a probability defined by this distribution:
-        P = k * np.exp(-(D**2) / (2*(r**2))) where
+Parameters:
+    p1 (obj Population): Source population
+    p2 (obj Population): Destination population
+    Plot (bool, optional): If True the connectivity between the two population is printed in the following way
+        ::
+
+            destination        
+                n1  n2  n3  n4
+            n1  x   3   1   x
+            n2  x   x   x   x
+            n3  x   x   x   x   source
+            n4  x   3   3   3
+
+        The number represent the connnection dynamics (x stays for no connection):\n
+        - *sInh* -> slow inhibitory (code 0)
+        - *fInh* -> fast inhibitory (code 1)
+        - *sExc* -> slow excitatory (code 2)
+        - *fExc* -> fast excitatory (code 3)
+
+    connType (string, optional): Type of the connection:\n
+        - *deterministic* : a specified fraction (f) of destination neurons is connected to the source neurons
+        - *bernoulli* : connection between two neurons depend on a certain specified probability (p)
+        - *gaussian* : connection between two neurons has a probability defined by this distribution
+
+        ::
+
+            P = k * np.exp(-(D**2) / (2*(r**2))) where:
             D is the Euclidean distance between two neurons
             r and k are two tuning parameters of the distribution
-connParams** : dictionary of parameters (example: f = 0.2)
-    - connType = "deterministic" -> f = ... ; f fraction of connection
-    - connType = "bernoulli" -> p = ... ; p probability of connection
-    - connType = "gaussian" -> k = ..., r = ... ; k and r parameters of the distribution
 
-Returns
--------
-connections : dictionary Neuron object = Neurons object. Contains all connections encoded
-    as SOURCE NEURON (Key) = DESTINATION NEURON (Item)
+    connParams** (dict of param): connection parameters:\n
+        - connType = "deterministic" -> f = ... ; f fraction of connection
+        - connType = "bernoulli" -> p = ... ; p probability of connection
+        - connType = "gaussian" -> k = ..., r = ... ; k and r parameters of the distribution
+
+Returns:
+    dict, obj Neuron : Dictionary containing all connections encoded as SOURCE NEURON (Key) = DESTINATION NEURON (Item)
 """
     
     # Initialize connections (p1 -> p2)
@@ -120,11 +127,10 @@ connections : dictionary Neuron object = Neurons object. Contains all connection
 def write_connections(*connections_lists, fileName = "network.txt"):
     """Write on a .txt file the network connections, ready to be uploaded to the final device.
 
-Parameters
-----------
-*connection_lists : list of dictionaries (Neuron object = Neurons object). Contains the list of all the connections
-    that must be written in the output file
-fileName : string. Name of the output .txt file
+Parameters:
+    *connection_lists (list of dict of connections): Contains the list of all the connections lists that must be written 
+    in the output file
+    fileName (string, optional): Name of the output .txt file
 """
     
     with open(fileName, 'w') as f:
@@ -145,9 +151,8 @@ fileName : string. Name of the output .txt file
 def change_seed(seed):
     """Change the seed of the random generator
 
-Parameters
-----------
-seed : int. New seed for the random generator
+Parameters:
+    seed (int): New seed for the random generator
 """
 
     np.random.seed(seed)
@@ -156,15 +161,13 @@ seed : int. New seed for the random generator
 def generate_n_rand_num(min, max, n):
     """Generate n random numbers between a minimum and a maximum, with no repetitions
 
-Parameters
-----------
-min : int. Lower limit to the random number generation
-max : int. Upper limit to the random number generation
-n : int. Number of random numbers that must be generated
+Parameters:
+    min (int): Lower limit to the random number generation
+    max (int): Upper limit to the random number generation
+    n (int): Number of random numbers that must be generated
 
-Returns
--------
-neuronsIndexes : list of ints. A list containing n random numbers
+Returns:
+    list, ints: A list containing n random numbers
 """
 
     neuronsIndexes = np.arange(min, max)

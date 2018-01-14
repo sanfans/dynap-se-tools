@@ -1,0 +1,304 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>EventsSet &#8212; DYNAPSETools 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="InputPattern" href="InputPattern.html" />
+    <link rel="prev" title="dynapseSpikesGenerator" href="dynapseSpikesGenerator.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="InputPattern.html" title="InputPattern"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dynapseSpikesGenerator.html" title="dynapseSpikesGenerator"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" accesskey="U">API</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-classes.EventsSet">
+<span id="eventsset"></span><h1>EventsSet<a class="headerlink" href="#module-classes.EventsSet" title="Permalink to this headline">¶</a></h1>
+<p>Contains a class that represent a set of DYNAP-se events</p>
+<dl class="class">
+<dt id="classes.EventsSet.EventsSet">
+<em class="property">class </em><code class="descclassname">classes.EventsSet.</code><code class="descname">EventsSet</code><span class="sig-paren">(</span><em>ts</em>, <em>chip_id</em>, <em>core_id</em>, <em>neuron_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>A set of DYNAP-se events</p>
+<p>Return a new EventsSet object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ts</strong> (<em>array</em><em>, </em><em>float</em>) – Times of events</li>
+<li><strong>chip_id</strong> (<em>array</em><em>, </em><em>int</em>) – Chip number of events</li>
+<li><strong>core_id</strong> (<em>array</em><em>, </em><em>int</em>) – Core number of events</li>
+<li><strong>neuron_id</strong> (<em>array</em><em>, </em><em>int</em>) – Neuron number of events</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="classes.EventsSet.EventsSet.calculate_firing_rate_matrix">
+<code class="descname">calculate_firing_rate_matrix</code><span class="sig-paren">(</span><em>numBins</em>, <em>totNeurons</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.calculate_firing_rate_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.calculate_firing_rate_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derive a firing rate matrix starting from the current EventSet</p>
+<p>Data have the following form:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">timeSteps</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">t0</span> <span class="n">t0</span><span class="o">+</span><span class="n">tBin</span> <span class="n">t0</span><span class="o">+</span><span class="mi">2</span><span class="n">tBin</span> <span class="o">...</span> <span class="n">tn</span><span class="o">-</span><span class="n">tBin</span><span class="p">]</span>
+    <span class="n">tBin</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">temporal</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">firing</span> <span class="n">rate</span> <span class="ow">is</span> <span class="n">evaluated</span> <span class="p">(</span><span class="n">tBin</span> <span class="o">=</span> <span class="p">(</span><span class="n">tn</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">numBins</span><span class="p">))</span>
+<span class="n">neuronsFireRate</span> <span class="p">(</span><span class="n">fr</span> <span class="n">stays</span> <span class="k">for</span> <span class="n">firing</span> <span class="n">rate</span> <span class="n">at</span> <span class="n">a</span> <span class="n">certain</span> <span class="n">time</span> <span class="n">step</span> <span class="p">(</span><span class="mf">0.</span><span class="o">..</span><span class="mf">1.</span><span class="o">..</span><span class="mf">2.</span><span class="o">..</span><span class="n">ecc</span><span class="o">.</span><span class="p">)</span>
+    <span class="n">neuron0</span>    <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
+    <span class="n">neuron1</span>    <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
+    <span class="o">...</span>
+    <span class="n">neuron1023</span> <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>numBins</strong> (<em>int</em>) – Number of intervals in which firing rate must be evaluated</li>
+<li><strong>totNeurons</strong> (<em>int</em>) – Maximum number of neurons for which firing rate is calculated</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>tuple containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>timeSteps</strong> (<em>array, float</em>): Time steps in which firing rate has been calculated</li>
+<li><strong>neuronsFireRate</strong> (<em>2D array, float</em>): Contain firing rate for every neuron and for every time step</li>
+</ul>
+</div></blockquote>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.EventsSet.EventsSet.filter_events">
+<code class="descname">filter_events</code><span class="sig-paren">(</span><em>chip_id</em>, <em>core_id</em>, <em>neuron_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.filter_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.filter_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a EventsSet containing only the wanted events</p>
+<p>Filter is specified selecting certain chip_id, core_id and neuron_id.
+It supports only one chip at a time (so chip_id must be a integer from 0 to 3).</p>
+<p>It could filter a single neuron data or data from range of neurons, indipendently from each core</p>
+<p>If neuron_id is left as “None”, all neurons are selected.
+If core_id is left as “None”, all cores are selected.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>chip_id</strong> (<em>int</em>) – For now is only possible to filter one chip</li>
+<li><strong>core_id</strong> (<em>list of int; int</em>) – Represent the cores included in the filter</li>
+<li><strong>neuron_id</strong> (<em>2D list of int; list of int; int</em>) – Represent the neurons included in the filter</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A set containing the events resulting from the filtering</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">obj EventsSet</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">]])</span>
+    <span class="n">take</span> <span class="n">chip</span> <span class="mi">0</span><span class="p">,</span> <span class="n">neuron</span> <span class="kn">from</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">100</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">neurons</span> <span class="kn">from</span> <span class="mi">100</span> <span class="n">to</span> <span class="mi">200</span> <span class="n">on</span> <span class="n">core</span> <span class="mi">1</span>
+<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">take</span> <span class="nb">all</span> <span class="n">neurons</span> <span class="ow">in</span> <span class="nb">all</span> <span class="n">cores</span> <span class="n">of</span> <span class="n">chip</span> <span class="mi">1</span>
+<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">take</span> <span class="nb">all</span> <span class="n">neurons</span> <span class="ow">in</span> <span class="n">cores</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">1</span> <span class="n">of</span> <span class="n">chip</span> <span class="mi">2</span>
+<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">take</span> <span class="n">traces</span> <span class="n">of</span> <span class="n">neuron</span> <span class="mi">3</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">chip</span> <span class="mi">3</span>
+<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">127</span><span class="p">])</span>
+    <span class="n">take</span> <span class="n">traces</span> <span class="n">of</span> <span class="n">neuron</span> <span class="mi">20</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">neuron</span> <span class="mi">127</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="n">chip</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.EventsSet.EventsSet.isolate_events_sets">
+<code class="descname">isolate_events_sets</code><span class="sig-paren">(</span><em>startTriggerNeuron</em>, <em>stopTriggerNeuron</em>, <em>maxNumber=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.isolate_events_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.isolate_events_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Isolate events between start trigger neuron and the stop trigger neuron</p>
+<p>A good way to synchronize with DYNAP-se is using two neurons to trigger the start and the end of the experiment:</p>
+<ul class="simple">
+<li>send a spike to a neuron that will represent my starting trigger</li>
+<li>send the experiment input spikes after small delay (1 ms should be enough)</li>
+<li>send a spike to a neuron that will represent my ending trigger</li>
+</ul>
+<p>Then this function can be used to filter all events but for the ones that are between this two neurons</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>startTriggerNeuron</strong> (<em>tuple of ints</em><em> (</em><em>chip id</em><em>, </em><em>core id</em><em>, </em><em>neuron id</em><em>)</em>) – Neuron which events triggers the start of the experiment</li>
+<li><strong>stopTriggerNeuron</strong> (<em>tuple of ints</em><em> (</em><em>chip id</em><em>, </em><em>core id</em><em>, </em><em>neuron id</em><em>)</em>) – </li>
+<li><strong>maxNumber</strong> (<em>int</em>) – max number of experiments that can be extracted from the Set of events</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Each item represent a set of events included in one experiment</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list, obj EventsSet</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+    <span class="n">take</span> <span class="nb">all</span> <span class="n">experiments</span> <span class="n">included</span> <span class="n">between</span> <span class="n">neuron</span> <span class="mi">64</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">neuron</span> <span class="mi">128</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">maxNumber</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">take</span> <span class="n">up</span> <span class="n">to</span> <span class="mi">5</span> <span class="n">experiments</span> <span class="n">included</span> <span class="n">between</span> <span class="n">neuron</span> <span class="mi">64</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="n">neuron</span> <span class="mi">128</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.EventsSet.EventsSet.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the time of the current EventSet</p>
+<p>The time of the first event is set to 0. The subsequent are changed accordingly</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new normalized EventSet</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">obj EventsSet</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.EventsSet.EventsSet.plot_events">
+<code class="descname">plot_events</code><span class="sig-paren">(</span><em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.plot_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.plot_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raster plot of events included in the current EventsSet</p>
+<p>Colors has been chosen to be clearly visible and to match the DYNAP-se core color enconding:</p>
+<ul class="simple">
+<li>core 0: green</li>
+<li>core 1: magenta</li>
+<li>core 2: red</li>
+<li>core 3: yellow</li>
+</ul>
+<p>Note that there is no distinguish between different chips events</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ax</strong> (<em>ax handle</em><em>, </em><em>optional</em>) – Plot graph on this handle, otherwise a new figure will be created</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple containing:<blockquote>
+<div><ul class="simple">
+<li><strong>fig</strong> (<em>fig handles</em>): To modify properties of the figure</li>
+<li><strong>ax</strong> (<em>ax handles</em>): To modify properties of the plot</li>
+<li><strong>handles</strong> (<em>lines handles</em>): To create custom legends</li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(tuple)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dynapseSpikesGenerator.html"
+                        title="previous chapter">dynapseSpikesGenerator</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="InputPattern.html"
+                        title="next chapter">InputPattern</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="InputPattern.html" title="InputPattern"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dynapseSpikesGenerator.html" title="dynapseSpikesGenerator"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" >API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Cattaneo Roberto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

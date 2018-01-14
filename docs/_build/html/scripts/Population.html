@@ -1,0 +1,232 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Population &#8212; DYNAPSETools 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Neuron" href="Neuron.html" />
+    <link rel="prev" title="InputEvent" href="InputEvent.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Neuron.html" title="Neuron"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="InputEvent.html" title="InputEvent"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" accesskey="U">API</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-classes.Population">
+<span id="population"></span><h1>Population<a class="headerlink" href="#module-classes.Population" title="Permalink to this headline">¶</a></h1>
+<p>Contains a class that represent a population of neuron in the device</p>
+<dl class="class">
+<dt id="classes.Population.Population">
+<em class="property">class </em><code class="descclassname">classes.Population.</code><code class="descname">Population</code><span class="sig-paren">(</span><em>deviceParam</em>, <em>name</em>, <em>chip_id=0</em>, <em>core_id=0</em>, <em>start_neuron=0</em>, <em>size=0</em>, <em>neuronType=None</em>, <em>shape=None</em>, <em>neurons_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/Population.html#Population"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.Population.Population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that represent a population of neuron with certain characteristics</p>
+<p>Return a new Population object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>deviceParam</strong> (<em>tuple of ints</em><em> (</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>)</em>) – Parameters of the device that is used (chipsPerDevice, coresPerChip, neuronsPerCore)</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the population (useful for debug)</li>
+<li><strong>chip_id</strong> (<em>int</em>) – Chip id in which the population is located</li>
+<li><strong>core_id</strong> (<em>int</em>) – Core id in which the population is located</li>
+<li><strong>start_neuron</strong> (<em>int</em>) – Neuron id where to start allocating neurons for the population.</li>
+<li><strong>size</strong> (<em>int</em>) – Dimension of the population</li>
+<li><strong>neuronType</strong> (<em>string</em>) – </li>
+<li><strong>sInh -&gt; slow inhibitory</strong> (<em>-</em>) – </li>
+<li><strong>fInh -&gt; fast inhibitory</strong> (<em>-</em>) – </li>
+<li><strong>sExc -&gt; slow excitatory</strong> (<em>-</em>) – </li>
+<li><strong>fExc -&gt; fast excitatory</strong> (<em>-</em>) – </li>
+<li><strong>shape</strong> (<em>tuple of ints</em><em> (</em><em>int</em><em>, </em><em>int</em><em>)</em>) – Shape of the population matrix (numRows, numColumns)</li>
+<li><strong>neurons_id</strong> (<em>list of int</em>) – Permit to specify a list of neuron id that are chosen for the population.
+Pay attention that it will overwrite start_neuron and size</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>All this parameters can also be not specified (except for deviceParam and name).
+Neurons can be added in a second time</p>
+<dl class="method">
+<dt id="classes.Population.Population.add_neurons">
+<code class="descname">add_neurons</code><span class="sig-paren">(</span><em>size</em>, <em>chip_id=None</em>, <em>core_id=None</em>, <em>start_neuron=None</em>, <em>neuronType=None</em>, <em>neurons_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/Population.html#Population.add_neurons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.Population.Population.add_neurons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permit to add neurons inside the population. Every new group of neurons is appended to the existing neuron list</p>
+<p>If chip_id, core_id and neuron_id are not specified, they are set to the one belonging to the last neuron added to the population</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size</strong> (<em>int</em>) – Dimension of the population</li>
+<li><strong>chip_id</strong> (<em>int</em>) – Chip id in which the population is located</li>
+<li><strong>core_id</strong> (<em>int</em>) – Core id in which the population is located</li>
+<li><strong>start_neuron</strong> (<em>int</em>) – Neuron id where to start allocating neurons for the population.</li>
+<li><strong>neuronType</strong> (<em>string</em>) – </li>
+<li><strong>sInh -&gt; slow inhibitory</strong> (<em>-</em>) – </li>
+<li><strong>fInh -&gt; fast inhibitory</strong> (<em>-</em>) – </li>
+<li><strong>sExc -&gt; slow excitatory</strong> (<em>-</em>) – </li>
+<li><strong>fExc -&gt; fast excitatory</strong> (<em>-</em>) – </li>
+<li><strong>neurons_id</strong> (<em>list of int</em>) – Permit to specify a list of neuron id that are chosen for the population.
+Pay attention that it will overwrite start_neuron and size</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Neurons that has been added to the global population</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">array of obj Neurons</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.Population.Population.change_population_shape">
+<code class="descname">change_population_shape</code><span class="sig-paren">(</span><em>rows</em>, <em>columns</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/Population.html#Population.change_population_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.Population.Population.change_population_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permit to change the shape of the population array.</p>
+<p>This could be really useful to abstract the theoretical population geometry
+from the actual distribution of the neuron in the device</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rows</strong> (<em>int</em>) – number of rows of the new population</li>
+<li><strong>columns</strong> (<em>int</em>) – number of columns of the new population</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.Population.Population.define_neurons_types">
+<code class="descname">define_neurons_types</code><span class="sig-paren">(</span><em>frac</em>, <em>type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/Population.html#Population.define_neurons_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.Population.Population.define_neurons_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a neuron type to a fraction of the population neurons</p>
+<p>Neuron are selected from the population according to a uniform distribution, from the one that have no type assigned yet.
+If the fraction is bigger than the left number of neurons, all remaining neurons are selected.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frac</strong> (<em>float</em>) – Fraction of population subjected to type assignment</li>
+<li><strong>type</strong> (<em>string</em>) – </li>
+<li><strong>sInh -&gt; slow inhibitory</strong> (<em>-</em>) – </li>
+<li><strong>fInh -&gt; fast inhibitory</strong> (<em>-</em>) – </li>
+<li><strong>sExc -&gt; slow excitatory</strong> (<em>-</em>) – </li>
+<li><strong>fExc -&gt; fast excitatory</strong> (<em>-</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Print:</dt>
+<dd>It prints the actual population fraction that has been assigned to a certain type.
+Can be different to the desidered one due to rounding</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.Population.Population.print_population">
+<code class="descname">print_population</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/Population.html#Population.print_population"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.Population.Population.print_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permit to display the properties of the neuron in the population, with the specified population shape</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="InputEvent.html"
+                        title="previous chapter">InputEvent</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Neuron.html"
+                        title="next chapter">Neuron</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Neuron.html" title="Neuron"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="InputEvent.html" title="InputEvent"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" >API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Cattaneo Roberto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

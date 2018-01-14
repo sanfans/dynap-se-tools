@@ -1,4 +1,5 @@
-# DESCRIPTION: Contains a class that represent a population of neuron in the device
+"""Contains a class that represent a population of neuron in the device
+"""
 
 import numpy as np
 import sys
@@ -13,22 +14,22 @@ class Population():
     def __init__(self, deviceParam, name, chip_id = 0, core_id = 0, start_neuron = 0, size = 0, neuronType = None, shape = None, neurons_id = None):
         """Return a new Population object
 
-Parameters
-----------
-deviceParam : tuple of ints (int, int, int). Parameters of the device that is used (chipsPerDevice, coresPerChip, neuronsPerCore)
-name : string. Name of the population (useful for debug)
-chip_id : int. Chip id in which the population is located
-core_id : int. Core id in which the population is located
-start_neuron : int. Neuron id where to start allocating neurons for the population.
-size : int. Dimension of the population
-neuronType : string
-    "sInh" -> slow inhibitory (code 0)
-    "fInh" -> fast inhibitory (code 1)
-    "sExc" -> slow excitatory (code 2)
-    "fExc" -> fast excitatory (code 3)
-shape : tuple of ints (int, int). Shape of the population matrix (numRows, numColumns)
-neurons_id : Permit to specify a list of neuron id that are chosen for the population.
-    Pay attention that it will overwrite start_neuron and size
+Parameters:
+    deviceParam (tuple of ints (int, int, int)): Parameters of the device that is used (chipsPerDevice, coresPerChip, neuronsPerCore)
+    name (string): Name of the population (useful for debug)
+    chip_id (int): Chip id in which the population is located
+    core_id (int): Core id in which the population is located
+    start_neuron (int): Neuron id where to start allocating neurons for the population.
+    size (int): Dimension of the population
+    neuronType (string):\n
+    - sInh -> slow inhibitory (code 0)
+    - fInh -> fast inhibitory (code 1)
+    - sExc -> slow excitatory (code 2)
+    - fExc -> fast excitatory (code 3)
+
+    shape (tuple of ints (int, int)): Shape of the population matrix (numRows, numColumns)
+    neurons_id (list of int): Permit to specify a list of neuron id that are chosen for the population.
+        Pay attention that it will overwrite start_neuron and size
 
 All this parameters can also be not specified (except for deviceParam and name).
 Neurons can be added in a second time
@@ -66,26 +67,23 @@ Neurons can be added in a second time
     def add_neurons(self, size, chip_id = None, core_id = None, start_neuron = None, neuronType = None, neurons_id = None):
         """Permit to add neurons inside the population. Every new group of neurons is appended to the existing neuron list
 
-Parameters
-----------
-size : int. Dimension of the population
-chip_id : int. Chip id in which the population is located
-core_id : int. Core id in which the population is located
-start_neuron : int. Neuron id where to start allocating neurons for the population.
-    
 If chip_id, core_id and neuron_id are not specified, they are set to the one belonging to the last neuron added to the population
 
-neuronType : string
-    "sInh" -> slow inhibitory (code 0)
-    "fInh" -> fast inhibitory (code 1)
-    "sExc" -> slow excitatory (code 2)
-    "fExc" -> fast excitatory (code 3)
-neurons_id : Permit to specify a list of neuron id that are chosen for the population.
-    Pay attention that it will overwrite start_neuron and size
+Parameters:
+    size (int): Dimension of the population
+    chip_id (int): Chip id in which the population is located
+    core_id (int): Core id in which the population is located
+    start_neuron (int): Neuron id where to start allocating neurons for the population.
+    neuronType (string):\n
+    - sInh -> slow inhibitory (code 0)
+    - fInh -> fast inhibitory (code 1)
+    - sExc -> slow excitatory (code 2)
+    - fExc -> fast excitatory (code 3)
+    neurons_id (list of int): Permit to specify a list of neuron id that are chosen for the population.
+        Pay attention that it will overwrite start_neuron and size
 
-Returns
--------
-population : array_like of Neurons that has been added to the global population
+Returns:
+    array of obj Neurons: Neurons that has been added to the global population
 """
         
         population = np.array([])
@@ -169,19 +167,17 @@ population : array_like of Neurons that has been added to the global population
 Neuron are selected from the population according to a uniform distribution, from the one that have no type assigned yet.
 If the fraction is bigger than the left number of neurons, all remaining neurons are selected.
 
-Parameters
-----------
-frac : float. Fraction of population subjected to type assignment
-type : string.
-    "sInh" -> slow inhibitory (code 0)
-    "fInh" -> fast inhibitory (code 1)
-    "sExc" -> slow excitatory (code 2)
-    "fExc" -> fast excitatory (code 3)
+Parameters:
+    frac (float): Fraction of population subjected to type assignment
+    type (string):\n
+    - sInh -> slow inhibitory (code 0)
+    - fInh -> fast inhibitory (code 1)
+    - sExc -> slow excitatory (code 2)
+    - fExc -> fast excitatory (code 3)
 
-Print
------
-It prints the actual population fraction that has been assigned to a certain type.
-Can be different to the desidered one due to rounding
+Print:
+    It prints the actual population fraction that has been assigned to a certain type.
+    Can be different to the desidered one due to rounding
 """
         
         remainingNeurons = np.array([neuron for neuron in self.neurons.flatten() if neuron.neuronType == -1])
@@ -229,10 +225,9 @@ Can be different to the desidered one due to rounding
 This could be really useful to abstract the theoretical population geometry
 from the actual distribution of the neuron in the device
 
-Parameters
-----------
-rows : int. number of rows of the new population
-columns : int. number of columns of the new population
+Parameters:
+    rows (int): number of rows of the new population
+    columns (int): number of columns of the new population
 """
         
         # New shape

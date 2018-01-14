@@ -1,0 +1,415 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>classes.InputPattern &#8212; DYNAPSETools 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for classes.InputPattern</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains a class that represent a pattern of inputs to DYNAP-se</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">DYNAPSETools.classes.InputEvent</span> <span class="k">import</span> <span class="n">InputEvent</span>
+
+<div class="viewcode-block" id="InputPattern"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern">[docs]</a><span class="k">class</span> <span class="nc">InputPattern</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class that represent a pattern of inputs to DYNAP-se</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="mf">90.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a new InputPattern object</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    name (string): Name of the pattern (useful for debug)</span>
+<span class="sd">    isiBase (int): Time base for time event generation.</span>
+<span class="sd">        Every delay is represented as multiple of this base. Knowing that an isiBase = 90 correspond to 1 us</span>
+<span class="sd">        a delay = 10 -&gt; 10 * isiBase = 10 us</span>
+<span class="sd">        With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="c1"># Set spike base timing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isiBase</span> <span class="o">=</span> <span class="n">isiBase</span> <span class="c1"># Base for the timing of the spikes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isiForUs</span> <span class="o">=</span> <span class="mf">90.0</span> <span class="c1"># ISI to have 1 us resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiBase</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiForUs</span>
+
+        <span class="c1"># Generate (address, time) event arrays</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tSig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ySig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.single_event"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.single_event">[docs]</a>    <span class="k">def</span> <span class="nf">single_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a single address and time step for a specified neuron and a certain interspike interval</span>
+<span class="sd">        </span>
+<span class="sd">Parameters:</span>
+<span class="sd">    virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</span>
+<span class="sd">    neuronAddress (int): Represent the address of the virtual neuron that will generate the event</span>
+<span class="sd">    coreDest (int): (4 bit hot coded, from 0 to 15). Represent the destination cores in which the spike will be routed</span>
+<span class="sd">    fireFreq (int, [Hz]): Firing frequency you want to achieve ; event delay is calculate as 1/frequency</span>
+<span class="sd">    firePeriod (float, [s]): Event delay (after delay the event is generated)</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">::</span>
+
+<span class="sd">    - single_event(1, 15, 0, firePeriod = 0.1)</span>
+<span class="sd">    - single_event(2, 1, 0, fireFreq = 50)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">firePeriod</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fireFreq</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">fireFreq</span> <span class="p">)</span> <span class="o">*</span> <span class="mf">1e+6</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span><span class="p">)</span> <span class="c1">#/*In ISI units*/</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">firePeriod</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fireFreq</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">firePeriod</span> <span class="o">*</span> <span class="mf">1e+6</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span><span class="p">)</span> <span class="c1">#/*In ISI units*/</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="s2">&quot;Error while creating event </span><span class="si">{}</span><span class="s2">, specify or fire frequency or fire period: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">errorString</span><span class="p">)</span>
+            
+        <span class="c1"># Create event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eventList</span><span class="p">,</span> <span class="n">InputEvent</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="p">))</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.multiple_events"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.multiple_events">[docs]</a>    <span class="k">def</span> <span class="nf">multiple_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">absTimes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create multiple events for specified neurons and times.</span>
+<span class="sd">        </span>
+<span class="sd">It is possible to specify a sequence of absolute times for the spikes (absTimes)</span>
+<span class="sd">It is possible to specify a sequence of firing frequencies for the spikes (fireFreq)</span>
+<span class="sd">It is possible to specify a sequence of firing periods for the spikes (firePeriod)</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    virtualSourceCoreId (list of int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</span>
+<span class="sd">    neuronAddress (list of int): Represent the address of the virtual neuron that will generate the event</span>
+<span class="sd">    coreDest (list of int): (4 bit hot coded, from 0 to 15). Represent the destination cores in which the spike will be routed</span>
+<span class="sd">    absTimes (list of float, [s]): Represent the absolute times for spikes, interspike interval is derived automatically</span>
+<span class="sd">    fireFreq (list of int, [Hz]): Firing frequency you want to achieve ; event delay is calculate as 1/frequency</span>
+<span class="sd">    firePeriod (float, [s]): Event delay (after delay the event is generated)</span>
+
+<span class="sd">Examples:\n</span>
+<span class="sd">- sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], absTimes = [20e-3, 40e-3, 60e-3])</span>
+<span class="sd">- sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], fireFreq = [50, 50, 50])</span>
+<span class="sd">- sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], firePeriod = [20e-3, 20e-3, 20e-3])</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Find which type of event series must be generated</span>
+        <span class="n">freq</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="c1"># Extract from absolute times the firePeriods</span>
+        <span class="k">if</span> <span class="n">absTimes</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">firePeriod</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">absTimes</span><span class="p">)</span>
+            <span class="n">firePeriod</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">absTimes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">firePeriod</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="n">fireFreq</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">firePeriod</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">period</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="s2">&quot;Error while creating event, specify or fire frequency or fire period: &quot;</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">errorString</span><span class="p">)</span>
+        
+        <span class="c1"># Scan the fireFreq or firePeriod vector and create all events</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">addr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">neuronAddress</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">freq</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">addr</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="n">fireFreq</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">addr</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>  <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">firePeriod</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.constant_freq"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.constant_freq">[docs]</a>    <span class="k">def</span> <span class="nf">constant_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span><span class="p">,</span> <span class="n">initDelay</span><span class="p">,</span> <span class="n">duration</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create addresses and time steps for a constant firing frequency of a certain duration</span>
+<span class="sd">         </span>
+<span class="sd">Parameters:</span>
+<span class="sd">    virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</span>
+<span class="sd">    neuronAddress (int): Represent the address of the virtual neuron that will generate the event</span>
+<span class="sd">    coreDest (int, 4 bit hot coded): Represent the destination cores in which the spike will be routed</span>
+<span class="sd">    fireFreq (int, [Hz]): Desidered Firing frequency</span>
+<span class="sd">    initDelay (float, [s]): Delay of the first event</span>
+<span class="sd">    duration (float, [s]): Duration of the event pattern</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">::</span>
+
+<span class="sd">    - constant_freq(1, 15, 0, 50, 1/50, 1)</span>
+<span class="sd">        Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate (address, time) event list</span>
+        <span class="n">addresses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="n">freqPhase</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">duration</span><span class="p">)</span> <span class="c1"># in Hz</span>
+        
+        <span class="c1"># Insert the first initial spike after an initial delay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">initDelay</span><span class="p">)</span>
+        
+        <span class="c1"># Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ </span>
+        <span class="n">num_events</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">fireFreq</span> <span class="o">/</span> <span class="n">freqPhase</span><span class="p">))</span>       
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_events</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="n">fireFreq</span><span class="p">)</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.linear_freq_modulation"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.linear_freq_modulation">[docs]</a>    <span class="k">def</span> <span class="nf">linear_freq_modulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">freqStart</span><span class="p">,</span> <span class="n">freqStop</span><span class="p">,</span> <span class="n">freqSteps</span><span class="p">,</span> <span class="n">freqPhaseDuration</span><span class="p">,</span> <span class="n">initDelay</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create addresses and time steps for a linear firing frequency modulation</span>
+<span class="sd">        </span>
+<span class="sd">The modulation starts at &lt;freqStart&gt; and stops at &lt;freqStop&gt;, with &lt;freqSteps&gt; number of steps</span>
+<span class="sd">of duration &lt;freqPhaseDuration&gt;.</span>
+
+<span class="sd">It is possible to specify an initial delay of the first spike changing &lt;initDelay&gt;</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</span>
+<span class="sd">    neuronAddress (int): Represent the address of the virtual neuron that will generate the event</span>
+<span class="sd">    coreDest (int, 4 bit hot coded): Represent the destination cores in which the spike will be routed</span>
+<span class="sd">    freqStart (int): Starting modulation frequency</span>
+<span class="sd">    freqStop (int): Stop modulation frequency</span>
+<span class="sd">    freqSteps (int): Number of steps of the modulation frequency</span>
+<span class="sd">    freqPhaseDuration (float, [s]): Duration of each frequency step</span>
+<span class="sd">    initDelay (float, [s]): Delay of the first event</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">::</span>
+
+<span class="sd">    - linear_freq_modulation(1, 15, 0, 50, 100, 6, 0.1, 0)</span>
+<span class="sd">        modulation from 50Hz to 100Hz with 6 steps (50, 60, 70, 80, 90, 100)Hz, 100ms of duration of each step, zero initial delay</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Generate (address, time) event list</span>
+        <span class="n">freqPhase</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">freqPhaseDuration</span><span class="p">)</span> <span class="c1"># in Hz</span>
+        <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">freqStart</span><span class="p">,</span> <span class="n">freqStop</span><span class="p">,</span> <span class="n">freqSteps</span><span class="p">)</span> <span class="c1"># in Hz</span>
+        
+        <span class="c1"># Insert the first initial spike after an initial delay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">initDelay</span><span class="p">)</span>
+        
+        <span class="c1"># Step on all frequencies and create (address, time) events list</span>
+        <span class="k">for</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">freqs</span><span class="p">:</span>
+            <span class="c1"># Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ </span>
+            <span class="n">num_events_this_freq</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">freq</span> <span class="o">/</span> <span class="n">freqPhase</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_events_this_freq</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="n">freq</span><span class="p">)</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.threshold_encoder"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.threshold_encoder">[docs]</a>    <span class="k">def</span> <span class="nf">threshold_encoder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressUpCH</span><span class="p">,</span> <span class="n">neuronAddressDwCH</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">noiseVar</span><span class="p">,</span> <span class="n">initDelay</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create spikes with variable frequency, in the form of a specified function      </span>
+<span class="sd">        </span>
+<span class="sd">A spike is generated when the signal does a step up or step down bigger than the threshold &lt;threshold&gt;.</span>
+
+<span class="sd">Spikes are encoded in two channels (&lt;neuronAddressUpCH&gt; and &lt;neuronAddressDwCH&gt;)</span>
+<span class="sd">according to the direction of the jump (depending on the slope of the signal):\n</span>
+<span class="sd">- deltaY &gt; threshold --&gt; Up channel spike</span>
+<span class="sd">- deltaY &lt; -threshold --&gt; Dw channel spike</span>
+
+<span class="sd">It is possible to specify an initial delay of the first spike changing &lt;initDelay&gt;</span>
+<span class="sd">It is possible to specify the variance &lt;noiseVar&gt; of a Gaussian noise added to the spike times</span>
+<span class="sd">With &lt;plotEn&gt; True the signal shape is included in the list of signals to be plotted</span>
+<span class="sd">        </span>
+<span class="sd">Note that the algorithm does not constrain the firing frequencies to a minimum or maximum,</span>
+<span class="sd">but they depend on the signal and the threshold. Minimum and maximum</span>
+<span class="sd">firing rates are calculated and printed.</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</span>
+<span class="sd">    neuronAddressUpCH (int): Represent the address of the virtual neuron that will generate the event on Up channel</span>
+<span class="sd">    neuronAddressDwCH (int): Represent the address of the virtual neuron that will generate the event on Up channel</span>
+<span class="sd">    coreDest (int, 4 bit hot coded): Represent the destination cores in which the spike will be routed</span>
+<span class="sd">    threshold (int): Theshold that triggers the generation of the spike</span>
+<span class="sd">    t (float, [s]): Time vector of the signal</span>
+<span class="sd">    y (float): Value vector of the signal</span>
+<span class="sd">    noiseVar (float): Variance of a gaussian distribution from which noise is applied to event times</span>
+<span class="sd">    initDelay (float, [s]): Delay of the first event</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">::</span>
+
+<span class="sd">    t = np.arange(0, 1, 1e-6)</span>
+<span class="sd">    y = np.sin(2 * np.pi * 1 * t)</span>
+<span class="sd">    spikeGen.threshold_encoder(1, 2, 15, 0, 0.05, t, y, 0, 1e-3, plotEn = True)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Initialization</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Time normalization</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">*</span><span class="mf">1e6</span> <span class="c1"># Transform in us scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tSig</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ySig</span> <span class="o">=</span> <span class="n">y</span>
+        
+        <span class="c1"># Insert the first spike after an initial delay*/</span>
+        <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="c1"># Positive slope</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressUpCH</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">initDelay</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># Negative slope</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressDwCH</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">initDelay</span><span class="p">)</span>
+        
+        <span class="c1"># Scan the whole sinewave and create spikes</span>
+        <span class="n">lastSpikeIndex</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">idy</span><span class="p">,</span> <span class="n">valy</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">valy</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">lastSpikeIndex</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span> <span class="c1"># If signal goes up of a quantity higher than threshold</span>
+                <span class="c1"># Evaluate interspike interval</span>
+                <span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">idy</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">lastSpikeIndex</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e6</span>
+                <span class="c1"># Apply noise</span>
+                <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">noiseVar</span><span class="p">))</span>
+                <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">noise</span>
+                <span class="c1"># Create event</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressUpCH</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">time</span><span class="p">)</span>
+                <span class="n">lastSpikeIndex</span> <span class="o">=</span> <span class="n">idy</span>
+                    
+            <span class="k">elif</span> <span class="p">(</span><span class="n">valy</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">lastSpikeIndex</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="p">(</span><span class="n">threshold</span><span class="p">):</span> <span class="c1"># If signal goes dows of a quantity higher than threshold</span>
+                <span class="c1"># Evaluate interspike interval</span>
+                <span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">idy</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">lastSpikeIndex</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e6</span>
+                <span class="c1"># Apply noise</span>
+                <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">noiseVar</span><span class="p">))</span>
+                <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">noise</span>
+                <span class="c1"># Create event</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressDwCH</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">time</span><span class="p">)</span>
+                <span class="n">lastSpikeIndex</span> <span class="o">=</span> <span class="n">idy</span></div>
+          
+        <span class="c1"># Calculate and print maximum and minimum firing frequencies obtained</span>
+        <span class="c1">#absTime = [0] * len(self.eventList)</span>
+        <span class="c1">#absTime[0] = self.eventList[0].time</span>
+        
+        <span class="c1">#for idx, event in enumerate(self.eventList[1:]):</span>
+        <span class="c1">#    absTime[idx + 1] = absTime[idx] + event.time</span>
+        <span class="c1">#upPos = [True for event in self.eventList if event.neuronAddress == neuronAddressUpCH]</span>
+
+        <span class="c1">#upChTimes = np.array(absTime)[np.where(self.eventList.neuronAddress == neuronAddressUpCH)]</span>
+        <span class="c1">#dwChTimes = np.array(absTime)[np.where(self.eventList.neuronAddress == neuronAddressDwCH)]</span>
+        
+        <span class="c1">#maxUpChFrequency = 1e6 / (np.min(np.diff(upChTimes)) * self.isiRatio) </span>
+        <span class="c1">#minUpChFrequency = 1e6 / (np.max(np.diff(upChTimes)) * self.isiRatio)</span>
+        <span class="c1">#maxDwChFrequency = 1e6 / (np.min(np.diff(dwChTimes)) * self.isiRatio)</span>
+        <span class="c1">#minDwChFrequency = 1e6 / (np.max(np.diff(dwChTimes)) * self.isiRatio)</span>
+        <span class="c1">#print(&#39;=======================================&#39;)</span>
+        <span class="c1">#print(&quot;MAX Up channel frequency: %.5f Hz&quot; % np.round(maxUpChFrequency))</span>
+        <span class="c1">#print(&quot;min Up channel frequency: %.5f Hz&quot; % np.round(minUpChFrequency))</span>
+        <span class="c1">#print(&#39;MAX Dw channel frequency: %.5f Hz&#39; % np.round(maxDwChFrequency))</span>
+        <span class="c1">#print(&#39;min Dw channel frequency: %.5f Hz&#39; % np.round(minDwChFrequency))</span>
+        <span class="c1">#print(&#39;=======================================&#39;)</span>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.plot_spikes"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.plot_spikes">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spikes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">timeShift</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plot the spikes of the current pattern</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    color (string): Color of the pattern</span>
+<span class="sd">    timeShift (int, optional): Add this time to all the events</span>
+<span class="sd">    ax (ax handle, optional): Plot graph on this handle, otherwise a new figure will be created</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># If no subplot is specified, create new plot</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+        <span class="n">currTime</span> <span class="o">=</span> <span class="n">timeShift</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span><span class="p">:</span>
+            <span class="n">handle</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">currTime</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">event</span><span class="o">.</span><span class="n">virtualSourceCoreId</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">neuronAddress</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">currTime</span> <span class="o">=</span> <span class="n">currTime</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span>
+
+        <span class="c1">#if self.tSig != None:</span>
+        <span class="c1">#    ax.plot(self.tSig + timeShift, self.ySig, color = color)</span>
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">handle</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.add_manually_event"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.add_manually_event">[docs]</a>    <span class="k">def</span> <span class="nf">add_manually_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add manually an event starting from address and time</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    address (int): Encoded address of the virtual neuron</span>
+<span class="sd">    time (int): Delay after which the event is generated. It is expressed as multiple of ISIBase</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eventList</span><span class="p">,</span> <span class="n">InputEvent</span><span class="p">(</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span><span class="p">,</span> <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="p">))</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="InputPattern.evaluate_duration"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.evaluate_duration">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the duration of the pattern</span>
+
+<span class="sd">Returns:</span>
+<span class="sd">    float: Duration of the whole pattern</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span><span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span>
+        <span class="k">return</span> <span class="n">time</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Cattaneo Roberto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

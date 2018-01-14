@@ -1,0 +1,170 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dynapseSpikesGenerator &#8212; DYNAPSETools 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="EventsSet" href="EventsSet.html" />
+    <link rel="prev" title="dynapseOutDecoder" href="dynapseOutDecoder.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="EventsSet.html" title="EventsSet"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dynapseOutDecoder.html" title="dynapseOutDecoder"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" accesskey="U">API</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-dynapseSpikesGenerator">
+<span id="dynapsespikesgenerator"></span><h1>dynapseSpikesGenerator<a class="headerlink" href="#module-dynapseSpikesGenerator" title="Permalink to this headline">¶</a></h1>
+<p>The module contains functions that permit to  write a .txt file with coded inputs to DYNAP-se</p>
+<dl class="function">
+<dt id="dynapseSpikesGenerator.import_events">
+<code class="descclassname">dynapseSpikesGenerator.</code><code class="descname">import_events</code><span class="sig-paren">(</span><em>fileName</em>, <em>name='ImportedPattern'</em>, <em>isiBase=90.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesGenerator.html#import_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesGenerator.import_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import events from an outside stimulus txt file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fileName</strong> (<em>string</em>) – Path of .txt file from which events must be imported</li>
+<li><strong>name</strong> (<em>string</em><em>, </em><em>optional</em>) – Name of the imported event pattern (useful for debug purpouses)</li>
+<li><strong>isiBase</strong> (<em>int</em><em>, </em><em>optional</em>) – <p>Time base of the input pattern, for time event generation.</p>
+<p>Every delay is represented as multiple of this base. Knowing that an isiBase = 90 correspond to 1 us
+a delay = 10 -&gt; 10 * isiBase = 10 us. With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Set of events that has been imported from input file</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">obj InputPattern</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesGenerator.plot_spikes">
+<code class="descclassname">dynapseSpikesGenerator.</code><code class="descname">plot_spikes</code><span class="sig-paren">(</span><em>*inputPatternList</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesGenerator.html#plot_spikes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesGenerator.plot_spikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the spike stimuli</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*inputPatternList</strong> (<em>list of obj InputPattern</em>) – Contains the patterns that must be plotted</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesGenerator.write_to_file">
+<code class="descclassname">dynapseSpikesGenerator.</code><code class="descname">write_to_file</code><span class="sig-paren">(</span><em>*input_patterns</em>, <em>fileName='stimulus.txt'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesGenerator.html#write_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesGenerator.write_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the stimulus on an output txt file and make controls to avoid overflow</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_patterns</strong> (<em>list of obj InputPattern</em>) – Contains all the patterns that should be written in the output file</li>
+<li><strong>fileName</strong> (<em>string</em><em>, </em><em>optional</em>) – Name of the output .txt file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dynapseOutDecoder.html"
+                        title="previous chapter">dynapseOutDecoder</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="EventsSet.html"
+                        title="next chapter">EventsSet</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="EventsSet.html" title="EventsSet"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dynapseOutDecoder.html" title="dynapseOutDecoder"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" >API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Cattaneo Roberto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>
