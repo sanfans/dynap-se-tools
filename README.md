@@ -11,10 +11,10 @@ It contains:
 
 To import a module write:
 ```python
-import DYNAPSETools.DynapseNetGenerator as netgen
-import DYNAPSETools.DynapseOutDecoder as decoder
-import DYNAPSETools.DynapseSpikesFitter as fitter
-import DYNAPSETools.DynapseSpikesGenerator as spikegen
+import DYNAPSETools.dynapseNetGenerator as netgen
+import DYNAPSETools.dynapseOutDecoder as decoder
+import DYNAPSETools.dynapseSpikesFitter as fitter
+import DYNAPSETools.dynapseSpikesGenerator as spikegen
 ```
 To use functions contained in the modules write
 ```python
@@ -43,8 +43,7 @@ Customized spiking patterns must be specified preparing a .txt file, containing 
 
 In the following image is summarized the main characteristics of the Spike Generator. As said before, can be considered as a virtual chip (U4) made with Virtual Neurons. The txt file specify the characteristics of the generated events: address of the source neuron, interspike interval and core destinations. Note that in this case U2 has been chosen as destination chip.
 
-
-<img src="./docs/images/spikeGen.jpg" width="500px"  />
+<img src="https://github.com/sanfans/DYNAPSETools/docs/images/spikeGen.jpg" width="500px"  />
 
 An example of .txt file is the following one:
 

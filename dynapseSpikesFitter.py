@@ -1,10 +1,6 @@
-############### author ####################
-# federico corradi & cattaneo roberto
-# federico@ini.phys.ethz.ch; cattaroby93@gmail.com
-# Fitter signal-spikes
-# =========================================
+""" The module contains functions that allows to make training and testing from DYNAP-se samples
+"""
 
-### ========================= import packages ===============================
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn import linear_model
@@ -16,28 +12,28 @@ def sklearn_fit(matrix, target):
         
 It uses the sklearn linear regression algorithm.
 
-Parameters
-----------
-matrix : numpy matrix of floats. Matrix that encodes spike in a certain way
-target : numpy array of floats. Vector of target values
+Parameters:
+    matrix (2D array, float): Matrix that encodes spike
+    target (array, float): Vector of target values
 
-Returns
--------
-regr : linear model object. Object used for linear regression
-coefficients : list of floats. Contains coefficients of the regression
+Returns:
+    (tuple): tuple containing:
+
+        - **regr** (*obj linear regression*): Object used for linear regression
+        - **coefficients** (*list of float*): Contains coefficients of the regression
 """
         
-    # Reshape to get an array in format (n, 1) --> required by sklearn for fitting
-    target = np.array(target).reshape((-1, 1))
-    matrix = np.array(matrix)
-        
+    # Reshape matrix to get an array in format (time step, neurons) required by sklearn
+    matrix = matrix.T
+    target = target.T
+
     # Train the model using the training sets
     # The flow is the following:
         # input signal y --> (n, 1)
         # neuronFireRate X --> (1024, n) [should be transposed to (n, 1024)]
         # We should find a vector v such that <v, X> = y
     regr = linear_model.LinearRegression()
-    regr.fit(np.transpose(matrix), target)
+    regr.fit(matrix, target)
     coefficients = regr.coef_
     return regr, coefficients
 
@@ -47,17 +43,16 @@ def sklearn_prevision(regr, matrix):
         
 It uses sklearn coefficients and prevision method
 
-Parameters
-----------
-regr : linear model object. Object used for linear regression
-matrix : numpy matrix of floats. Matrix that encodes spike in a certain way
+Parameters:
+    regr (obj linear regression): Object used for linear regression
+    matrix (2D array, float): Matrix that encodes spike
 
-Returns
--------
-prediction : numpy array of floats. Contains the performed prediction
+Returns:
+    array, float : The performed prediction
 """
-        
-    matrix = np.transpose(matrix)
+    
+    # Transpose input matrix
+    matrix = matrix.T
     prediction = regr.predict(matrix)
     return prediction
         
@@ -67,34 +62,44 @@ def pseudo_inv_fit(matrix, target):
         
 It uses the pseudo inverse fitting algorithm
 
-Parameters
-----------
-matrix : numpy matrix of floats. Matrix that encodes spike in a certain way
-target : numpy array of floats. Vector of target values
+Parameters:
+    matrix (2D array, float): Matrix that encodes spike
+    target (array, float): Vector of target values
 
-Returns
--------
-coefficients : list of floats. Contains coefficients of the regression
+Returns:
+    array, float : Coefficients of the regression
 """
+    
+    # ============ FEDERICO WAY ===============
+    ## Reshape to get an array in format (n, 1) --> required for fitting
+    #matrix = np.array(matrix)
+    #target = np.array(target).reshape((-1, 1))
         
-    # Reshape to get an array in format (n, 1) --> required for fitting
-    matrix = np.array(matrix)
-    target = np.array(target).reshape((-1, 1))
-        
-    # y = X * b --> linear system where b is the vector we are searching (decoders)
-    # b = inv(X'X) X'y ---> b = pseudoinv(X'X) X'y
-        # should be equivalent:
-        # gamma = X*X'
-        # upsilon = Xy
-        # b = pseudoinv(gamma)*upsilon
-    gamma = np.dot(matrix, matrix.T)
-    # Apply regularization adding some Gaussian noise close to 1 in the diagonal
-    #gamma = gamma + np.eye(len(gamma)) * np.random.normal(loc = 1, scale = 0.15, size = len(gamma))
-    upsilon = np.dot(matrix, target)
-    ginv = np.linalg.pinv(gamma)
+    ## y = X * b --> linear system where b is the vector we are searching (decoders)
+    ## b = inv(X'X) X'y ---> b = pseudoinv(X'X) X'y
+    #    # should be equivalent:
+    #    # gamma = X*X'
+    #    # upsilon = Xy
+    #    # b = pseudoinv(gamma)*upsilon
+    #gamma = np.dot(matrix, matrix.T)
+    ## Apply regularization adding some Gaussian noise close to 1 in the diagonal
+    ##gamma = gamma + np.eye(len(gamma)) * np.random.normal(loc = 1, scale = 0.15, size = len(gamma))
+    #upsilon = np.dot(matrix, target)
+    #ginv = np.linalg.pinv(gamma)
 
-    # Calculate coefficients
-    coefficients = np.dot(ginv,upsilon)
+    ## Calculate coefficients
+    #coefficients = np.dot(ginv,upsilon)
+
+    # ============ NORMAL WAY ===============
+    # Transpose to have a matrix with shape (time step, neurons)
+    matrix = matrix.T
+
+    # Calculate pseudo inverse
+    pinv = np.linalg.pinv(matrix)
+
+    # Retrieve coefficients
+    coefficients = np.dot(pinv, target.T)
+
     return coefficients
 
 ### ===========================================================================
@@ -103,35 +108,34 @@ def pseudo_inv_prevision(coefficients, matrix):
         
 It uses pseudo inverse coefficients and prevision method
 
-Parameters
-----------
-coefficients : list of floats. Contains coefficients of the regression
-matrix : numpy matrix of floats. Matrix that encodes spike in a certain way
+Parameters:
+    coefficients (array, float): Coefficients that should be used for the prevision
+    matrix (2D array, float): Matrix that encodes spike
 
-Returns
--------
-prediction : numpy array of floats. Contains the performed prediction
+Returns:
+    array, float : The performed prediction
 """
         
-    # i have to traspose it to have (n, 1) shape
-    prediction = np.dot(coefficients.T, matrix).T
+    # Traspose matrix to have (time, neurons)
+    prediction = np.dot(matrix.T, coefficients)
     return prediction
 
 ### ===========================================================================  
-def prediction_plot(timeScale, target, prediction, ax = None):
-    """Plot the prediction
+def prediction_plot(timeScale, prediction, target, ax = None):
+    """Plot the prediction and the corrent output together
     
-Parameters
-----------
-timeScale : array_like, floats. Time steps in which firing rate has been calculated
-target : numpy array of floats. Vector of target values
-prediction : numpy array of floats. Contains the performed prediction 
+Parameters:
+    timeScale (array, float): Time steps in which firing rate has been calculated
+    target (array, float): Vector of target values
+    prediction : numpy array of floats. Contains the performed prediction 
+    ax (ax handle, optional): Plot graph on this handle
 
-Returns
--------
-fig : figure handle of the created figure, if generated
-ax : axis handle of the created plot
-handles : list of handles of created line (every plot)
+Returns:
+    (tuple): tuple containing:
+
+        - **figList** (*list of fig handles*): To modify properties of the figure
+        - **axList** (*list of ax handles*): To modify properties of the plot
+        - **handlesList** (*list of lines handles*): To create custom legends
 """
         
     fig = None
@@ -143,41 +147,51 @@ handles : list of handles of created line (every plot)
 
     handles = []
 
-    handle, = ax.plot(timeScale, target,  linestyle = 'None', marker = 'o', color='black')
+    handle = ax.plot(timeScale, target,  linestyle = 'None', marker = 'o', color='black', label = 'target')
     handles.append(handle)
-    handle, = ax.plot(timeScale, prediction, linestyle = 'None', marker = 'o', color='blue')
+    handle = ax.plot(timeScale, prediction, linestyle = 'None', marker = 'o', color='blue', label = 'prediction')
     handles.append(handle)
     
     return fig, ax, handles
         
 ### ===========================================================================  
-def prediction_performances(target, prediction):
+def prediction_performances(prediction, target, firingRateThreshold):
     """Print the mean square error and r2 score of the prediction
 
-Parameters
-----------
-target : numpy array of floats. Vector of target values
-prediction : numpy array of floats. Contains the performed prediction
+Parameters:
+    target (array, float): Vector of target values
+    prediction (array, float): The performed prediction
+    firingThreshold (float): Threshold for determining neuron output
 """
-    # Print the performances of the fitting
-    print("Testing Mean squared error: %.4f" % mean_squared_error(target, prediction))
-    print('Testing Variance score: %.4f' % r2_score(target, prediction))
+    
+    # Discriminate elements if above or below the chosen threshold
+    prediction = prediction > firingRateThreshold
+    target = target > firingRateThreshold
+
+    # Take the difference between prediction and target
+    # If there is a difference for at least an output neuron, the whole sample is wrong
+    diff = np.any((prediction != target), axis = 1)
+
+    # Count how much samples are wrong and how much are true
+    wrongs = np.count_nonzero(diff)
+    rights = len(diff) - wrongs
+
+    return rights, wrongs
 
 ### ===========================================================================  
 def av_fireRate_matrix_diff(M1, M2):
     """Calculate indicators that give hints about the difference between two matrices
     
-The indicators are:
+The indicators are:\n
 - nDiffNeuronAv: it tells in average how many neurons have a different firing rate
                     between the matrixes. It is expressed in percentage of the
                     average number of neurons that fire (in the two matrixes)
 - diffFiringAv: it tells the average firing rate different between the matrixes.\
                     It is expressed in percentage of the average firing rate of the matrixes
 
-Parameters
-----------
-M1 : numpy matrix of floats. First matrix for the comparizon
-M2 : numpy matrix of floats. Second matrix for the comparizon
+Parameters:
+    M1 (2D array, float): First matrix for the comparizon
+    M2 (2D array, float): Second matrix for the comparizon
 """
     
     # Calculate the distance between matrixes (correspond to the number of differences in the experiment)

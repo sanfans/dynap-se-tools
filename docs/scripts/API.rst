@@ -12,6 +12,7 @@ The following contents tree permit to explore the different modules and classes 
    dynapseNetGenerator
    dynapseOutDecoder
    dynapseSpikesGenerator
+   dynapseSpikesFitter
 
 .. toctree::
    :maxdepth: 1

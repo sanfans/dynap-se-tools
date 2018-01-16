@@ -1,0 +1,297 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dynapseSpikesFitter &#8212; DYNAPSETools 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="EventsSet" href="EventsSet.html" />
+    <link rel="prev" title="dynapseSpikesGenerator" href="dynapseSpikesGenerator.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="EventsSet.html" title="EventsSet"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dynapseSpikesGenerator.html" title="dynapseSpikesGenerator"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" accesskey="U">API</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-dynapseSpikesFitter">
+<span id="dynapsespikesfitter"></span><h1>dynapseSpikesFitter<a class="headerlink" href="#module-dynapseSpikesFitter" title="Permalink to this headline">¶</a></h1>
+<p>The module contains functions that allows to make training and testing from DYNAP-se samples</p>
+<dl class="function">
+<dt id="dynapseSpikesFitter.av_fireRate_matrix_diff">
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">av_fireRate_matrix_diff</code><span class="sig-paren">(</span><em>M1</em>, <em>M2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#av_fireRate_matrix_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.av_fireRate_matrix_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate indicators that give hints about the difference between two matrices</p>
+<p>The indicators are:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>nDiffNeuronAv: it tells in average how many neurons have a different firing rate</dt>
+<dd>between the matrixes. It is expressed in percentage of the
+average number of neurons that fire (in the two matrixes)</dd>
+</dl>
+</li>
+<li>diffFiringAv: it tells the average firing rate different between the matrixes.                    It is expressed in percentage of the average firing rate of the matrixes</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>M1</strong> (<em>2D array</em><em>, </em><em>float</em>) – First matrix for the comparizon</li>
+<li><strong>M2</strong> (<em>2D array</em><em>, </em><em>float</em>) – Second matrix for the comparizon</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesFitter.prediction_performances">
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">prediction_performances</code><span class="sig-paren">(</span><em>target</em>, <em>prediction</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#prediction_performances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.prediction_performances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the mean square error and r2 score of the prediction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target</strong> (<em>array</em><em>, </em><em>float</em>) – Vector of target values</li>
+<li><strong>prediction</strong> (<em>array</em><em>, </em><em>float</em>) – The performed prediction</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesFitter.prediction_plot">
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">prediction_plot</code><span class="sig-paren">(</span><em>timeScale</em>, <em>target</em>, <em>prediction</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#prediction_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.prediction_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the prediction and the corrent output together</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>timeScale</strong> (<em>array</em><em>, </em><em>float</em>) – Time steps in which firing rate has been calculated</li>
+<li><strong>target</strong> (<em>array</em><em>, </em><em>float</em>) – Vector of target values</li>
+<li><strong>prediction</strong> – numpy array of floats. Contains the performed prediction</li>
+<li><strong>ax</strong> (<em>ax handle</em><em>, </em><em>optional</em>) – Plot graph on this handle</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>tuple containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>figList</strong> (<em>list of fig handles</em>): To modify properties of the figure</li>
+<li><strong>axList</strong> (<em>list of ax handles</em>): To modify properties of the plot</li>
+<li><strong>handlesList</strong> (<em>list of lines handles</em>): To create custom legends</li>
+</ul>
+</div></blockquote>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesFitter.pseudo_inv_fit">
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">pseudo_inv_fit</code><span class="sig-paren">(</span><em>matrix</em>, <em>target</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#pseudo_inv_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.pseudo_inv_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply linear regression and find the coefficients to fit matrix in target</p>
+<p>It uses the pseudo inverse fitting algorithm</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>matrix</strong> (<em>2D array</em><em>, </em><em>float</em>) – Matrix that encodes spike</li>
+<li><strong>target</strong> (<em>array</em><em>, </em><em>float</em>) – Vector of target values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Coefficients of the regression</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">array, float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesFitter.pseudo_inv_prevision">
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">pseudo_inv_prevision</code><span class="sig-paren">(</span><em>coefficients</em>, <em>matrix</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#pseudo_inv_prevision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.pseudo_inv_prevision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a target prevision using the previously found coefficients</p>
+<p>It uses pseudo inverse coefficients and prevision method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coefficients</strong> (<em>array</em><em>, </em><em>float</em>) – Coefficients that should be used for the prevision</li>
+<li><strong>matrix</strong> (<em>2D array</em><em>, </em><em>float</em>) – Matrix that encodes spike</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The performed prediction</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">array, float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesFitter.sklearn_fit">
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">sklearn_fit</code><span class="sig-paren">(</span><em>matrix</em>, <em>target</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#sklearn_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.sklearn_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply linear regression and find the coefficients to fit matrix in target</p>
+<p>It uses the sklearn linear regression algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>matrix</strong> (<em>2D array</em><em>, </em><em>float</em>) – Matrix that encodes spike</li>
+<li><strong>target</strong> (<em>array</em><em>, </em><em>float</em>) – Vector of target values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>tuple containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>regr</strong> (<em>obj linear regression</em>): Object used for linear regression</li>
+<li><strong>coefficients</strong> (<em>list of float</em>): Contains coefficients of the regression</li>
+</ul>
+</div></blockquote>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dynapseSpikesFitter.sklearn_prevision">
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">sklearn_prevision</code><span class="sig-paren">(</span><em>regr</em>, <em>matrix</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#sklearn_prevision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.sklearn_prevision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a target prevision using the previously found coefficients</p>
+<p>It uses sklearn coefficients and prevision method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>regr</strong> (<em>obj linear regression</em>) – Object used for linear regression</li>
+<li><strong>matrix</strong> (<em>2D array</em><em>, </em><em>float</em>) – Matrix that encodes spike</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The performed prediction</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">array, float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dynapseSpikesGenerator.html"
+                        title="previous chapter">dynapseSpikesGenerator</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="EventsSet.html"
+                        title="next chapter">EventsSet</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="EventsSet.html" title="EventsSet"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dynapseSpikesGenerator.html" title="dynapseSpikesGenerator"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="API.html" >API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Cattaneo Roberto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

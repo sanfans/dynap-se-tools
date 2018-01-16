@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from DYNAPSETools.classes.EventsSet import EventsSet
 
+### ===========================================================================
 def import_events(fileName):
     """Read events from the from cAER aedat 3.0 file format
 
