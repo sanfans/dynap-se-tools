@@ -1,0 +1,5 @@
+dynapseOutDecoder
+=================
+
+.. automodule:: dynapseOutDecoder
+   :members:

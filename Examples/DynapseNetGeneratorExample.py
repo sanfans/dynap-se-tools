@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
-import DYNAPSETools.DynapseNetGenerator as netgen
+import DYNAPSETools.dynapseNetGenerator as netgen
 
 # Initialize random seed
 np.random.seed(1993)
@@ -14,14 +14,14 @@ neuronsPerCore = 256
 deviceParam = (chipsPerDevice, coresPerChip, neuronsPerCore)
 
 # INPUT POPULATION
-InputUpCh = netgen.generate_population(deviceParam = deviceParam, name = "InputUpCh", 
-                            chip_id = 4, core_id = 0, neuronType = "fExc", neurons_id = 1)
-InputDwCh = netgen.generate_population(deviceParam = deviceParam, name = "InputDwCh",
-                            chip_id = 4, core_id = 0, neuronType = "fExc", neurons_id = 2)
+InputUpCh = netgen.Population(deviceParam = deviceParam, name = "InputUpCh", 
+                              chip_id = 4, core_id = 0, neuronType = "fExc", neurons_id = 1)
+InputDwCh = netgen.Population(deviceParam = deviceParam, name = "InputDwCh",
+                              chip_id = 4, core_id = 0, neuronType = "fExc", neurons_id = 2)
 
 ## RESERVOIR POPULATION
-Reservoir = netgen.generate_population(deviceParam = deviceParam, name = "Reservoir")
-Reservoir.add_neurons(size = 25, chip_id = 0, core_id = 1, start_neuron = 1, neuronType = None)
+Reservoir = netgen.Population(deviceParam = deviceParam, name = "Reservoir")
+Reservoir.add_neurons(size = 25, chip_id = 0, core_id = 1, start_neuron = 0, neuronType = None)
 # Shape as a rectangle of 5 by 5 neurons
 Reservoir.change_population_shape(rows = 5, columns = 5)
 # 80% excitatory, 20% inhibitory
@@ -29,10 +29,10 @@ Reservoir.define_neurons_types(frac = 0.8, type = "fExc")
 Reservoir.define_neurons_types(frac = 0.2, type = "fInh")
 
 ## OUTPUT LAYER POPULATION
-OutputLayerClass1 = netgen.generate_population(deviceParam = deviceParam, name = "OutputLayerClass1",
-                                               chip_id = 0, core_id = 3, neuronType = "fExc", neurons_id = 16)
-OutputLayerClass2 = netgen.generate_population(deviceParam = deviceParam, name = "OutputLayerClass2",
-                                               chip_id = 0, core_id = 3, neuronType = "fExc", neurons_id = 32)
+OutputLayerClass1 = netgen.Population(deviceParam = deviceParam, name = "OutputLayerClass1",
+                                      chip_id = 0, core_id = 3, neuronType = "fExc", neurons_id = 16)
+OutputLayerClass2 = netgen.Population(deviceParam = deviceParam, name = "OutputLayerClass2",
+                                      chip_id = 0, core_id = 3, neuronType = "fExc", neurons_id = 32)
 
 ## PRINT POPULATIONS
 InputUpCh.print_population()

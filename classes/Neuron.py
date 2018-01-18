@@ -1,4 +1,4 @@
-# DESCRIPTION: Contains a class that represent a neuron in the device
+"""Contains a class that represent a neuron in the device"""
 
 class Neuron():
     """Class that represent a neuron in the device
@@ -7,12 +7,11 @@ class Neuron():
     def __init__(self, chip_id, core_id, neuron_id, neuronType):
         """Return a new Neuron object
 
-Parameters
-----------
-chip_id : int. Chip number of the neuron
-core_id : int. Core number of the neuron
-neuron_id : int. Neuron number of the neuron
-neuronType : int. Type of Neuron (fast/slow, excitatory/inhibitory)
+Parameters:
+    chip_id (int): Chip number of the neuron
+    core_id (int): Core number of the neuron
+    neuron_id (int): Neuron number of the neuron
+    neuronType (int): Type of Neuron (fast/slow, excitatory/inhibitory)
 """
         
         self.neuronType = neuronType

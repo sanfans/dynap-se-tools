@@ -1,4 +1,5 @@
-# DESCRIPTION: contains a class that represent a set of DYNAP-se events
+"""Contains a class that represent a set of DYNAP-se events
+"""
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -10,12 +11,11 @@ class EventsSet:
     def __init__(self, ts, chip_id, core_id, neuron_id):
         """Return a new EventsSet object
 
-Parameters
-----------
-ts : array_like, float. Times of events
-chip_id : array_like, int. Chip number of events
-core_id : array_like, int. Core number of events
-neuron_id : array_like, int. Neuron number of events
+Parameters:
+    ts (array, float): Times of events
+    chip_id (array, int): Chip number of events
+    core_id (array, int): Core number of events
+    neuron_id (array, int): Neuron number of events
 """
 
         self.ts = ts
@@ -27,34 +27,35 @@ neuron_id : array_like, int. Neuron number of events
     def filter_events(self, chip_id, core_id, neuron_id):
         """Return a EventsSet containing only the wanted events
 
-Filter is specified selecting certain chip_id, core_id and neuron_id
-It supports only one chip at a time (so chip_id must be a integer from 0 to 3)
-It could single neuron data or data from range of neurons, indipendently from each core
+Filter is specified selecting certain chip_id, core_id and neuron_id.
+It supports only one chip at a time (so chip_id must be a integer from 0 to 3).
+
+It could filter a single neuron data or data from range of neurons, indipendently from each core
+
 If neuron_id is left as "None", all neurons are selected.
 If core_id is left as "None", all cores are selected.
 
-Parameters
-----------
-chip_id : int. For now is only possible to filter one chip
-core_id : int or list of ints. Represent the cores included in the filter
-neuron_id : int, list of ints or list of lists of ints. Represent the neurons included in the filter
+Parameters:
+    chip_id (int): For now is only possible to filter one chip
+    core_id (list of int; int): Represent the cores included in the filter
+    neuron_id (2D list of int; list of int; int): Represent the neurons included in the filter
 
-Returns
--------
-EventsSet object : A set containing the events resulting from the filtering
+Returns:
+    obj EventsSet: A set containing the events resulting from the filtering
 
-Examples
---------
-- chip_id = 0, core_id = np.array([0, 1]), neuron_id = np.array([[0, 100], [100, 200]])
-    take chip 0, neuron from 0 to 100 of core 0 and neurons from 100 to 200 on core 1
-- chip_id = 1, core_id = None, neuron_id = None
-    take all neurons in all cores of chip 1
-- chip_id = 2, core_id = np.array([0, 1]), neuron_id = None
-    take all neurons in cores 0 and 1 of chip 2
-- chip_id = 3, core_id = 0, neuron_id = 3
-    take traces of neuron 3 of core 0 in chip 3
-- chip_id = 0, core_id = np.array([0, 1]), neuron_id = np.array([20, 127])
-    take traces of neuron 20 of core 0 and neuron 127 of core 1, in chip 0
+Examples:
+::
+
+    - chip_id = 0, core_id = np.array([0, 1]), neuron_id = np.array([[0, 100], [100, 200]])
+        take chip 0, neuron from 0 to 100 of core 0 and neurons from 100 to 200 on core 1
+    - chip_id = 1, core_id = None, neuron_id = None
+        take all neurons in all cores of chip 1
+    - chip_id = 2, core_id = np.array([0, 1]), neuron_id = None
+        take all neurons in cores 0 and 1 of chip 2
+    - chip_id = 3, core_id = 0, neuron_id = 3
+        take traces of neuron 3 of core 0 in chip 3
+    - chip_id = 0, core_id = np.array([0, 1]), neuron_id = np.array([20, 127])
+        take traces of neuron 20 of core 0 and neuron 127 of core 1, in chip 0
 """
         
         #Check the core_id input to find events correlated with it*/
@@ -93,28 +94,28 @@ Examples
     def isolate_events_sets(self, startTriggerNeuron, stopTriggerNeuron, maxNumber = None):
         """Isolate events between start trigger neuron and the stop trigger neuron
         
-A good way to synchronize with DYNAP-se is using two neurons to trigger the start and the end of the experiment:
+A good way to synchronize with DYNAP-se is using two neurons to trigger the start and the end of the experiment:\n
 - send a spike to a neuron that will represent my starting trigger
 - send the experiment input spikes after small delay (1 ms should be enough)
 - send a spike to a neuron that will represent my ending trigger
+
 Then this function can be used to filter all events but for the ones that are between this two neurons
 
-Parameters
-----------
-startTriggerNeuron : tuple of ints (chip id, core id, neuron id). Neuron which events triggers the start of the experiment
-stopTriggerNeuron : tuple of ints (chip id, core id, neuron id). Neuron which events trigger the end of the experiment
-maxNumber : max number of experiments that can be extracted from the Set of events
+Parameters:
+    startTriggerNeuron (tuple of ints (chip id, core id, neuron id)): Neuron which events triggers the start of the experiment
+    stopTriggerNeuron (tuple of ints (chip id, core id, neuron id)). Neuron which events trigger the end of the experiment
+    maxNumber (int): max number of experiments that can be extracted from the Set of events
 
-Returns
--------
-list of EventsSet objects : Each item represent a set of events included in one experiment
+Returns:
+    list, obj EventsSet: Each item represent a set of events included in one experiment
 
-Examples
---------
-- startTriggerNeuron = (0, 2, 64), stopTriggerNeuron = (0, 2, 128)
-    take all experiments included between neuron 64 (chip id = 0, core id = 2) and neuron 128 (chip id = 0, core id = 2)
-- startTriggerNeuron = (1, 3, 64), stopTriggerNeuron = (1, 3, 128), maxNumber = 5
-    take up to 5 experiments included between neuron 64 (chip id = 1, core id = 3) and neuron 128 (chip id = 1, core id = 3)
+Examples:
+::
+
+    - startTriggerNeuron = (0, 2, 64), stopTriggerNeuron = (0, 2, 128)
+        take all experiments included between neuron 64 (chip id = 0, core id = 2) and neuron 128 (chip id = 0, core id = 2)
+    - startTriggerNeuron = (1, 3, 64), stopTriggerNeuron = (1, 3, 128), maxNumber = 5
+        take up to 5 experiments included between neuron 64 (chip id = 1, core id = 3) and neuron 128 (chip id = 1, core id = 3)
 """
         
         # If absolute index, convert to tuple containing (core, neuron id)
@@ -177,23 +178,23 @@ Examples
     def plot_events(self, ax = None):
         """Raster plot of events included in the current EventsSet
 
-The colors has been chosen to be clearly visible and to match the DYNAP-se core color enconding:
+Colors has been chosen to be clearly visible and to match the DYNAP-se core color enconding:\n
 - core 0: green
 - core 1: magenta
 - core 2: red
 - core 3: yellow
+
 Note that there is no distinguish between different chips events
 
-Parameters
-----------
-title : string. Title of the current plot
-ax : pyplot subplot object. Graph in which events will be plotted. If None, a new figure is created
+Parameters:
+    ax (ax handle, optional): Plot graph on this handle, otherwise a new figure will be created
 
-Returns
--------
-fig : figure handle of the created figure, if generated
-ax : axis handle of the created plot
-handles : list of handles of created line (every plot)
+Returns:
+    (tuple): tuple containing:
+        
+        - **fig** (*fig handles*): To modify properties of the figure
+        - **ax** (*ax handles*): To modify properties of the plot
+        - **handles** (*lines handles*): To create custom legends
 """
 
         fig = None
@@ -226,25 +227,26 @@ handles : list of handles of created line (every plot)
     def calculate_firing_rate_matrix(self, numBins, totNeurons):
         """Derive a firing rate matrix starting from the current EventSet
         
-Data have the following form:
-TIME
-- timeSteps -> [t0 t0+tBin t0+2tBin ... tn-tBin]
-    tBin is the temporal step in which firing rate is evaluated (tBin = (tn - t0) / numBins))
-- neuronsFireRate (fr stays for firing rate at a certain time step (0...1...2...ecc.)
-    neuron0    fr0 fr1 fr2 ... frn
-    neuron1    fr0 fr1 fr2 ... frn
-    ...
-    neuron1023 fr0 fr1 fr2 ... frn
+Data have the following form:\n
+::
 
-Parameters
-----------
-numBins : int. Number of intervals in which firing rate must be evaluated
-totNeurons : int. Maximum number of neurons for which firing rate is calculated
+    timeSteps -> [t0 t0+tBin t0+2tBin ... tn-tBin]
+        tBin is the temporal step in which firing rate is evaluated (tBin = (tn - t0) / numBins))
+    neuronsFireRate (fr stays for firing rate at a certain time step (0...1...2...ecc.)
+        neuron0    fr0 fr1 fr2 ... frn
+        neuron1    fr0 fr1 fr2 ... frn
+        ...
+        neuron1023 fr0 fr1 fr2 ... frn
 
-Returns
--------
-timeSteps : array_like, float. Time steps in which firing rate has been calculated
-neuronsFireRate: array of arrays, float. Contain firing rate for every neuron and for every time step
+Parameters:
+    numBins (int): Number of intervals in which firing rate must be evaluated
+    totNeurons (int): Maximum number of neurons for which firing rate is calculated
+
+Returns:
+    (tuple): tuple containing:
+
+        - **timeSteps** (*array, float*): Time steps in which firing rate has been calculated
+        - **neuronsFireRate** (*2D array, float*): Contain firing rate for every neuron and for every time step
 """
         
         # Initialize vectors
@@ -285,8 +287,7 @@ neuronsFireRate: array of arrays, float. Contain firing rate for every neuron an
 
 The time of the first event is set to 0. The subsequent are changed accordingly
 
-Returns
--------
-EventsSet objects. A new normalized EventSet
+Returns:
+    obj EventsSet: A new normalized EventSet
 """
         return EventsSet(self.ts - self.ts[0], self.chip_id, self.core_id, self.neuron_id)

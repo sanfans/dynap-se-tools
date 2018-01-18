@@ -1,4 +1,5 @@
-# DESCRIPTION: functions that allows to retrieve and display output .aedat files
+""" The module contains functions that allows to retrieve and display output .aedat files
+"""
 
 import struct
 import numpy as np
@@ -6,25 +7,26 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from DYNAPSETools.classes.EventsSet import EventsSet
 
+### ===========================================================================
 def import_events(fileName):
     """Read events from the from cAER aedat 3.0 file format
-        
-OUTPUT FORMAT EXAMPLE:
-VECT POSITION -> |       0       |        1       |       2       |
-chip_id_tot   -> |  chip 0       |  chip 1        |  chip 3       |
-core_id_tot   -> |  core 0       |  core 3        |  core 1       |
-neuron_id_tot -> |  neuron 1     |  neuron 100    |  neuron 255   |
-ts_tot        -> |  time 150000  |  time 15068    |  time 150127  |
+
+OUTPUT FORMAT EXAMPLE
+::
+
+    VECT POSITION -> |       0       |        1       |       2       |
+    chip_id_tot   -> |  chip 0       |  chip 1        |  chip 3       |
+    core_id_tot   -> |  core 0       |  core 3        |  core 1       |
+    neuron_id_tot -> |  neuron 1     |  neuron 100    |  neuron 255   |
+    ts_tot        -> |  time 150000  |  time 15068    |  time 150127  |
         
 the same for special events
 
-Parameters
-----------
-fileName : string. Name (with path) of the source .aedat file
+Parameters:
+    fileName (string): Name (with path) of the source .aedat file
 
-Returns
--------
-EventsSet object : A set containing the events imported from the file
+Returns:
+    obj EventsSet: A set containing the events imported from the file
 """
        
     try:
@@ -71,7 +73,11 @@ EventsSet object : A set containing the events imported from the file
 
 ### ===========================================================================
 def skip_header(file):
-    """Skip the standard header of the recording file"""
+    """Skip the standard header of the recording file
+
+Parameters:
+    file (obj file handle): handle of the recording file
+"""
         
     line = file.readline()
     while line.startswith(b'#'):
@@ -84,27 +90,30 @@ def skip_header(file):
 def read_packet(file, debug = False):
     """Read DYNAP-se packet from cAER aedat 3.0 file format
         
-OUTPUT FORMAT EXAMPLE:
-VECT POSITION -> |       0       |        1       |       2       |
-chip_id_tot   -> |  chip 0       |  chip 1        |  chip 3       |
-core_id_tot   -> |  core 0       |  core 3        |  core 1       |
-neuron_id_tot -> |  neuron 1     |  neuron 100    |  neuron 255   |
-ts_tot        -> |  time 150000  |  time 15068    |  time 150127  |
+OUTPUT FORMAT EXAMPLE
+::
+
+    VECT POSITION -> |       0       |        1       |       2       |
+    chip_id_tot   -> |  chip 0       |  chip 1        |  chip 3       |
+    core_id_tot   -> |  core 0       |  core 3        |  core 1       |
+    neuron_id_tot -> |  neuron 1     |  neuron 100    |  neuron 255   |
+    ts_tot        -> |  time 150000  |  time 15068    |  time 150127  |
         
 the same for special events
 
-Parameters
-----------
-file : file object. File object of the source event file
+Parameters:
+    file (obj file handle): handle of the recording file
+    debug (bool, optional): print debug data
 
-Returns
--------
-core_id_tot : list of ints. Contains the core id of the events in the packet
-chip_id_tot : list of ints. Contains the chip id of the events in the packet
-neuron_id_tot : list of ints. Contains the neuron id of the events in the packet
-ts_tot : list of floats. Contains the time of the events in the packet
-spec_type_tot : list of ints. Contains the types of the special events in the packet
-spec_ts_tot : list of floats. Contains the time of special events in the packet
+Returns:
+    (tuple): tuple containing:
+
+        - **core_id_tot** (*list, int*): Contains the core id of the events in the packet
+        - **chip_id_tot** (*list, int*): Contains the chip id of the events in the packet
+        - **neuron_id_tot** (*list, int*): Contains the neuron id of the events in the packet
+        - **ts_tot** (*list, float*): Contains the time of the events in the packet
+        - **spec_type_tot** (*list, int*): Contains the types of the special events in the packet
+        - **spec_ts_tot** (*list, float*): Contains the time of special events in the packet
 """
         
     # raise Exception at end of file
@@ -171,15 +180,15 @@ spec_ts_tot : list of floats. Contains the time of special events in the packet
 def plot_events(eventsSetList):
     """Raster plot of events included in the current EventsSet
 
-Parameters
-----------
-eventsSetList : list of EventSet objects
+Parameters:
+    eventsSetList (list of obj EventSet): List of event sets that must be printed
 
-Returns
--------
-figList : list of figure handles. To modify properties of the figure
-axList : list of axis handles. TO modify properties of the plot
-handlesList : list of handles list of every line in the plot
+Returns:
+    (tuple): tuple containing:
+
+        - **figList** (*list of fig handles*): To modify properties of the figure
+        - **axList** (*list of ax handles*): To modify properties of the plot
+        - **handlesList** (*list of lines handles*): To create custom legends
 """
 
     # Initialize lists
@@ -202,15 +211,18 @@ def plot_firing_rate(timeSteps, neuronsFireRate, ax = None, enPlot3d = False, en
         
 It is available a 3d view and a Imshow view
 
-Parameters
-----------
-timeSteps : array_like, float. Time steps in which firing rate has been calculated
-neuronsFireRate: array of arrays, float. Contain firing rate for every neuron and for every time step
+Parameters:
+    timeSteps (array, float): Time steps in which firing rate has been calculated
+    neuronsFireRate (2D array, float): Contain firing rate for every neuron and for every time step
+    ax (ax handle, optional): Plot graph on this handle
+    enPlot3d (bool, optional): Activate 3D visualization
+    enImshow (bool, optional): Activate ImShow visualization
 
-Returns
--------
-figList : list of figure handles. To modify properties of the figure
-axList : list of axis handles. TO modify properties of the plot
+Returns:
+    (tuple): tuple containing:
+
+        - **figList** (*list, fig handles*): To modify properties of the figure
+        - **axList** (*list, ax handles*): To modify properties of the plot
 """
         
         fig = None
