@@ -6,7 +6,7 @@ import numpy as np
 import sys
 import collections
 import warnings
-import copy
+from copy import copy
 from matplotlib import pyplot as plt
 from scipy.stats import bernoulli
 
@@ -61,21 +61,46 @@ Returns:
     connections = {}
     connections[p1.name] = p2.name # Population connection strings
     
-
+    p1Neurons = p1.neurons.flatten()
+    p2Neurons = p2.neurons.flatten()
+    
+    print(connType + " " + str(len(connParams)))
+    # If connection is matrix (connectivity matrix)
+    if (connType == 'matrix') & (len(connParams) == 1):
+        matrix = connParams.get('m')
+        # Check if matrix dimensions are right
+        if(np.shape(matrix)[0] != np.size(p1Neurons)):
+            errorString = "Error while connecting populations {} -> {}, Cannot connect: ".format(p1.name, p2.name)
+            errorString += "matrix lines {} must be equal to p1 size {}".format(np.shape(matrix)[0], np.size(p1.neurons))
+            raise NameError(errorString)
+        elif(np.shape(matrix)[1] != np.size(p2Neurons)):
+            errorString = "Error while connecting populations {} -> {}, Cannot connect: ".format(p1.name, p2.name)
+            errorString += "matrix columns {} must be equal to p2 size {}".format(np.shape(matrix)[1], np.size(p2Neurons))
+            raise NameError(errorString)
+        # Sweep over all extracted connections from matrix and apply them to neurons
+        matrixConnections = np.argwhere(matrix != 0)
+        for srcIdx, destIdx in matrixConnections:
+            srcNeuron = p1Neurons[srcIdx]
+            destNeuron = p2Neurons[destIdx]
+            destNeuron.weight = int(matrix[srcIdx, destIdx])
+            connections[copy(srcNeuron)] = copy(destNeuron)
+            
+        return connections
+    
     # If Connection is deterministic (certain number of neuron connected)
     # must be handled in a different way
     if (connType == 'deterministic') & (len(connParams) == 1):
-        neuronsToConnect = int(np.floor(connParams.get("f") * np.size(p2.neurons)))
+        neuronsToConnect = int(np.floor(connParams.get("f") * np.size(p2Neurons)))
         # Sweep over all source neurons
-        for srcNeuron in p1.neurons.flatten():
+        for srcNeuron in p1Neurons:
             # Choose the neurons to connect
-            neuronsIndexes = generate_n_rand_num(0, np.size(p2.neurons), neuronsToConnect)
+            neuronsIndexes = generate_n_rand_num(0, np.size(p2Neurons), neuronsToConnect)
             # Sweep over destination neurons
-            for index, destNeuron in enumerate(p2.neurons.flatten()):
+            for index, destNeuron in enumerate(p2Neurons):
                 # if i have to connect, create an instance in connection dictionary
                 if index in neuronsIndexes:
                     destNeuron.weight = 1
-                    connections[copy.copy(srcNeuron)] = copy.copy(destNeuron)
+                    connections[copy(srcNeuron)] = copy(destNeuron)
                     if Plot:
                         print(srcNeuron.neuronType, end = '')
                 elif Plot:
@@ -86,8 +111,8 @@ Returns:
         return connections
 
     # Sweep over all neurons of both populations (p2 receive connections)
-    for srcNeuron in p1.neurons.flatten():
-        for destNeuron in p2.neurons.flatten():
+    for srcNeuron in p1Neurons:
+        for destNeuron in p2Neurons:
             try:
                 # Calculate if connect or not according to prob distributions
                 if (connType == 'bernoulli') & (len(connParams) == 1):
@@ -110,7 +135,7 @@ Returns:
                 # If the random number created is 1 -> connect neurons (and update rams and cams), otherwise print 'x'
                 if(connect):
                     destNeuron.weight = 1
-                    connections[copy.copy(srcNeuron)] = copy.copy(destNeuron)
+                    connections[copy(srcNeuron)] = copy(destNeuron)
                     if Plot:
                         print(srcNeuron.neuronType, end = '')
                 elif Plot:
