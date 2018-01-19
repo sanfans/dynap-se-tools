@@ -209,7 +209,7 @@ Parameters:
     threshold (int): Theshold that triggers the generation of the spike
     t (float, [s]): Time vector of the signal
     y (float): Value vector of the signal
-    noiseVar (float): Variance of a gaussian distribution from which noise is applied to event times
+    noiseVar (float, [s]): Variance of a gaussian distribution from which noise is applied to event times
     initDelay (float, [s]): Delay of the first event
 
 Examples:
@@ -239,7 +239,7 @@ Examples:
                 # Evaluate interspike interval
                 time = (t[idy] - t[lastSpikeIndex]) / 1e6
                 # Apply noise
-                noise = np.int(np.random.normal(loc = 0, scale = noiseVar))
+                noise = np.random.normal(loc = 0, scale = noiseVar)
                 time = time + noise
                 # Create event
                 self.single_event(virtualSourceCoreId, neuronAddressUpCH, coreDest, firePeriod = time)
@@ -249,7 +249,7 @@ Examples:
                 # Evaluate interspike interval
                 time = (t[idy] - t[lastSpikeIndex]) / 1e6
                 # Apply noise
-                noise = np.int(np.random.normal(loc = 0, scale = noiseVar))
+                noise = np.random.normal(loc = 0, scale = noiseVar)
                 time = time + noise
                 # Create event
                 self.single_event(virtualSourceCoreId, neuronAddressDwCH, coreDest, firePeriod = time)

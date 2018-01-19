@@ -80,22 +80,31 @@ Parameters:
                 print("Checking and writing pattern {}".format(pattern.name))
                 # Check pattern
                 patternLenght = patternLenght + len(pattern.eventList)
+                
+                # Check lenght
                 if(patternLenght > (2**15-1)):
                     errorString = "Error while writing pattern {}. Stimulus is too big, it will not fit in SRAM!".format(pattern.name)
                     raise NameError(errorString)
                 else:
                     print("Current pattern lenght is {}. Remaining {} input events".format(patternLenght, (2**15-1) - patternLenght))
+                    
+                # Check maximum delay and if negative
                 for idx, event in enumerate(pattern.eventList):
                     if(event.time > 2**16-1):
                         errorString = "Error while writing pattern {}. Event at position {} has a delay too big ({}).".format(
                             pattern.name, idx, event.time)
                         errorString += "Consider increasing isiBase unit"
                         raise NameError(errorString)
+                    elif(event.time < 0):
+                        errorString = "Error while writing pattern {}. Event at position {} has negative delay ({}).".format(
+                            pattern.name, idx, event.time)
+                        errorString += "Consider changing jitter distribution variance"
+                        raise NameError(errorString)
 
                 # If valid, write on output file
                 for event in pattern.eventList:            
                     f.write(str(int(event.address))+','+str(int(event.time))+'\n')
-                print("Pattern {} succesfully written".format(pattern.name))
+                print("Pattern {} succesfully written\n".format(pattern.name))
             except:
                 if errorString == "":
                     errorString = "Error while writing pattern {}, cannot write it".format(pattern.name)
