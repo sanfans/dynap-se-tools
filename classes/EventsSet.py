@@ -155,6 +155,7 @@ Examples:
                 stopTrigger = stopTriggerIndexes[stopTriggerIndexes >= startTrigger][0] # End trigger should happen after start trigger
 
                 # Filter the spikes information according to the previous range (the +1 is in order to take also the trigger spike)
+                # Start and stop trigger are included!
                 ts_event = self.ts[startTrigger:(stopTrigger+1)]
                 neuron_id_event = self.neuron_id[startTrigger:(stopTrigger+1)]
                 core_id_event = self.core_id[startTrigger:(stopTrigger+1)]
@@ -172,6 +173,7 @@ Examples:
             errorString += "Check start and stop trigger neurons, or maxNumber value"
             raise NameError(errorString)
         else:
+            print("Extracted {} experiments".format(len(experiments)))
             return experiments
 
 ### ===========================================================================

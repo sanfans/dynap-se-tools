@@ -119,7 +119,7 @@ Returns:
     # raise Exception at end of file
     data = file.read(28)
     if(len(data) <= 0):
-        print("read all data\n")
+        print("Read all data\n")
         raise NameError('END OF DATA')
     
     

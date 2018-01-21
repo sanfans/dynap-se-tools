@@ -55,7 +55,7 @@ Parameters:
 
     duration = 0
     for idx, pattern in enumerate(inputPatternList):
-        figtem, axtemp, handle = pattern.plot_spikes(color = "C" + str(idx), timeShift = duration, ax = ax)
+        figtem, axtemp, handle = pattern.plot_spikes(color = "C" + str(idx % 10), timeShift = duration, ax = ax)
         duration = duration + pattern.evaluate_duration()
         handles.append(handle)
 
