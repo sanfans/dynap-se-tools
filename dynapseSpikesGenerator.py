@@ -1,11 +1,12 @@
 """The module contains functions that permit to  write a .txt file with coded inputs to DYNAP-se
 """
 
+import numpy as np
 import matplotlib.pyplot as plt
 from DYNAPSETools.classes.InputPattern import InputPattern
 
 ### ===========================================================================
-def import_events(fileName, name = "ImportedPattern", isiBase = 90.0):
+def import_events(fileName, name = "ImportedPattern.txt", isiBase = 90.0):
     """Import events from an outside stimulus txt file
 
 Parameters:
@@ -41,7 +42,7 @@ Returns:
     return pattern
 
 ### ===========================================================================
-def plot_spikes(*inputPatternList):
+def plot_spikes(*inputPatternList, ax = None):
     """Plot the spike stimuli
     
 Parameters:
@@ -49,16 +50,17 @@ Parameters:
 """
         
     # Create figure
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    handles = []
+    if ax == None: 
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
-    duration = 0
-    for idx, pattern in enumerate(inputPatternList):
-        figtem, axtemp, handle = pattern.plot_spikes(color = "C" + str(idx % 10), timeShift = duration, ax = ax)
-        duration = duration + pattern.evaluate_duration()
-        handles.append(handle)
-
+    sumPattern = InputPattern(name = "sumPattern")
+    
+    for pattern in inputPatternList:
+        sumPattern.eventList = np.append(sumPattern.eventList, pattern.eventList)
+        
+    fig, ax, handles = sumPattern.plot_spikes(timeShift = 0, ax = ax)
+    
     return fig, ax, handles
 
 ### ===========================================================================

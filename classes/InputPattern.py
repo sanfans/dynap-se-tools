@@ -31,7 +31,7 @@ Parameters:
         self.eventList = np.array([])
         self.tSig = np.array([])
         self.ySig = np.array([])
-
+        
 ### ===========================================================================
     def single_event(self, virtualSourceCoreId, neuronAddress, coreDest, fireFreq = None, firePeriod = None):
         """Create a single address and time step for a specified neuron and a certain interspike interval
@@ -51,9 +51,9 @@ Examples:
 """
 
         if (firePeriod == None) & (fireFreq != None):
-            time = np.ceil((1.0 / fireFreq ) * 1e+6 / self.isiRatio) #/*In ISI units*/
+            time = np.round((1.0 / fireFreq ) * 1e+6 / self.isiRatio) #/*In ISI units*/
         elif (firePeriod != None) & (fireFreq == None):
-            time = np.ceil(firePeriod * 1e+6 / self.isiRatio) #/*In ISI units*/
+            time = np.round(firePeriod * 1e+6 / self.isiRatio) #/*In ISI units*/
         else:
             errorString = "Error while creating event {}, specify or fire frequency or fire period: ".format(self.name)
             raise NameError(errorString)
@@ -127,10 +127,6 @@ Examples:
     - constant_freq(1, 15, 0, 50, 1/50, 1)
         Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration
 """
-
-        # Generate (address, time) event list
-        addresses = []
-        times = []
         
         freqPhase = (1.0 / duration) # in Hz
         
@@ -138,7 +134,7 @@ Examples:
         self.single_event(virtualSourceCoreId, neuronAddress, coreDest, firePeriod = initDelay)
         
         # Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ 
-        num_events = int(np.floor(fireFreq / freqPhase))       
+        num_events = int(np.round(fireFreq / freqPhase))       
         for event in range(num_events):
             self.single_event(virtualSourceCoreId, neuronAddress, coreDest, fireFreq = fireFreq)
 
@@ -178,7 +174,7 @@ Examples:
         # Step on all frequencies and create (address, time) events list
         for freq in freqs:
             # Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ 
-            num_events_this_freq = int(np.floor(freq / freqPhase))
+            num_events_this_freq = int(np.round(freq / freqPhase))
             for event in range(num_events_this_freq):
                 self.single_event(virtualSourceCoreId, neuronAddress, coreDest, fireFreq = freq)
 
@@ -223,7 +219,7 @@ Examples:
         # Initialization
         t = t - t[0] # Time normalization
         t = t*1e6 # Transform in us scale
-        self.tSig = t
+        self.tSig = t + initDelay * 1e6
         self.ySig = y
         
         # Insert the first spike after an initial delay*/
@@ -278,7 +274,7 @@ Examples:
         #print('=======================================')
 
 ### ===========================================================================
-    def plot_spikes(self, color, timeShift = 0, ax = None):
+    def plot_spikes(self, timeShift = 0, ax = None):
         """ Plot the spikes of the current pattern
 
 Parameters:
@@ -293,15 +289,53 @@ Parameters:
         if ax == None: 
             fig = plt.figure()
             ax = fig.add_subplot(111)
-
-        currTime = timeShift
+            
+        # Create absolute times
+        absTimes = []
         for event in self.eventList:
-            handle, = ax.plot(currTime + event.time, 4 * event.virtualSourceCoreId + event.neuronAddress, linestyle = 'None', marker = 'o', color = color, label = self.name)
-            currTime = currTime + event.time
-
-        #if self.tSig != None:
-        #    ax.plot(self.tSig + timeShift, self.ySig, color = color)
-        return fig, ax, handle
+            try:
+                absTimes.append(absTimes[-1] + event.time * self.isiRatio)
+            except:
+                absTimes.append(event.time * self.isiRatio + timeShift)
+        absTimes = np.array(absTimes)
+        
+        # Create vector of addresses
+        addresses = []
+        for event in self.eventList:
+            addresses.append(event.address)
+        addresses = np.array(addresses)
+        
+        # Create set of addresses
+        setAddresses = []
+        for address in addresses:
+            if(address not in setAddresses):
+                setAddresses.append(address)
+        setAddresses = np.array(list(setAddresses))
+        
+        # Plot separately
+        handles = []
+        for idx, address in enumerate(setAddresses):
+            indexes = np.where(addresses == address)
+            times = absTimes[indexes]
+            arrowDim = 1
+#            handle = ax.quiver(times,
+#                               np.zeros(len(times)),
+#                               np.zeros(len(times)),
+#                               arrowDim * np.ones(len(times)),
+#                               color = "C" + str(idx),
+#                               angles = 'xy', scale_units = 'xy', scale = 1,
+#                               label = self.name)
+#            ax.plot(times, arrowDim * np.ones(len(times)), linestyle  = 'None', color = "C" + str(idx), marker = '^')
+            handle = ax.vlines(x = times, ymin = 0, ymax = arrowDim, colors = "C" + str(idx),
+                              label = str(idx))
+            handles.append(handle)
+        
+        # Plot signal shape
+        if  len(self.tSig) != []:
+            handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
+        handles.append(handle)
+        
+        return fig, ax, handles
 
 ### ===========================================================================
     def add_manually_event(self, address, time):
@@ -324,5 +358,5 @@ Returns:
 
         time = 0
         for event in self.eventList:
-            time = time + event.time
+            time = time + event.time * self.isiRatio
         return time
