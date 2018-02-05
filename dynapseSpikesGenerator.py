@@ -81,14 +81,15 @@ Parameters:
             try:
                 print("Checking and writing pattern {}".format(pattern.name))
                 # Check pattern
-                patternLenght = patternLenght + len(pattern.eventList)
+                print("Current pattern lenght is {}".format(len(pattern.eventList)))
                 
+                patternLenght = patternLenght + len(pattern.eventList)
                 # Check lenght
                 if(patternLenght > (2**15-1)):
                     errorString = "Error while writing pattern {}. Stimulus is too big, it will not fit in SRAM!".format(pattern.name)
                     raise NameError(errorString)
                 else:
-                    print("Current pattern lenght is {}. Remaining {} input events".format(patternLenght, (2**15-1) - patternLenght))
+                    print("Cumulative pattern lenght is {}. Remaining {} events".format(patternLenght, (2**15-1) - patternLenght))
                     
                 # Check maximum delay and if negative
                 for idx, event in enumerate(pattern.eventList):
