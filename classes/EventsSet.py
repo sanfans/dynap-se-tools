@@ -23,6 +23,10 @@ Parameters:
         self.core_id = core_id
         self.neuron_id = neuron_id
 
+    def __getitem__(self, key):
+        init, end = key
+        return EventsSet(self.ts[init:end], self.chip_id[init:end], self.core_id[init:end], self.neuron_id[init:end])
+
 ### ===========================================================================
     def filter_events(self, chip_id, core_id, neuron_id):
         """Return a EventsSet containing only the wanted events
@@ -226,14 +230,14 @@ Returns:
         return fig, ax, handles
 
 ### ===========================================================================
-    def calculate_firing_rate_matrix(self, numBins, totNeurons):
+    def calculate_firing_rate_matrix(self, totNeurons, numBins = 10, timeBin = None):
         """Derive a firing rate matrix starting from the current EventSet
         
 Data have the following form:\n
 ::
 
     timeSteps -> [t0 t0+tBin t0+2tBin ... tn-tBin]
-        tBin is the temporal step in which firing rate is evaluated (tBin = (tn - t0) / numBins))
+        tBin is the temporal step in which firing rate is evaluated (tBin = (tn - t0) / numBins)) or directly the specified tBin
     neuronsFireRate (fr stays for firing rate at a certain time step (0...1...2...ecc.)
         neuron0    fr0 fr1 fr2 ... frn
         neuron1    fr0 fr1 fr2 ... frn
@@ -241,9 +245,9 @@ Data have the following form:\n
         neuron1023 fr0 fr1 fr2 ... frn
 
 Parameters:
-    numBins (int): Number of intervals in which firing rate must be evaluated
     totNeurons (int): Maximum number of neurons for which firing rate is calculated
-
+    numBins (int): Default parameter. Number of intervals in which firing rate must be evaluated
+    tBin (int, [s], optional): Amplitude of each interval in which firing rate must be evaluated
 Returns:
     (tuple): tuple containing:
 
@@ -258,7 +262,15 @@ Returns:
         absoluteNeurons = (self.chip_id * 1024) + (self.core_id * 256) + self.neuron_id
 
         # Calculate time bins
-        timeBins, binSize = np.linspace(self.ts[0], self.ts[-1], numBins + 1, retstep = True)
+        if timeBin != None: # If time bin is fixed and the number of bins are variable
+            binSize = timeBin * 1000000 # Transform in [us]
+            time = self.ts[0]
+            timeBins = [time]
+            while time < self.ts[-1]:
+                time += binSize
+                timeBins.append(time)
+        else: # If time bin is variable and the number of bins are fixed
+            timeBins, binSize = np.linspace(self.ts[0], self.ts[-1], numBins + 1, retstep = True)
         timeBins = [(timeBins[i], timeBins[i + 1]) for i in range(len(timeBins) - 1)]
         
         # Sweep over the time bins and calculate spikes and firing rate

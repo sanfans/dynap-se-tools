@@ -54,11 +54,11 @@ Parameters:
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
-    sumPattern = InputPattern(name = "sumPattern")
+    sumPattern = InputPattern(name = "sumPattern", isiBase = inputPatternList[0].isiBase)
     
     for pattern in inputPatternList:
         sumPattern.eventList = np.append(sumPattern.eventList, pattern.eventList)
-        
+
     fig, ax, handles = sumPattern.plot_spikes(timeShift = 0, ax = ax)
     
     return fig, ax, handles

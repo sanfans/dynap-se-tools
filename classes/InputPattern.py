@@ -298,7 +298,7 @@ Parameters:
             except:
                 absTimes.append(event.time * self.isiRatio + timeShift)
         absTimes = np.array(absTimes)
-        
+
         # Create vector of addresses
         addresses = []
         for event in self.eventList:
