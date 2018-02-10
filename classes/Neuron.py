@@ -15,7 +15,7 @@ Parameters:
 """
         
         self.neuronType = neuronType
-        self.weight = 0
+        self.weight = 1
         self.freeCAM = 64
         self.freeSRAM = 3
         self.chip_id = chip_id

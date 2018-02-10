@@ -99,7 +99,6 @@ Returns:
             for index, destNeuron in enumerate(p2Neurons):
                 # if i have to connect, create an instance in connection dictionary
                 if index in neuronsIndexes:
-                    destNeuron.weight = 1
                     connections[copy(srcNeuron)] = copy(destNeuron)
                     if Plot:
                         print(srcNeuron.neuronType, end = '')
@@ -134,7 +133,6 @@ Returns:
                     raise
                 # If the random number created is 1 -> connect neurons (and update rams and cams), otherwise print 'x'
                 if(connect):
-                    destNeuron.weight = 1
                     connections[copy(srcNeuron)] = copy(destNeuron)
                     if Plot:
                         print(srcNeuron.neuronType, end = '')
