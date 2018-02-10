@@ -88,15 +88,15 @@ Examples:\n
         period = False
         
         # Extract from absolute times the firePeriods
-        if absTimes != None:
+        if absTimes is not None:
             firePeriod = []
             diff = np.diff(absTimes)
             firePeriod.append(absTimes[0])
             firePeriod.extend(diff)
             
-        if fireFreq != None:
+        if fireFreq is not None:
             freq = True
-        elif firePeriod != None:
+        elif firePeriod is not None:
             period = True
         else:
             errorString = "Error while creating event, specify or fire frequency or fire period: "

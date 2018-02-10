@@ -266,7 +266,7 @@ Returns:
             binSize = timeBin * 1000000 # Transform in [us]
             time = self.ts[0]
             timeBins = [time]
-            while time < self.ts[-1]:
+            while time <= self.ts[-1]:
                 time += binSize
                 timeBins.append(time)
         else: # If time bin is variable and the number of bins are fixed
