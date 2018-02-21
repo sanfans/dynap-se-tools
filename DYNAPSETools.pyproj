@@ -59,7 +59,7 @@
     <Compile Include="Examples\DynapseSpikesFitterExample.py" />
     <Compile Include="Examples\DynapseSpikesGeneratorExample.py" />
     <Compile Include="parameters\DynapseParam.py" />
-    <Compile Include="Tutorial.py" />
+    <Compile Include="Examples\Tutorial.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +69,7 @@
     <Content Include="docs\index.rst" />
     <Content Include="docs\make.bat" />
     <Content Include="docs\Makefile" />
+    <Content Include="docs\reStructuredText Primer — Sphinx 1.6.pdf" />
     <Content Include="docs\scripts\API.rst" />
     <Content Include="docs\scripts\dynapseNetGenerator.rst" />
     <Content Include="docs\scripts\dynapseOutDecoder.rst" />
