@@ -70,6 +70,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">core_id</span> <span class="o">=</span> <span class="n">core_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">neuron_id</span> <span class="o">=</span> <span class="n">neuron_id</span>
 
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">init</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="k">return</span> <span class="n">EventsSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="n">init</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">chip_id</span><span class="p">[</span><span class="n">init</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_id</span><span class="p">[</span><span class="n">init</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">neuron_id</span><span class="p">[</span><span class="n">init</span><span class="p">:</span><span class="n">end</span><span class="p">])</span>
+
 <span class="c1">### ===========================================================================</span>
 <div class="viewcode-block" id="EventsSet.filter_events"><a class="viewcode-back" href="../../scripts/EventsSet.html#classes.EventsSet.EventsSet.filter_events">[docs]</a>    <span class="k">def</span> <span class="nf">filter_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chip_id</span><span class="p">,</span> <span class="n">core_id</span><span class="p">,</span> <span class="n">neuron_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a EventsSet containing only the wanted events</span>
@@ -202,6 +206,7 @@
                 <span class="n">stopTrigger</span> <span class="o">=</span> <span class="n">stopTriggerIndexes</span><span class="p">[</span><span class="n">stopTriggerIndexes</span> <span class="o">&gt;=</span> <span class="n">startTrigger</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># End trigger should happen after start trigger</span>
 
                 <span class="c1"># Filter the spikes information according to the previous range (the +1 is in order to take also the trigger spike)</span>
+                <span class="c1"># Start and stop trigger are included!</span>
                 <span class="n">ts_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="n">startTrigger</span><span class="p">:(</span><span class="n">stopTrigger</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
                 <span class="n">neuron_id_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neuron_id</span><span class="p">[</span><span class="n">startTrigger</span><span class="p">:(</span><span class="n">stopTrigger</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
                 <span class="n">core_id_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_id</span><span class="p">[</span><span class="n">startTrigger</span><span class="p">:(</span><span class="n">stopTrigger</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
@@ -219,6 +224,7 @@
             <span class="n">errorString</span> <span class="o">+=</span> <span class="s2">&quot;Check start and stop trigger neurons, or maxNumber value&quot;</span>
             <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">errorString</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracted </span><span class="si">{}</span><span class="s2"> experiments&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">experiments</span><span class="p">)))</span>
             <span class="k">return</span> <span class="n">experiments</span></div>
 
 <span class="c1">### ===========================================================================</span>
@@ -271,14 +277,14 @@
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">handles</span></div>
 
 <span class="c1">### ===========================================================================</span>
-<div class="viewcode-block" id="EventsSet.calculate_firing_rate_matrix"><a class="viewcode-back" href="../../scripts/EventsSet.html#classes.EventsSet.EventsSet.calculate_firing_rate_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_firing_rate_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">numBins</span><span class="p">,</span> <span class="n">totNeurons</span><span class="p">):</span>
+<div class="viewcode-block" id="EventsSet.calculate_firing_rate_matrix"><a class="viewcode-back" href="../../scripts/EventsSet.html#classes.EventsSet.EventsSet.calculate_firing_rate_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_firing_rate_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">totNeurons</span><span class="p">,</span> <span class="n">numBins</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">timeBin</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Derive a firing rate matrix starting from the current EventSet</span>
 <span class="sd">        </span>
 <span class="sd">Data have the following form:\n</span>
 <span class="sd">::</span>
 
 <span class="sd">    timeSteps -&gt; [t0 t0+tBin t0+2tBin ... tn-tBin]</span>
-<span class="sd">        tBin is the temporal step in which firing rate is evaluated (tBin = (tn - t0) / numBins))</span>
+<span class="sd">        tBin is the temporal step in which firing rate is evaluated (tBin = (tn - t0) / numBins)) or directly the specified tBin</span>
 <span class="sd">    neuronsFireRate (fr stays for firing rate at a certain time step (0...1...2...ecc.)</span>
 <span class="sd">        neuron0    fr0 fr1 fr2 ... frn</span>
 <span class="sd">        neuron1    fr0 fr1 fr2 ... frn</span>
@@ -286,9 +292,9 @@
 <span class="sd">        neuron1023 fr0 fr1 fr2 ... frn</span>
 
 <span class="sd">Parameters:</span>
-<span class="sd">    numBins (int): Number of intervals in which firing rate must be evaluated</span>
 <span class="sd">    totNeurons (int): Maximum number of neurons for which firing rate is calculated</span>
-
+<span class="sd">    numBins (int): Default parameter. Number of intervals in which firing rate must be evaluated</span>
+<span class="sd">    tBin (int, [s], optional): Amplitude of each interval in which firing rate must be evaluated</span>
 <span class="sd">Returns:</span>
 <span class="sd">    (tuple): tuple containing:</span>
 
@@ -303,7 +309,15 @@
         <span class="n">absoluteNeurons</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chip_id</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">core_id</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neuron_id</span>
 
         <span class="c1"># Calculate time bins</span>
-        <span class="n">timeBins</span><span class="p">,</span> <span class="n">binSize</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">numBins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">retstep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">timeBin</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># If time bin is fixed and the number of bins are variable</span>
+            <span class="n">binSize</span> <span class="o">=</span> <span class="n">timeBin</span> <span class="o">*</span> <span class="mi">1000000</span> <span class="c1"># Transform in [us]</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">timeBins</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="k">while</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">time</span> <span class="o">+=</span> <span class="n">binSize</span>
+                <span class="n">timeBins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># If time bin is variable and the number of bins are fixed</span>
+            <span class="n">timeBins</span><span class="p">,</span> <span class="n">binSize</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">numBins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">retstep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">timeBins</span> <span class="o">=</span> <span class="p">[(</span><span class="n">timeBins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">timeBins</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">timeBins</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
         
         <span class="c1"># Sweep over the time bins and calculate spikes and firing rate</span>

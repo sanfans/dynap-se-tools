@@ -1,4 +1,5 @@
 # DYNAPSETools (documentation work in progress)
+# Examples not updated, i will ASAP
 The repository contains a set of tools that are useful to work with [DYNAP-se board](https://inilabs.com/products/dynap/).
 It contains:
   * **DynapseNetGenerator** : permit to create a .txt file with encodes connections that can be programmed using [netparser](https://inilabs.com/support/hardware/user-guide-dynap-se/#h.crkj98n9ian3) module.

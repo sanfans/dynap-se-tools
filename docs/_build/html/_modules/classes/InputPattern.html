@@ -78,7 +78,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tSig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ySig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-
+        
 <span class="c1">### ===========================================================================</span>
 <div class="viewcode-block" id="InputPattern.single_event"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.single_event">[docs]</a>    <span class="k">def</span> <span class="nf">single_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a single address and time step for a specified neuron and a certain interspike interval</span>
@@ -98,9 +98,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">firePeriod</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fireFreq</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">fireFreq</span> <span class="p">)</span> <span class="o">*</span> <span class="mf">1e+6</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span><span class="p">)</span> <span class="c1">#/*In ISI units*/</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">fireFreq</span> <span class="p">)</span> <span class="o">*</span> <span class="mf">1e+6</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span><span class="p">)</span> <span class="c1">#/*In ISI units*/</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">firePeriod</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">fireFreq</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">firePeriod</span> <span class="o">*</span> <span class="mf">1e+6</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span><span class="p">)</span> <span class="c1">#/*In ISI units*/</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">firePeriod</span> <span class="o">*</span> <span class="mf">1e+6</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span><span class="p">)</span> <span class="c1">#/*In ISI units*/</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">errorString</span> <span class="o">=</span> <span class="s2">&quot;Error while creating event </span><span class="si">{}</span><span class="s2">, specify or fire frequency or fire period: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">errorString</span><span class="p">)</span>
@@ -135,15 +135,15 @@
         <span class="n">period</span> <span class="o">=</span> <span class="kc">False</span>
         
         <span class="c1"># Extract from absolute times the firePeriods</span>
-        <span class="k">if</span> <span class="n">absTimes</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">absTimes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">firePeriod</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">absTimes</span><span class="p">)</span>
             <span class="n">firePeriod</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">absTimes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">firePeriod</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
             
-        <span class="k">if</span> <span class="n">fireFreq</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fireFreq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">freq</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">firePeriod</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">firePeriod</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">period</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">errorString</span> <span class="o">=</span> <span class="s2">&quot;Error while creating event, specify or fire frequency or fire period: &quot;</span>
@@ -174,10 +174,6 @@
 <span class="sd">    - constant_freq(1, 15, 0, 50, 1/50, 1)</span>
 <span class="sd">        Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-        <span class="c1"># Generate (address, time) event list</span>
-        <span class="n">addresses</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
         
         <span class="n">freqPhase</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">duration</span><span class="p">)</span> <span class="c1"># in Hz</span>
         
@@ -185,7 +181,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">initDelay</span><span class="p">)</span>
         
         <span class="c1"># Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ </span>
-        <span class="n">num_events</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">fireFreq</span> <span class="o">/</span> <span class="n">freqPhase</span><span class="p">))</span>       
+        <span class="n">num_events</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">fireFreq</span> <span class="o">/</span> <span class="n">freqPhase</span><span class="p">))</span>       
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_events</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="n">fireFreq</span><span class="p">)</span></div>
 
@@ -225,7 +221,7 @@
         <span class="c1"># Step on all frequencies and create (address, time) events list</span>
         <span class="k">for</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">freqs</span><span class="p">:</span>
             <span class="c1"># Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ </span>
-            <span class="n">num_events_this_freq</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">freq</span> <span class="o">/</span> <span class="n">freqPhase</span><span class="p">))</span>
+            <span class="n">num_events_this_freq</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">freq</span> <span class="o">/</span> <span class="n">freqPhase</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_events_this_freq</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="n">freq</span><span class="p">)</span></div>
 
@@ -256,7 +252,7 @@
 <span class="sd">    threshold (int): Theshold that triggers the generation of the spike</span>
 <span class="sd">    t (float, [s]): Time vector of the signal</span>
 <span class="sd">    y (float): Value vector of the signal</span>
-<span class="sd">    noiseVar (float): Variance of a gaussian distribution from which noise is applied to event times</span>
+<span class="sd">    noiseVar (float, [s]): Variance of a gaussian distribution from which noise is applied to event times</span>
 <span class="sd">    initDelay (float, [s]): Delay of the first event</span>
 
 <span class="sd">Examples:</span>
@@ -270,7 +266,7 @@
         <span class="c1"># Initialization</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Time normalization</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">*</span><span class="mf">1e6</span> <span class="c1"># Transform in us scale</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tSig</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tSig</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">initDelay</span> <span class="o">*</span> <span class="mf">1e6</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ySig</span> <span class="o">=</span> <span class="n">y</span>
         
         <span class="c1"># Insert the first spike after an initial delay*/</span>
@@ -286,7 +282,7 @@
                 <span class="c1"># Evaluate interspike interval</span>
                 <span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">idy</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">lastSpikeIndex</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e6</span>
                 <span class="c1"># Apply noise</span>
-                <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">noiseVar</span><span class="p">))</span>
+                <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">noiseVar</span><span class="p">)</span>
                 <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">noise</span>
                 <span class="c1"># Create event</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressUpCH</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">time</span><span class="p">)</span>
@@ -296,7 +292,7 @@
                 <span class="c1"># Evaluate interspike interval</span>
                 <span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">idy</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">lastSpikeIndex</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e6</span>
                 <span class="c1"># Apply noise</span>
-                <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">noiseVar</span><span class="p">))</span>
+                <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">noiseVar</span><span class="p">)</span>
                 <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">noise</span>
                 <span class="c1"># Create event</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressDwCH</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">time</span><span class="p">)</span>
@@ -325,7 +321,7 @@
         <span class="c1">#print(&#39;=======================================&#39;)</span>
 
 <span class="c1">### ===========================================================================</span>
-<div class="viewcode-block" id="InputPattern.plot_spikes"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.plot_spikes">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spikes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">timeShift</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="InputPattern.plot_spikes"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.plot_spikes">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spikes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeShift</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plot the spikes of the current pattern</span>
 
 <span class="sd">Parameters:</span>
@@ -340,15 +336,53 @@
         <span class="k">if</span> <span class="n">ax</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span> 
             <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-
-        <span class="n">currTime</span> <span class="o">=</span> <span class="n">timeShift</span>
+            
+        <span class="c1"># Create absolute times</span>
+        <span class="n">absTimes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span><span class="p">:</span>
-            <span class="n">handle</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">currTime</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">event</span><span class="o">.</span><span class="n">virtualSourceCoreId</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">neuronAddress</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">currTime</span> <span class="o">=</span> <span class="n">currTime</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">absTimes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">absTimes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">absTimes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">time</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span> <span class="o">+</span> <span class="n">timeShift</span><span class="p">)</span>
+        <span class="n">absTimes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">absTimes</span><span class="p">)</span>
 
-        <span class="c1">#if self.tSig != None:</span>
-        <span class="c1">#    ax.plot(self.tSig + timeShift, self.ySig, color = color)</span>
-        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">handle</span></div>
+        <span class="c1"># Create vector of addresses</span>
+        <span class="n">addresses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span><span class="p">:</span>
+            <span class="n">addresses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
+        <span class="n">addresses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">addresses</span><span class="p">)</span>
+        
+        <span class="c1"># Create set of addresses</span>
+        <span class="n">setAddresses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">addresses</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">address</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">setAddresses</span><span class="p">):</span>
+                <span class="n">setAddresses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+        <span class="n">setAddresses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">setAddresses</span><span class="p">))</span>
+        
+        <span class="c1"># Plot separately</span>
+        <span class="n">handles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">address</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">setAddresses</span><span class="p">):</span>
+            <span class="n">indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">addresses</span> <span class="o">==</span> <span class="n">address</span><span class="p">)</span>
+            <span class="n">times</span> <span class="o">=</span> <span class="n">absTimes</span><span class="p">[</span><span class="n">indexes</span><span class="p">]</span>
+            <span class="n">arrowDim</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1">#            handle = ax.quiver(times,</span>
+<span class="c1">#                               np.zeros(len(times)),</span>
+<span class="c1">#                               np.zeros(len(times)),</span>
+<span class="c1">#                               arrowDim * np.ones(len(times)),</span>
+<span class="c1">#                               color = &quot;C&quot; + str(idx),</span>
+<span class="c1">#                               angles = &#39;xy&#39;, scale_units = &#39;xy&#39;, scale = 1,</span>
+<span class="c1">#                               label = self.name)</span>
+<span class="c1">#            ax.plot(times, arrowDim * np.ones(len(times)), linestyle  = &#39;None&#39;, color = &quot;C&quot; + str(idx), marker = &#39;^&#39;)</span>
+            <span class="n">handle</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">times</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">arrowDim</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="s2">&quot;C&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span>
+                              <span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+        
+        <span class="c1"># Plot signal shape</span>
+        <span class="k">if</span>  <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tSig</span><span class="p">)</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">handle</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tSig</span> <span class="o">+</span> <span class="n">timeShift</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ySig</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">handles</span></div>
 
 <span class="c1">### ===========================================================================</span>
 <div class="viewcode-block" id="InputPattern.add_manually_event"><a class="viewcode-back" href="../../scripts/InputPattern.html#classes.InputPattern.InputPattern.add_manually_event">[docs]</a>    <span class="k">def</span> <span class="nf">add_manually_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
@@ -371,7 +405,7 @@
 
         <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eventList</span><span class="p">:</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">time</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">isiRatio</span>
         <span class="k">return</span> <span class="n">time</span></div></div>
 </pre></div>
 

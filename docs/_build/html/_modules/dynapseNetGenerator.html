@@ -49,133 +49,15 @@
 <span class="sd">This last one can be used by cAER NETPARSER module to implement them in DYNAP-se</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">bernoulli</span>
-
-<span class="kn">from</span> <span class="nn">DYNAPSETools.classes.Population</span> <span class="k">import</span> <span class="n">Population</span>
-
-<span class="c1">### ===========================================================================</span>
-<div class="viewcode-block" id="connect_populations"><a class="viewcode-back" href="../scripts/dynapseNetGenerator.html#dynapseNetGenerator.connect_populations">[docs]</a><span class="k">def</span> <span class="nf">connect_populations</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">Plot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">connType</span> <span class="o">=</span> <span class="s1">&#39;bernoulli&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">connParams</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate the connections between two different population of neurons</span>
-
-<span class="sd">Parameters:</span>
-<span class="sd">    p1 (obj Population): Source population</span>
-<span class="sd">    p2 (obj Population): Destination population</span>
-<span class="sd">    Plot (bool, optional): If True the connectivity between the two population is printed in the following way</span>
-<span class="sd">        ::</span>
-
-<span class="sd">            destination        </span>
-<span class="sd">                n1  n2  n3  n4</span>
-<span class="sd">            n1  x   3   1   x</span>
-<span class="sd">            n2  x   x   x   x</span>
-<span class="sd">            n3  x   x   x   x   source</span>
-<span class="sd">            n4  x   3   3   3</span>
-
-<span class="sd">        The number represent the connnection dynamics (x stays for no connection):\n</span>
-<span class="sd">        - *sInh* -&gt; slow inhibitory (code 0)</span>
-<span class="sd">        - *fInh* -&gt; fast inhibitory (code 1)</span>
-<span class="sd">        - *sExc* -&gt; slow excitatory (code 2)</span>
-<span class="sd">        - *fExc* -&gt; fast excitatory (code 3)</span>
-
-<span class="sd">    connType (string, optional): Type of the connection:\n</span>
-<span class="sd">        - *deterministic* : a specified fraction (f) of destination neurons is connected to the source neurons</span>
-<span class="sd">        - *bernoulli* : connection between two neurons depend on a certain specified probability (p)</span>
-<span class="sd">        - *gaussian* : connection between two neurons has a probability defined by this distribution</span>
-
-<span class="sd">        ::</span>
-
-<span class="sd">            P = k * np.exp(-(D**2) / (2*(r**2))) where:</span>
-<span class="sd">            D is the Euclidean distance between two neurons</span>
-<span class="sd">            r and k are two tuning parameters of the distribution</span>
-
-<span class="sd">    connParams** (dict of param): connection parameters:\n</span>
-<span class="sd">        - connType = &quot;deterministic&quot; -&gt; f = ... ; f fraction of connection</span>
-<span class="sd">        - connType = &quot;bernoulli&quot; -&gt; p = ... ; p probability of connection</span>
-<span class="sd">        - connType = &quot;gaussian&quot; -&gt; k = ..., r = ... ; k and r parameters of the distribution</span>
-
-<span class="sd">Returns:</span>
-<span class="sd">    dict, obj Neuron : Dictionary containing all connections encoded as SOURCE NEURON (Key) = DESTINATION NEURON (Item)</span>
-<span class="sd">&quot;&quot;&quot;</span>
-    
-    <span class="c1"># Initialize connections (p1 -&gt; p2)</span>
-    <span class="k">if</span> <span class="n">Plot</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CONNECTIVITY MAP OF </span><span class="si">{}</span><span class="s2">-&gt;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-    <span class="n">connections</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">connections</span><span class="p">[</span><span class="n">p1</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">name</span> <span class="c1"># Population connection strings</span>
-    
-
-    <span class="c1"># If Connection is deterministic (certain number of neuron connected)</span>
-    <span class="c1"># must be handled in a different way</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">connType</span> <span class="o">==</span> <span class="s1">&#39;deterministic&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">connParams</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">neuronsToConnect</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">connParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">neurons</span><span class="p">)))</span>
-        <span class="c1"># Sweep over all source neurons</span>
-        <span class="k">for</span> <span class="n">srcNeuron</span> <span class="ow">in</span> <span class="n">p1</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
-            <span class="c1"># Choose the neurons to connect</span>
-            <span class="n">neuronsIndexes</span> <span class="o">=</span> <span class="n">generate_n_rand_num</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">neurons</span><span class="p">),</span> <span class="n">neuronsToConnect</span><span class="p">)</span>
-            <span class="c1"># Sweep over destination neurons</span>
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">destNeuron</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">flatten</span><span class="p">()):</span>
-                <span class="c1"># if i have to connect, create an instance in connection dictionary</span>
-                <span class="k">if</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">neuronsIndexes</span><span class="p">:</span>
-                    <span class="n">destNeuron</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span>
-                    <span class="n">connections</span><span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">srcNeuron</span><span class="p">)]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">destNeuron</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">Plot</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">srcNeuron</span><span class="o">.</span><span class="n">neuronType</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">Plot</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">Plot</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="c1"># No need to check the other connections type</span>
-        <span class="k">return</span> <span class="n">connections</span>
-
-    <span class="c1"># Sweep over all neurons of both populations (p2 receive connections)</span>
-    <span class="k">for</span> <span class="n">srcNeuron</span> <span class="ow">in</span> <span class="n">p1</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">destNeuron</span> <span class="ow">in</span> <span class="n">p2</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="c1"># Calculate if connect or not according to prob distributions</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">connType</span> <span class="o">==</span> <span class="s1">&#39;bernoulli&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">connParams</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
-                    <span class="n">connect</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">connParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">connType</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">connParams</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
-                    <span class="c1"># Calculate positions of source and destination neurons</span>
-                    <span class="n">posP1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">neurons</span> <span class="o">==</span> <span class="n">srcNeuron</span><span class="p">)</span>
-                    <span class="n">posP2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">neurons</span> <span class="o">==</span> <span class="n">destNeuron</span><span class="p">)</span>
-                    <span class="c1"># Euclidean distance D = sqrt((r2 - r1)^2 + (c2 - c1)^2)</span>
-                    <span class="c1"># r is the row in the matrix, c is the column in the matrix</span>
-                    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">posP2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">posP1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">posP2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">posP1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-                    <span class="c1"># Gaussian distribution probability P = k*e^(-D^2/(2*r^2))</span>
-                    <span class="n">k</span> <span class="o">=</span> <span class="n">connParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="n">connParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
-                    <span class="n">P</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">D</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
-                    <span class="c1"># Use bernoulli to determine if connect or not</span>
-                    <span class="n">connect</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span>
-                <span class="c1"># If the random number created is 1 -&gt; connect neurons (and update rams and cams), otherwise print &#39;x&#39;</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">connect</span><span class="p">):</span>
-                    <span class="n">destNeuron</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span>
-                    <span class="n">connections</span><span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">srcNeuron</span><span class="p">)]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">destNeuron</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">Plot</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">srcNeuron</span><span class="o">.</span><span class="n">neuronType</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">Plot</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="n">errorString</span> <span class="o">=</span> <span class="s2">&quot;Error while connecting populations </span><span class="si">{}</span><span class="s2"> -&gt; </span><span class="si">{}</span><span class="s2">, Cannot connect: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                <span class="n">errorString</span> <span class="o">+=</span> <span class="s2">&quot;Specified connection type or connection parameters not valid&quot;</span>
-                <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">errorString</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">Plot</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">connections</span></div>
+<span class="kn">from</span> <span class="nn">DYNAPSETools.classes.DevicePopulation</span> <span class="k">import</span> <span class="n">DevicePopulation</span>
+<span class="kn">from</span> <span class="nn">DYNAPSETools.classes.DeviceConnections</span> <span class="k">import</span> <span class="n">DeviceConnections</span>
 
 <span class="c1">### ===========================================================================</span>
 <div class="viewcode-block" id="write_connections"><a class="viewcode-back" href="../scripts/dynapseNetGenerator.html#dynapseNetGenerator.write_connections">[docs]</a><span class="k">def</span> <span class="nf">write_connections</span><span class="p">(</span><span class="o">*</span><span class="n">connections_lists</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;network.txt&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write on a .txt file the network connections, ready to be uploaded to the final device.</span>
 
 <span class="sd">Parameters:</span>
-<span class="sd">    *connection_lists (list of dict of connections): Contains the list of all the connections lists that must be written </span>
+<span class="sd">    *connection_lists (list of connections): Contains the list of all the connections lists that must be written </span>
 <span class="sd">    in the output file</span>
 <span class="sd">    fileName (string, optional): Name of the output .txt file</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -183,43 +65,16 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="c1"># Sweep over all the dictionary containing the connections</span>
         <span class="k">for</span> <span class="n">connections</span> <span class="ow">in</span> <span class="n">connections_lists</span><span class="p">:</span>
-            <span class="n">srcPop</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">destPop</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Write header</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#!======================================== &#39;</span><span class="p">)</span> <span class="c1"># Separator</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Connecting </span><span class="si">{}</span><span class="s1">-&gt;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">srcPop</span><span class="p">,</span> <span class="n">destPop</span><span class="p">))</span> <span class="c1"># Title of the connections</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Connecting </span><span class="si">{}</span><span class="s1">-&gt;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">sourcePop</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">connections</span><span class="o">.</span><span class="n">targetPop</span><span class="o">.</span><span class="n">name</span><span class="p">))</span> <span class="c1"># Title of the connections</span>
+
             <span class="c1"># Write connections</span>
-            <span class="k">for</span> <span class="n">srcNeuron</span><span class="p">,</span> <span class="n">destNeuron</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">for</span> <span class="n">srcNeuron</span><span class="p">,</span> <span class="n">destNeuron</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">sourceNeurons</span><span class="p">,</span> <span class="n">connections</span><span class="o">.</span><span class="n">targetNeurons</span><span class="p">,</span> <span class="n">connections</span><span class="o">.</span><span class="n">weights</span><span class="p">):</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">-&gt;</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">srcNeuron</span><span class="o">.</span><span class="n">create_neuron_string</span><span class="p">(),</span>
-                        <span class="n">srcNeuron</span><span class="o">.</span><span class="n">neuronType</span><span class="p">,</span>
-                        <span class="n">destNeuron</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span>
-                        <span class="n">destNeuron</span><span class="o">.</span><span class="n">create_neuron_string</span><span class="p">()))</span></div>
-
-<span class="c1">### ===========================================================================</span>
-<div class="viewcode-block" id="change_seed"><a class="viewcode-back" href="../scripts/dynapseNetGenerator.html#dynapseNetGenerator.change_seed">[docs]</a><span class="k">def</span> <span class="nf">change_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Change the seed of the random generator</span>
-
-<span class="sd">Parameters:</span>
-<span class="sd">    seed (int): New seed for the random generator</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
-
-<span class="c1">### ===========================================================================</span>
-<div class="viewcode-block" id="generate_n_rand_num"><a class="viewcode-back" href="../scripts/dynapseNetGenerator.html#dynapseNetGenerator.generate_n_rand_num">[docs]</a><span class="k">def</span> <span class="nf">generate_n_rand_num</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate n random numbers between a minimum and a maximum, with no repetitions</span>
-
-<span class="sd">Parameters:</span>
-<span class="sd">    min (int): Lower limit to the random number generation</span>
-<span class="sd">    max (int): Upper limit to the random number generation</span>
-<span class="sd">    n (int): Number of random numbers that must be generated</span>
-
-<span class="sd">Returns:</span>
-<span class="sd">    list, ints: A list containing n random numbers</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-    <span class="n">neuronsIndexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">neuronsIndexes</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">neuronsIndexes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">]</span></div>
+                                                <span class="n">srcNeuron</span><span class="o">.</span><span class="n">neuronType</span><span class="p">,</span>
+                                                <span class="nb">int</span><span class="p">(</span><span class="n">weight</span><span class="p">),</span>
+                                                <span class="n">destNeuron</span><span class="o">.</span><span class="n">create_neuron_string</span><span class="p">()))</span></div>
 </pre></div>
 
           </div>

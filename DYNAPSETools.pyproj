@@ -39,13 +39,15 @@
     <Folder Include="docs\_static\" />
     <Folder Include="docs\_templates\" />
     <Folder Include="Examples\" />
+    <Folder Include="parameters\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\DeviceConnections.py" />
     <Compile Include="classes\EventsSet.py" />
     <Compile Include="classes\InputEvent.py" />
     <Compile Include="classes\InputPattern.py" />
-    <Compile Include="classes\Neuron.py" />
-    <Compile Include="classes\Population.py" />
+    <Compile Include="classes\DeviceNeuron.py" />
+    <Compile Include="classes\DevicePopulation.py" />
     <Compile Include="classes\__init__.py" />
     <Compile Include="docs\conf.py" />
     <Compile Include="dynapseNetGenerator.py" />
@@ -56,6 +58,7 @@
     <Compile Include="Examples\DynapseOutDecoderExample.py" />
     <Compile Include="Examples\DynapseSpikesFitterExample.py" />
     <Compile Include="Examples\DynapseSpikesGeneratorExample.py" />
+    <Compile Include="parameters\DynapseParam.py" />
     <Compile Include="Tutorial.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>

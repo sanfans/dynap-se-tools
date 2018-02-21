@@ -76,11 +76,11 @@
 </table>
 <dl class="method">
 <dt id="classes.EventsSet.EventsSet.calculate_firing_rate_matrix">
-<code class="descname">calculate_firing_rate_matrix</code><span class="sig-paren">(</span><em>numBins</em>, <em>totNeurons</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.calculate_firing_rate_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.calculate_firing_rate_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calculate_firing_rate_matrix</code><span class="sig-paren">(</span><em>totNeurons</em>, <em>numBins=10</em>, <em>timeBin=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.calculate_firing_rate_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.calculate_firing_rate_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Derive a firing rate matrix starting from the current EventSet</p>
 <p>Data have the following form:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">timeSteps</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">t0</span> <span class="n">t0</span><span class="o">+</span><span class="n">tBin</span> <span class="n">t0</span><span class="o">+</span><span class="mi">2</span><span class="n">tBin</span> <span class="o">...</span> <span class="n">tn</span><span class="o">-</span><span class="n">tBin</span><span class="p">]</span>
-    <span class="n">tBin</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">temporal</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">firing</span> <span class="n">rate</span> <span class="ow">is</span> <span class="n">evaluated</span> <span class="p">(</span><span class="n">tBin</span> <span class="o">=</span> <span class="p">(</span><span class="n">tn</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">numBins</span><span class="p">))</span>
+    <span class="n">tBin</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">temporal</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">firing</span> <span class="n">rate</span> <span class="ow">is</span> <span class="n">evaluated</span> <span class="p">(</span><span class="n">tBin</span> <span class="o">=</span> <span class="p">(</span><span class="n">tn</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">numBins</span><span class="p">))</span> <span class="ow">or</span> <span class="n">directly</span> <span class="n">the</span> <span class="n">specified</span> <span class="n">tBin</span>
 <span class="n">neuronsFireRate</span> <span class="p">(</span><span class="n">fr</span> <span class="n">stays</span> <span class="k">for</span> <span class="n">firing</span> <span class="n">rate</span> <span class="n">at</span> <span class="n">a</span> <span class="n">certain</span> <span class="n">time</span> <span class="n">step</span> <span class="p">(</span><span class="mf">0.</span><span class="o">..</span><span class="mf">1.</span><span class="o">..</span><span class="mf">2.</span><span class="o">..</span><span class="n">ecc</span><span class="o">.</span><span class="p">)</span>
     <span class="n">neuron0</span>    <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
     <span class="n">neuron1</span>    <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
@@ -93,8 +93,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>numBins</strong> (<em>int</em>) – Number of intervals in which firing rate must be evaluated</li>
 <li><strong>totNeurons</strong> (<em>int</em>) – Maximum number of neurons for which firing rate is calculated</li>
+<li><strong>numBins</strong> (<em>int</em>) – Default parameter. Number of intervals in which firing rate must be evaluated</li>
+<li><strong>tBin</strong> (<em>int</em><em>, </em><em>[</em><em>s</em><em>]</em><em>, </em><em>optional</em>) – Amplitude of each interval in which firing rate must be evaluated</li>
 </ul>
 </td>
 </tr>

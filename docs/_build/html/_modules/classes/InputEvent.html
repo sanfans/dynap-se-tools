@@ -99,9 +99,9 @@
 <span class="sd">coreDest is hard coded -&gt; 1111 (15 decimal) means to all cores</span>
 <span class="sd">&quot;&quot;&quot;</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="p">(</span><span class="n">address</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x3</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">coreDest</span> <span class="o">=</span> <span class="n">address</span> <span class="o">&amp;</span> <span class="mh">0xf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">neuronAddress</span> <span class="o">=</span> <span class="p">(</span><span class="n">address</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coreDest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">&amp;</span> <span class="mh">0xf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neuronAddress</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span></div></div>
 </pre></div>
 
           </div>

@@ -1,0 +1,5 @@
+Neuron
+======
+
+.. automodule:: classes.DeviceNeuron
+   :members:
