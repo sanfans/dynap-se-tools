@@ -21,5 +21,6 @@ The following contents tree permit to explore the different modules and classes 
    EventsSet
    InputPattern
    InputEvent
-   Population
-   Neuron
+   DevicePopulation
+   DeviceNeuron
+   DeviceConnections

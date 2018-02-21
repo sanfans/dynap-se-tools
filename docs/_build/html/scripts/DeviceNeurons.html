@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API &#8212; DYNAPSETools 1.0 documentation</title>
+    <title>Neuron &#8212; DYNAPSETools 1.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,9 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="dynapseNetGenerator" href="dynapseNetGenerator.html" />
-    <link rel="prev" title="Welcome to DYNAPSETools’s documentation!" href="../index.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
   </head>
   <body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -36,12 +34,6 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="dynapseNetGenerator.html" title="dynapseNetGenerator"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../index.html" title="Welcome to DYNAPSETools’s documentation!"
-             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,30 +43,38 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="api">
-<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
-<p>This page contains references to the API (application programming interface), the library functions that the programmer can use to build his own scripts.</p>
-<p>The following contents tree permit to explore the different modules and classes contained in the library. For each function there is a <strong>[source]</strong> button on the right the title. Clicking on it the function source code is shown.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Modules:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="dynapseNetGenerator.html">dynapseNetGenerator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dynapseOutDecoder.html">dynapseOutDecoder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dynapseSpikesGenerator.html">dynapseSpikesGenerator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dynapseSpikesFitter.html">dynapseSpikesFitter</a></li>
+  <div class="section" id="module-classes.DeviceNeuron">
+<span id="neuron"></span><h1>Neuron<a class="headerlink" href="#module-classes.DeviceNeuron" title="Permalink to this headline">¶</a></h1>
+<p>Contains a class that represent a neuron in the device</p>
+<dl class="class">
+<dt id="classes.DeviceNeuron.DeviceNeuron">
+<em class="property">class </em><code class="descclassname">classes.DeviceNeuron.</code><code class="descname">DeviceNeuron</code><span class="sig-paren">(</span><em>chip_id</em>, <em>core_id</em>, <em>neuron_id</em>, <em>neuronType</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/DeviceNeuron.html#DeviceNeuron"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.DeviceNeuron.DeviceNeuron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that represent a neuron in the device</p>
+<p>Return a new Neuron object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>chip_id</strong> (<em>int</em>) – Chip number of the neuron</li>
+<li><strong>core_id</strong> (<em>int</em>) – Core number of the neuron</li>
+<li><strong>neuron_id</strong> (<em>int</em>) – Neuron number of the neuron</li>
+<li><strong>neuronType</strong> (<em>int</em>) – Type of Neuron (fast/slow, excitatory/inhibitory)</li>
 </ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Classes:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="EventsSet.html">EventsSet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="InputPattern.html">InputPattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="InputEvent.html">InputEvent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DevicePopulation.html">DevicePopulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DeviceNeuron.html">DeviceNeuron</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DeviceConnections.html">DeviceConnections</a></li>
-</ul>
-</div>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="classes.DeviceNeuron.DeviceNeuron.create_neuron_string">
+<code class="descname">create_neuron_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/DeviceNeuron.html#DeviceNeuron.create_neuron_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.DeviceNeuron.DeviceNeuron.create_neuron_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crete the connection neuron string (UxxCxxNxxx) from chip, core and neuron id
+Includes also synaptic type</p>
+<p>EX: chip_id = 0; core_id = 0; neuron_id = 1 /// return -&gt; U00C00N001</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -83,12 +83,6 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../index.html"
-                        title="previous chapter">Welcome to DYNAPSETools’s documentation!</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="dynapseNetGenerator.html"
-                        title="next chapter">dynapseNetGenerator</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -112,12 +106,6 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="dynapseNetGenerator.html" title="dynapseNetGenerator"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../index.html" title="Welcome to DYNAPSETools’s documentation!"
-             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li> 
       </ul>
     </div>

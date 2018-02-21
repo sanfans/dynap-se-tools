@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Neuron &#8212; DYNAPSETools 1.0 documentation</title>
+    <title>DeviceNeuron &#8212; DYNAPSETools 1.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -23,8 +23,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tutorial" href="tutorial.html" />
-    <link rel="prev" title="Population" href="Population.html" /> 
+    <link rel="prev" title="DevicePopulation" href="DevicePopulation.html" /> 
   </head>
   <body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,10 +36,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="tutorial.html" title="Tutorial"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="Population.html" title="Population"
+          <a href="DevicePopulation.html" title="DevicePopulation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="API.html" accesskey="U">API</a> &#187;</li> 
@@ -52,8 +48,38 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="neuron">
-<h1>Neuron<a class="headerlink" href="#neuron" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-classes.DeviceNeuron">
+<span id="deviceneuron"></span><h1>DeviceNeuron<a class="headerlink" href="#module-classes.DeviceNeuron" title="Permalink to this headline">¶</a></h1>
+<p>Contains a class that represent a neuron in the device</p>
+<dl class="class">
+<dt id="classes.DeviceNeuron.DeviceNeuron">
+<em class="property">class </em><code class="descclassname">classes.DeviceNeuron.</code><code class="descname">DeviceNeuron</code><span class="sig-paren">(</span><em>chip_id</em>, <em>core_id</em>, <em>neuron_id</em>, <em>neuronType</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/DeviceNeuron.html#DeviceNeuron"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.DeviceNeuron.DeviceNeuron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that represent a neuron in the device</p>
+<p>Return a new Neuron object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>chip_id</strong> (<em>int</em>) – Chip number of the neuron</li>
+<li><strong>core_id</strong> (<em>int</em>) – Core number of the neuron</li>
+<li><strong>neuron_id</strong> (<em>int</em>) – Neuron number of the neuron</li>
+<li><strong>neuronType</strong> (<em>int</em>) – Type of Neuron (fast/slow, excitatory/inhibitory)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="classes.DeviceNeuron.DeviceNeuron.create_neuron_string">
+<code class="descname">create_neuron_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/DeviceNeuron.html#DeviceNeuron.create_neuron_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.DeviceNeuron.DeviceNeuron.create_neuron_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crete the connection neuron string (UxxCxxNxxx) from chip, core and neuron id
+Includes also synaptic type</p>
+<p>EX: chip_id = 0; core_id = 0; neuron_id = 1 /// return -&gt; U00C00N001</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -63,11 +89,8 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Population.html"
-                        title="previous chapter">Population</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="tutorial.html"
-                        title="next chapter">Tutorial</a></p>
+  <p class="topless"><a href="DevicePopulation.html"
+                        title="previous chapter">DevicePopulation</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -92,10 +115,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="tutorial.html" title="Tutorial"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="Population.html" title="Population"
+          <a href="DevicePopulation.html" title="DevicePopulation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="API.html" >API</a> &#187;</li> 
