@@ -1,6 +1,6 @@
 """Contains a class that represent a neuron in the device"""
 
-class Neuron():
+class DeviceNeuron():
     """Class that represent a neuron in the device
     """
     
@@ -15,7 +15,6 @@ Parameters:
 """
         
         self.neuronType = neuronType
-        self.weight = 0
         self.freeCAM = 64
         self.freeSRAM = 3
         self.chip_id = chip_id

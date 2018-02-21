@@ -1,11 +1,12 @@
 """The module contains functions that permit to  write a .txt file with coded inputs to DYNAP-se
 """
 
+import numpy as np
 import matplotlib.pyplot as plt
 from DYNAPSETools.classes.InputPattern import InputPattern
 
 ### ===========================================================================
-def import_events(fileName, name = "ImportedPattern", isiBase = 90.0):
+def import_events(fileName, name = "ImportedPattern.txt", isiBase = 90.0):
     """Import events from an outside stimulus txt file
 
 Parameters:
@@ -41,7 +42,7 @@ Returns:
     return pattern
 
 ### ===========================================================================
-def plot_spikes(*inputPatternList):
+def plot_spikes(*inputPatternList, ax = None):
     """Plot the spike stimuli
     
 Parameters:
@@ -49,16 +50,17 @@ Parameters:
 """
         
     # Create figure
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    handles = []
+    if ax == None: 
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
-    duration = 0
-    for idx, pattern in enumerate(inputPatternList):
-        figtem, axtemp, handle = pattern.plot_spikes(color = "C" + str(idx), timeShift = duration, ax = ax)
-        duration = duration + pattern.evaluate_duration()
-        handles.append(handle)
+    sumPattern = InputPattern(name = "sumPattern", isiBase = inputPatternList[0].isiBase)
+    
+    for pattern in inputPatternList:
+        sumPattern.eventList = np.append(sumPattern.eventList, pattern.eventList)
 
+    fig, ax, handles = sumPattern.plot_spikes(timeShift = 0, ax = ax)
+    
     return fig, ax, handles
 
 ### ===========================================================================
@@ -79,23 +81,33 @@ Parameters:
             try:
                 print("Checking and writing pattern {}".format(pattern.name))
                 # Check pattern
+                print("Current pattern lenght is {}".format(len(pattern.eventList)))
+                
                 patternLenght = patternLenght + len(pattern.eventList)
+                # Check lenght
                 if(patternLenght > (2**15-1)):
                     errorString = "Error while writing pattern {}. Stimulus is too big, it will not fit in SRAM!".format(pattern.name)
                     raise NameError(errorString)
                 else:
-                    print("Current pattern lenght is {}. Remaining {} input events".format(patternLenght, (2**15-1) - patternLenght))
+                    print("Cumulative pattern lenght is {}. Remaining {} events".format(patternLenght, (2**15-1) - patternLenght))
+                    
+                # Check maximum delay and if negative
                 for idx, event in enumerate(pattern.eventList):
                     if(event.time > 2**16-1):
                         errorString = "Error while writing pattern {}. Event at position {} has a delay too big ({}).".format(
                             pattern.name, idx, event.time)
                         errorString += "Consider increasing isiBase unit"
                         raise NameError(errorString)
+                    elif(event.time < 0):
+                        errorString = "Error while writing pattern {}. Event at position {} has negative delay ({}).".format(
+                            pattern.name, idx, event.time)
+                        errorString += "Consider changing jitter distribution variance"
+                        raise NameError(errorString)
 
                 # If valid, write on output file
                 for event in pattern.eventList:            
                     f.write(str(int(event.address))+','+str(int(event.time))+'\n')
-                print("Pattern {} succesfully written".format(pattern.name))
+                print("Pattern {} succesfully written\n".format(pattern.name))
             except:
                 if errorString == "":
                     errorString = "Error while writing pattern {}, cannot write it".format(pattern.name)

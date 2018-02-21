@@ -4,13 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ce044199-b1af-47d3-a9fc-c7aa7f1ef3bf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DYNAPSETools.py</StartupFile>
+    <StartupFile>Examples\DynapseNetGeneratorExample.py</StartupFile>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>../</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>DYNAPSETools</Name>
     <RootNamespace>DYNAPSETools</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +22,142 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DYNAPSETools.py" />
+    <Folder Include="classes\" />
+    <Folder Include="docs\" />
+    <Folder Include="docs\images\" />
+    <Folder Include="docs\scripts\" />
+    <Folder Include="docs\_build\" />
+    <Folder Include="docs\_build\doctrees\" />
+    <Folder Include="docs\_build\doctrees\scripts\" />
+    <Folder Include="docs\_build\html\" />
+    <Folder Include="docs\_build\html\scripts\" />
+    <Folder Include="docs\_build\html\_modules\" />
+    <Folder Include="docs\_build\html\_modules\classes\" />
+    <Folder Include="docs\_build\html\_sources\" />
+    <Folder Include="docs\_build\html\_sources\scripts\" />
+    <Folder Include="docs\_build\html\_static\" />
+    <Folder Include="docs\_static\" />
+    <Folder Include="docs\_templates\" />
+    <Folder Include="Examples\" />
+    <Folder Include="parameters\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="classes\DeviceConnections.py" />
+    <Compile Include="classes\EventsSet.py" />
+    <Compile Include="classes\InputEvent.py" />
+    <Compile Include="classes\InputPattern.py" />
+    <Compile Include="classes\DeviceNeuron.py" />
+    <Compile Include="classes\DevicePopulation.py" />
+    <Compile Include="classes\__init__.py" />
+    <Compile Include="docs\conf.py" />
+    <Compile Include="dynapseNetGenerator.py" />
+    <Compile Include="dynapseOutDecoder.py" />
+    <Compile Include="dynapseSpikesFitter.py" />
+    <Compile Include="dynapseSpikesGenerator.py" />
+    <Compile Include="Examples\DynapseNetGeneratorExample.py" />
+    <Compile Include="Examples\DynapseOutDecoderExample.py" />
+    <Compile Include="Examples\DynapseSpikesFitterExample.py" />
+    <Compile Include="Examples\DynapseSpikesGeneratorExample.py" />
+    <Compile Include="parameters\DynapseParam.py" />
+    <Compile Include="Examples\Tutorial.py" />
+    <Compile Include="__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitattributes" />
+    <Content Include=".gitignore" />
+    <Content Include="docs\images\spikeGen.jpg" />
+    <Content Include="docs\index.rst" />
+    <Content Include="docs\make.bat" />
+    <Content Include="docs\Makefile" />
+    <Content Include="docs\reStructuredText Primer — Sphinx 1.6.pdf" />
+    <Content Include="docs\scripts\API.rst" />
+    <Content Include="docs\scripts\dynapseNetGenerator.rst" />
+    <Content Include="docs\scripts\dynapseOutDecoder.rst" />
+    <Content Include="docs\scripts\dynapseSpikesFitter.rst" />
+    <Content Include="docs\scripts\dynapseSpikesGenerator.rst" />
+    <Content Include="docs\scripts\EventsSet.rst" />
+    <Content Include="docs\scripts\InputEvent.rst" />
+    <Content Include="docs\scripts\InputPattern.rst" />
+    <Content Include="docs\scripts\Neuron.rst" />
+    <Content Include="docs\scripts\Population.rst" />
+    <Content Include="docs\scripts\tutorial.md" />
+    <Content Include="docs\_build\doctrees\environment.pickle" />
+    <Content Include="docs\_build\doctrees\index.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\API.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\dynapseNetGenerator.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\dynapseOutDecoder.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\dynapseSpikesGenerator.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\EventsSet.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\InputEvent.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\InputPattern.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\Neuron.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\Population.doctree" />
+    <Content Include="docs\_build\doctrees\scripts\tutorial.doctree" />
+    <Content Include="docs\_build\html\.buildinfo" />
+    <Content Include="docs\_build\html\genindex.html" />
+    <Content Include="docs\_build\html\index.html" />
+    <Content Include="docs\_build\html\objects.inv" />
+    <Content Include="docs\_build\html\py-modindex.html" />
+    <Content Include="docs\_build\html\scripts\API.html" />
+    <Content Include="docs\_build\html\scripts\dynapseNetGenerator.html" />
+    <Content Include="docs\_build\html\scripts\dynapseOutDecoder.html" />
+    <Content Include="docs\_build\html\scripts\dynapseSpikesGenerator.html" />
+    <Content Include="docs\_build\html\scripts\EventsSet.html" />
+    <Content Include="docs\_build\html\scripts\InputEvent.html" />
+    <Content Include="docs\_build\html\scripts\InputPattern.html" />
+    <Content Include="docs\_build\html\scripts\Neuron.html" />
+    <Content Include="docs\_build\html\scripts\Population.html" />
+    <Content Include="docs\_build\html\scripts\tutorial.html" />
+    <Content Include="docs\_build\html\search.html" />
+    <Content Include="docs\_build\html\searchindex.js" />
+    <Content Include="docs\_build\html\_modules\classes\EventsSet.html" />
+    <Content Include="docs\_build\html\_modules\classes\InputEvent.html" />
+    <Content Include="docs\_build\html\_modules\classes\InputPattern.html" />
+    <Content Include="docs\_build\html\_modules\classes\Neuron.html" />
+    <Content Include="docs\_build\html\_modules\classes\Population.html" />
+    <Content Include="docs\_build\html\_modules\dynapseNetGenerator.html" />
+    <Content Include="docs\_build\html\_modules\dynapseOutDecoder.html" />
+    <Content Include="docs\_build\html\_modules\dynapseSpikesGenerator.html" />
+    <Content Include="docs\_build\html\_modules\index.html" />
+    <Content Include="docs\_build\html\_sources\index.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\API.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\dynapseNetGenerator.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\dynapseOutDecoder.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\dynapseSpikesGenerator.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\EventsSet.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\InputEvent.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\InputPattern.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\Neuron.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\Population.rst.txt" />
+    <Content Include="docs\_build\html\_sources\scripts\tutorial.md.txt" />
+    <Content Include="docs\_build\html\_static\ajax-loader.gif" />
+    <Content Include="docs\_build\html\_static\basic.css" />
+    <Content Include="docs\_build\html\_static\classic.css" />
+    <Content Include="docs\_build\html\_static\comment-bright.png" />
+    <Content Include="docs\_build\html\_static\comment-close.png" />
+    <Content Include="docs\_build\html\_static\comment.png" />
+    <Content Include="docs\_build\html\_static\doctools.js" />
+    <Content Include="docs\_build\html\_static\down-pressed.png" />
+    <Content Include="docs\_build\html\_static\down.png" />
+    <Content Include="docs\_build\html\_static\file.png" />
+    <Content Include="docs\_build\html\_static\jquery-3.1.0.js" />
+    <Content Include="docs\_build\html\_static\jquery.js" />
+    <Content Include="docs\_build\html\_static\minus.png" />
+    <Content Include="docs\_build\html\_static\plus.png" />
+    <Content Include="docs\_build\html\_static\pygments.css" />
+    <Content Include="docs\_build\html\_static\searchtools.js" />
+    <Content Include="docs\_build\html\_static\sidebar.js" />
+    <Content Include="docs\_build\html\_static\underscore-1.3.1.js" />
+    <Content Include="docs\_build\html\_static\underscore.js" />
+    <Content Include="docs\_build\html\_static\up-pressed.png" />
+    <Content Include="docs\_build\html\_static\up.png" />
+    <Content Include="docs\_build\html\_static\websupport.js" />
+    <Content Include="Examples\DynapseOutDecoder.aedat" />
+    <Content Include="Examples\DynapseSpikesFitter_sine1.aedat" />
+    <Content Include="Examples\DynapseSpikesFitter_sine2.aedat" />
+    <Content Include="Examples\network.txt" />
+    <Content Include="Examples\stimulus.txt" />
+    <Content Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

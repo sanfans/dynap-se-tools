@@ -52,6 +52,6 @@ coreDest is hard coded -> 1111 (15 decimal) means to all cores
 coreDest is hard coded -> 1111 (15 decimal) means to all cores
 """
         
-        self.virtualSourceCoreId = (address >> 4) & 0x3
-        self.coreDest = address & 0xf
-        self.neuronAddress = (address >> 6) & 0xff
+        self.virtualSourceCoreId = (self.address >> 4) & 0x3
+        self.coreDest = self.address & 0xf
+        self.neuronAddress = (self.address >> 6) & 0xff

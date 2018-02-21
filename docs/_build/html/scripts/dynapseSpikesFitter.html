@@ -85,7 +85,7 @@ average number of neurons that fire (in the two matrixes)</dd>
 
 <dl class="function">
 <dt id="dynapseSpikesFitter.prediction_performances">
-<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">prediction_performances</code><span class="sig-paren">(</span><em>target</em>, <em>prediction</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#prediction_performances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.prediction_performances" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">prediction_performances</code><span class="sig-paren">(</span><em>prediction</em>, <em>target</em>, <em>firingRateThreshold</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#prediction_performances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.prediction_performances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the mean square error and r2 score of the prediction</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -94,6 +94,7 @@ average number of neurons that fire (in the two matrixes)</dd>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>target</strong> (<em>array</em><em>, </em><em>float</em>) – Vector of target values</li>
 <li><strong>prediction</strong> (<em>array</em><em>, </em><em>float</em>) – The performed prediction</li>
+<li><strong>firingThreshold</strong> (<em>float</em>) – Threshold for determining neuron output</li>
 </ul>
 </td>
 </tr>
@@ -103,7 +104,7 @@ average number of neurons that fire (in the two matrixes)</dd>
 
 <dl class="function">
 <dt id="dynapseSpikesFitter.prediction_plot">
-<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">prediction_plot</code><span class="sig-paren">(</span><em>timeScale</em>, <em>target</em>, <em>prediction</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#prediction_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.prediction_plot" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dynapseSpikesFitter.</code><code class="descname">prediction_plot</code><span class="sig-paren">(</span><em>timeScale</em>, <em>prediction</em>, <em>target</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseSpikesFitter.html#prediction_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseSpikesFitter.prediction_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the prediction and the corrent output together</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

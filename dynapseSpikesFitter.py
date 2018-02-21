@@ -147,9 +147,9 @@ Returns:
 
     handles = []
 
-    handle = ax.plot(timeScale, target,  linestyle = 'None', marker = 'o', color='black', label = 'target')
+    handle = ax.plot(timeScale, target,  linestyle = 'None', marker = 'o')
     handles.append(handle)
-    handle = ax.plot(timeScale, prediction, linestyle = 'None', marker = 'o', color='blue', label = 'prediction')
+    handle = ax.plot(timeScale, prediction, linestyle = 'None', marker = 'o')
     handles.append(handle)
     
     return fig, ax, handles

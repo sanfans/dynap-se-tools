@@ -13,7 +13,6 @@ This documentation is meant to give information about DYNAPSETools python librar
    :caption: Contents:
 
    scripts/API
-   scripts/tutorial
 
 Indices and tables
 ==================

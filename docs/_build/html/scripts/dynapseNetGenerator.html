@@ -57,105 +57,6 @@
 <p>The module contains functions that permit to create networks of neurons and write connections on a .txt file.
 This last one can be used by cAER NETPARSER module to implement them in DYNAP-se</p>
 <dl class="function">
-<dt id="dynapseNetGenerator.change_seed">
-<code class="descclassname">dynapseNetGenerator.</code><code class="descname">change_seed</code><span class="sig-paren">(</span><em>seed</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseNetGenerator.html#change_seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseNetGenerator.change_seed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the seed of the random generator</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>seed</strong> (<em>int</em>) – New seed for the random generator</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dynapseNetGenerator.connect_populations">
-<code class="descclassname">dynapseNetGenerator.</code><code class="descname">connect_populations</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em>, <em>Plot=True</em>, <em>connType='bernoulli'</em>, <em>**connParams</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseNetGenerator.html#connect_populations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseNetGenerator.connect_populations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the connections between two different population of neurons</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>p1</strong> (<em>obj Population</em>) – Source population</li>
-<li><strong>p2</strong> (<em>obj Population</em>) – Destination population</li>
-<li><strong>Plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – <p>If True the connectivity between the two population is printed in the following way</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">destination</span>
-    <span class="n">n1</span>  <span class="n">n2</span>  <span class="n">n3</span>  <span class="n">n4</span>
-<span class="n">n1</span>  <span class="n">x</span>   <span class="mi">3</span>   <span class="mi">1</span>   <span class="n">x</span>
-<span class="n">n2</span>  <span class="n">x</span>   <span class="n">x</span>   <span class="n">x</span>   <span class="n">x</span>
-<span class="n">n3</span>  <span class="n">x</span>   <span class="n">x</span>   <span class="n">x</span>   <span class="n">x</span>   <span class="n">source</span>
-<span class="n">n4</span>  <span class="n">x</span>   <span class="mi">3</span>   <span class="mi">3</span>   <span class="mi">3</span>
-</pre></div>
-</div>
-<p>The number represent the connnection dynamics (x stays for no connection):</p>
-<ul>
-<li><em>sInh</em> -&gt; slow inhibitory (code 0)</li>
-<li><em>fInh</em> -&gt; fast inhibitory (code 1)</li>
-<li><em>sExc</em> -&gt; slow excitatory (code 2)</li>
-<li><em>fExc</em> -&gt; fast excitatory (code 3)</li>
-</ul>
-</li>
-<li><strong>connType</strong> (<em>string</em><em>, </em><em>optional</em>) – <p>Type of the connection:</p>
-<ul>
-<li><em>deterministic</em> : a specified fraction (f) of destination neurons is connected to the source neurons</li>
-<li><em>bernoulli</em> : connection between two neurons depend on a certain specified probability (p)</li>
-<li><em>gaussian</em> : connection between two neurons has a probability defined by this distribution</li>
-</ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">D</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="n">where</span><span class="p">:</span>
-<span class="n">D</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">Euclidean</span> <span class="n">distance</span> <span class="n">between</span> <span class="n">two</span> <span class="n">neurons</span>
-<span class="n">r</span> <span class="ow">and</span> <span class="n">k</span> <span class="n">are</span> <span class="n">two</span> <span class="n">tuning</span> <span class="n">parameters</span> <span class="n">of</span> <span class="n">the</span> <span class="n">distribution</span>
-</pre></div>
-</div>
-</li>
-<li><strong>connParams**</strong> (<em>dict of param</em>) – <p>connection parameters:</p>
-<ul>
-<li>connType = “deterministic” -&gt; f = … ; f fraction of connection</li>
-<li>connType = “bernoulli” -&gt; p = … ; p probability of connection</li>
-<li>connType = “gaussian” -&gt; k = …, r = … ; k and r parameters of the distribution</li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dictionary containing all connections encoded as SOURCE NEURON (Key) = DESTINATION NEURON (Item)</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict, obj Neuron</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dynapseNetGenerator.generate_n_rand_num">
-<code class="descclassname">dynapseNetGenerator.</code><code class="descname">generate_n_rand_num</code><span class="sig-paren">(</span><em>min</em>, <em>max</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseNetGenerator.html#generate_n_rand_num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseNetGenerator.generate_n_rand_num" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate n random numbers between a minimum and a maximum, with no repetitions</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>min</strong> (<em>int</em>) – Lower limit to the random number generation</li>
-<li><strong>max</strong> (<em>int</em>) – Upper limit to the random number generation</li>
-<li><strong>n</strong> (<em>int</em>) – Number of random numbers that must be generated</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list containing n random numbers</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list, ints</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="dynapseNetGenerator.write_connections">
 <code class="descclassname">dynapseNetGenerator.</code><code class="descname">write_connections</code><span class="sig-paren">(</span><em>*connections_lists</em>, <em>fileName='network.txt'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dynapseNetGenerator.html#write_connections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dynapseNetGenerator.write_connections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write on a .txt file the network connections, ready to be uploaded to the final device.</p>
@@ -164,7 +65,7 @@ This last one can be used by cAER NETPARSER module to implement them in DYNAP-se
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>*connection_lists</strong> (<em>list of dict of connections</em>) – Contains the list of all the connections lists that must be written</li>
+<li><strong>*connection_lists</strong> (<em>list of connections</em>) – Contains the list of all the connections lists that must be written</li>
 <li><strong>the output file</strong> (<em>in</em>) – </li>
 <li><strong>fileName</strong> (<em>string</em><em>, </em><em>optional</em>) – Name of the output .txt file</li>
 </ul>
