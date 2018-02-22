@@ -5,7 +5,7 @@ dynapseNeuronTypes = {"sInh": 0,
                "sExc": 2,
                "fExc": 3}
 
-dynapseStructure = {"nNeuronsPerCore" : 255,
+dynapseStructure = {"nNeuronsPerCore" : 256,
              "nCoresPerChip" : 4,
              "nChipPerDevice" : 4,
              "virtualChipCode" : 4}
