@@ -5,7 +5,7 @@ import numpy as np
 import sys
 import warnings
 from DYNAPSETools.classes.DeviceNeuron import DeviceNeuron
-from DYNAPSETools.parameters.dynapseParam import dynapseNeuronTypes, dynapseStructure
+from DYNAPSETools.parameters.dynapseParameters import dynapseNeuronTypes, dynapseStructure
 
 class DevicePopulation():
     """Class that represent a population of neuron with certain characteristics
