@@ -23,8 +23,21 @@ Parameters:
             f.write('Connecting {}->{}\n'.format(connections.sourcePop.name, connections.targetPop.name)) # Title of the connections
 
             # Write connections
-            for srcNeuron, destNeuron, weight in zip(connections.sourceNeurons, connections.targetNeurons, connections.weights):
-                f.write('{}->{}-{}-{}\n'.format(srcNeuron.create_neuron_string(),
-                                                srcNeuron.neuronType,
-                                                int(weight),
-                                                destNeuron.create_neuron_string()))
+            # In case you specified a connection type, use that. Otherwise, use the neuron type
+            if connections.connTypes is not None:
+                for srcNeuron, destNeuron, connType, weight in zip(connections.sourceNeurons,
+                                                               connections.targetNeurons,
+                                                               connections.connType,
+                                                               connections.weights):
+                    f.write('{}->{}-{}-{}\n'.format(srcNeuron.create_neuron_string(),
+                                                    srcNeuron.neuronType,
+                                                    connType,
+                                                    destNeuron.create_neuron_string()))
+            else:
+                for srcNeuron, destNeuron, weight in zip(connections.sourceNeurons,
+                                                         connections.targetNeurons,
+                                                         connections.weights):
+                    f.write('{}->{}-{}-{}\n'.format(srcNeuron.create_neuron_string(),
+                                                    srcNeuron.neuronType,
+                                                    int(weight),
+                                                    destNeuron.create_neuron_string()))
