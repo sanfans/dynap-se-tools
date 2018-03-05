@@ -58,7 +58,6 @@
     <Compile Include="Examples\DynapseOutDecoderExample.py" />
     <Compile Include="Examples\DynapseSpikesFitterExample.py" />
     <Compile Include="Examples\DynapseSpikesGeneratorExample.py" />
-    <Compile Include="parameters\DynapseParam.py" />
     <Compile Include="Examples\Tutorial.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>

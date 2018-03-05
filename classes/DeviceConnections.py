@@ -4,7 +4,7 @@
 import numpy as np
 import sys
 import warnings
-from DYNAPSETools.parameters.dynapseParam import dynapseNeuronTypes
+from DYNAPSETools.parameters.dynapseParameters import dynapseNeuronTypes
 
 class DeviceConnections():
     """Class that represent connections between populations
