@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>classes.Neuron &#8212; DYNAPSETools 1.0 documentation</title>
+    <title>classes.DeviceNeuron &#8212; DYNAPSETools 1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -44,10 +44,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for classes.Neuron</h1><div class="highlight"><pre>
+  <h1>Source code for classes.DeviceNeuron</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Contains a class that represent a neuron in the device&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Neuron"><a class="viewcode-back" href="../../scripts/Neuron.html#classes.Neuron.Neuron">[docs]</a><span class="k">class</span> <span class="nc">Neuron</span><span class="p">():</span>
+<div class="viewcode-block" id="DeviceNeuron"><a class="viewcode-back" href="../../scripts/DeviceNeuron.html#classes.DeviceNeuron.DeviceNeuron">[docs]</a><span class="k">class</span> <span class="nc">DeviceNeuron</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Class that represent a neuron in the device</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -62,7 +62,6 @@
 <span class="sd">&quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">neuronType</span> <span class="o">=</span> <span class="n">neuronType</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">freeCAM</span> <span class="o">=</span> <span class="mi">64</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">freeSRAM</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chip_id</span> <span class="o">=</span> <span class="n">chip_id</span>
@@ -70,7 +69,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">neuron_id</span> <span class="o">=</span> <span class="n">neuron_id</span>
         
 <span class="c1">### ===========================================================================</span>
-<div class="viewcode-block" id="Neuron.create_neuron_string"><a class="viewcode-back" href="../../scripts/Neuron.html#classes.Neuron.Neuron.create_neuron_string">[docs]</a>    <span class="k">def</span> <span class="nf">create_neuron_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DeviceNeuron.create_neuron_string"><a class="viewcode-back" href="../../scripts/DeviceNeuron.html#classes.DeviceNeuron.DeviceNeuron.create_neuron_string">[docs]</a>    <span class="k">def</span> <span class="nf">create_neuron_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Crete the connection neuron string (UxxCxxNxxx) from chip, core and neuron id</span>
 <span class="sd">        Includes also synaptic type</span>
 <span class="sd">        </span>

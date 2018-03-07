@@ -27,11 +27,11 @@ Parameters:
             if connections.connTypes is not None:
                 for srcNeuron, destNeuron, connType, weight in zip(connections.sourceNeurons,
                                                                connections.targetNeurons,
-                                                               connections.connType,
+                                                               connections.connTypes,
                                                                connections.weights):
                     f.write('{}->{}-{}-{}\n'.format(srcNeuron.create_neuron_string(),
-                                                    srcNeuron.neuronType,
                                                     connType,
+                                                    int(weight),
                                                     destNeuron.create_neuron_string()))
             else:
                 for srcNeuron, destNeuron, weight in zip(connections.sourceNeurons,

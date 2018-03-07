@@ -1,0 +1,367 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dynapseOutDecoder &#8212; DYNAPSETools 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for dynapseOutDecoder</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; The module contains functions that allows to retrieve and display output .aedat files</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
+<span class="kn">from</span> <span class="nn">DYNAPSETools.classes.EventsSet</span> <span class="k">import</span> <span class="n">EventsSet</span>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="import_events"><a class="viewcode-back" href="../scripts/dynapseOutDecoder.html#dynapseOutDecoder.import_events">[docs]</a><span class="k">def</span> <span class="nf">import_events</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read events from the from cAER aedat 3.0 file format</span>
+
+<span class="sd">OUTPUT FORMAT EXAMPLE</span>
+<span class="sd">::</span>
+
+<span class="sd">    VECT POSITION -&gt; |       0       |        1       |       2       |</span>
+<span class="sd">    chip_id_tot   -&gt; |  chip 0       |  chip 1        |  chip 3       |</span>
+<span class="sd">    core_id_tot   -&gt; |  core 0       |  core 3        |  core 1       |</span>
+<span class="sd">    neuron_id_tot -&gt; |  neuron 1     |  neuron 100    |  neuron 255   |</span>
+<span class="sd">    ts_tot        -&gt; |  time 150000  |  time 15068    |  time 150127  |</span>
+<span class="sd">        </span>
+<span class="sd">the same for special events</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    fileName (string): Name (with path) of the source .aedat file</span>
+
+<span class="sd">Returns:</span>
+<span class="sd">    obj EventsSet: A set containing the events imported from the file</span>
+<span class="sd">&quot;&quot;&quot;</span>
+       
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">errorString</span> <span class="o">=</span> <span class="s2">&quot;Error while reading file </span><span class="si">{}</span><span class="s2"> , file doesn&#39;t exist: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">errorString</span><span class="p">)</span>
+        
+    <span class="n">done_reading</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="c1"># skip comment header of file</span>
+    <span class="n">skip_header</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    
+    <span class="c1"># prepare lists</span>
+    <span class="n">core_id_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">chip_id_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">neuron_id_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ts_tot</span>  <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># special events</span>
+    <span class="n">spec_type_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spec_ts_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">while</span><span class="p">(</span><span class="n">done_reading</span> <span class="o">==</span> <span class="kc">False</span><span class="p">):</span> <span class="c1"># cycle on all the packets inside the file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">core_id</span><span class="p">,</span> <span class="n">chip_id</span><span class="p">,</span> <span class="n">neuron_id</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">spec_type</span><span class="p">,</span> <span class="n">spec_ts</span> <span class="o">=</span> <span class="n">read_packet</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">core_id_tot</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">core_id</span><span class="p">))</span>
+            <span class="n">chip_id_tot</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chip_id</span><span class="p">))</span>
+            <span class="n">neuron_id_tot</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">neuron_id</span><span class="p">))</span>
+            <span class="n">ts_tot</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ts</span><span class="p">))</span>
+            <span class="n">spec_type_tot</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spec_type</span><span class="p">))</span>
+            <span class="n">spec_ts_tot</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spec_ts</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">done_reading</span> <span class="o">=</span> <span class="kc">True</span>
+    
+    
+    <span class="c1"># make all arrays</span>
+    <span class="n">core_id_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">core_id_tot</span><span class="p">)</span>
+    <span class="n">chip_id_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chip_id_tot</span><span class="p">)</span>
+    <span class="n">neuron_id_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">neuron_id_tot</span><span class="p">)</span>
+    <span class="n">ts_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ts_tot</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">EventsSet</span><span class="p">(</span><span class="n">ts_tot</span><span class="p">,</span> <span class="n">chip_id_tot</span><span class="p">,</span> <span class="n">core_id_tot</span><span class="p">,</span> <span class="n">neuron_id_tot</span><span class="p">)</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="skip_header"><a class="viewcode-back" href="../scripts/dynapseOutDecoder.html#dynapseOutDecoder.skip_header">[docs]</a><span class="k">def</span> <span class="nf">skip_header</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Skip the standard header of the recording file</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    file (obj file handle): handle of the recording file</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        
+    <span class="n">line</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">line</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;#!END-HEADER</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span></div>
+                
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="read_packet"><a class="viewcode-back" href="../scripts/dynapseOutDecoder.html#dynapseOutDecoder.read_packet">[docs]</a><span class="k">def</span> <span class="nf">read_packet</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read DYNAP-se packet from cAER aedat 3.0 file format</span>
+<span class="sd">        </span>
+<span class="sd">OUTPUT FORMAT EXAMPLE</span>
+<span class="sd">::</span>
+
+<span class="sd">    VECT POSITION -&gt; |       0       |        1       |       2       |</span>
+<span class="sd">    chip_id_tot   -&gt; |  chip 0       |  chip 1        |  chip 3       |</span>
+<span class="sd">    core_id_tot   -&gt; |  core 0       |  core 3        |  core 1       |</span>
+<span class="sd">    neuron_id_tot -&gt; |  neuron 1     |  neuron 100    |  neuron 255   |</span>
+<span class="sd">    ts_tot        -&gt; |  time 150000  |  time 15068    |  time 150127  |</span>
+<span class="sd">        </span>
+<span class="sd">the same for special events</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    file (obj file handle): handle of the recording file</span>
+<span class="sd">    debug (bool, optional): print debug data</span>
+
+<span class="sd">Returns:</span>
+<span class="sd">    (tuple): tuple containing:</span>
+
+<span class="sd">        - **core_id_tot** (*list, int*): Contains the core id of the events in the packet</span>
+<span class="sd">        - **chip_id_tot** (*list, int*): Contains the chip id of the events in the packet</span>
+<span class="sd">        - **neuron_id_tot** (*list, int*): Contains the neuron id of the events in the packet</span>
+<span class="sd">        - **ts_tot** (*list, float*): Contains the time of the events in the packet</span>
+<span class="sd">        - **spec_type_tot** (*list, int*): Contains the types of the special events in the packet</span>
+<span class="sd">        - **spec_ts_tot** (*list, float*): Contains the time of special events in the packet</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        
+    <span class="c1"># raise Exception at end of file</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Read all data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;END OF DATA&#39;</span><span class="p">)</span>
+    
+    
+    <span class="c1"># read header</span>
+    <span class="n">eventtype</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eventsource</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eventsize</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eventoffset</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eventtsoverflow</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eventcapacity</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eventnumber</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">20</span><span class="p">:</span><span class="mi">24</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eventvalid</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">24</span><span class="p">:</span><span class="mi">28</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">next_read</span> <span class="o">=</span> <span class="n">eventcapacity</span> <span class="o">*</span> <span class="n">eventsize</span>  <span class="c1"># we now read the full packet</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">next_read</span><span class="p">)</span>    
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># eventnumber[0]</span>
+    <span class="c1">#spike events</span>
+    <span class="n">core_id_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">chip_id_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">neuron_id_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ts_tot</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="c1">#special events</span>
+    <span class="n">spec_type_tot</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="n">spec_ts_tot</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">if</span><span class="p">(</span><span class="n">eventtype</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">spec_type_tot</span> <span class="o">=</span><span class="p">[]</span>
+        <span class="n">spec_ts_tot</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">counter</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="n">eventsize</span><span class="p">]):</span>  <span class="c1"># loop over all event packets</span>
+            <span class="n">special_data</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">counter</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">4</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">8</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">spec_type</span> <span class="o">=</span> <span class="p">(</span><span class="n">special_data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000007F</span>
+            <span class="n">spec_type_tot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec_type</span><span class="p">)</span>
+            <span class="n">spec_ts_tot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">spec_type</span> <span class="o">==</span> <span class="mi">6</span> <span class="ow">or</span> <span class="n">spec_type</span> <span class="o">==</span> <span class="mi">7</span> <span class="ow">or</span> <span class="n">spec_type</span> <span class="o">==</span> <span class="mi">9</span> <span class="ow">or</span> <span class="n">spec_type</span> <span class="o">==</span> <span class="mi">10</span><span class="p">):</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">spec_type</span><span class="p">)</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="n">eventsize</span>        
+    <span class="k">elif</span><span class="p">(</span><span class="n">eventtype</span> <span class="o">==</span> <span class="mi">12</span><span class="p">):</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">counter</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="n">eventsize</span><span class="p">]):</span>  <span class="c1"># loop over all event packets</span>
+            <span class="n">aer_data</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">counter</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">4</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">8</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">core_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">aer_data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000001F</span>
+            <span class="n">chip_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">aer_data</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000003F</span>
+            <span class="n">neuron_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">aer_data</span> <span class="o">&gt;&gt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x000FFFFF</span>
+            <span class="n">core_id_tot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">core_id</span><span class="p">)</span>
+            <span class="n">chip_id_tot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chip_id</span><span class="p">)</span>
+            <span class="n">neuron_id_tot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuron_id</span><span class="p">)</span>
+            <span class="n">ts_tot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="n">eventsize</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">debug</span><span class="p">):</span>          
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;chip id &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">chip_id</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;core_id &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">core_id</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;neuron_id &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">neuron_id</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;timestamp &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;####</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">core_id_tot</span><span class="p">,</span> <span class="n">chip_id_tot</span><span class="p">,</span> <span class="n">neuron_id_tot</span><span class="p">,</span> <span class="n">ts_tot</span><span class="p">,</span> <span class="n">spec_type_tot</span><span class="p">,</span> <span class="n">spec_ts_tot</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="plot_events"><a class="viewcode-back" href="../scripts/dynapseOutDecoder.html#dynapseOutDecoder.plot_events">[docs]</a><span class="k">def</span> <span class="nf">plot_events</span><span class="p">(</span><span class="n">eventsSetList</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raster plot of events included in the current EventsSet</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    eventsSetList (list of obj EventSet): List of event sets that must be printed</span>
+
+<span class="sd">Returns:</span>
+<span class="sd">    (tuple): tuple containing:</span>
+
+<span class="sd">        - **figList** (*list of fig handles*): To modify properties of the figure</span>
+<span class="sd">        - **axList** (*list of ax handles*): To modify properties of the plot</span>
+<span class="sd">        - **handlesList** (*list of lines handles*): To create custom legends</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize lists</span>
+    <span class="n">figList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">axList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">handlesList</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Sweep over event list and plot every one of them</span>
+    <span class="k">for</span> <span class="n">eventSet</span> <span class="ow">in</span> <span class="n">eventsSetList</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">handles</span> <span class="o">=</span> <span class="n">eventSet</span><span class="o">.</span><span class="n">plot_events</span><span class="p">()</span>
+        <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">axList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">handlesList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">figList</span><span class="p">,</span> <span class="n">axList</span><span class="p">,</span> <span class="n">handlesList</span></div>
+
+<span class="c1">### ===========================================================================</span>
+<div class="viewcode-block" id="plot_firing_rate"><a class="viewcode-back" href="../scripts/dynapseOutDecoder.html#dynapseOutDecoder.plot_firing_rate">[docs]</a><span class="k">def</span> <span class="nf">plot_firing_rate</span><span class="p">(</span><span class="n">timeSteps</span><span class="p">,</span> <span class="n">neuronsFireRate</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">enPlot3d</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">enImshow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot the firing rate of every neuron present in the chip</span>
+<span class="sd">        </span>
+<span class="sd">It is available a 3d view and a Imshow view</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    timeSteps (array, float): Time steps in which firing rate has been calculated</span>
+<span class="sd">    neuronsFireRate (2D array, float): Contain firing rate for every neuron and for every time step</span>
+<span class="sd">    ax (ax handle, optional): Plot graph on this handle</span>
+<span class="sd">    enPlot3d (bool, optional): Activate 3D visualization</span>
+<span class="sd">    enImshow (bool, optional): Activate ImShow visualization</span>
+
+<span class="sd">Returns:</span>
+<span class="sd">    (tuple): tuple containing:</span>
+
+<span class="sd">        - **figList** (*list, fig handles*): To modify properties of the figure</span>
+<span class="sd">        - **axList** (*list, ax handles*): To modify properties of the plot</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># If no subplot is specified, create new plot</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+        <span class="n">figList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">axList</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">neuronsVect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">768</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">768</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)])</span>
+        
+        <span class="c1"># Plot</span>
+        <span class="k">for</span> <span class="n">minN</span><span class="p">,</span> <span class="n">maxN</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">neuronsVect</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timeSteps</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">neuronsFireRate</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">minN</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">maxN</span><span class="p">)]),</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">)</span>
+        <span class="c1"># Append plot handles</span>
+        <span class="n">axList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        
+        <span class="c1"># Plot a 3d view of the firing rate</span>
+        <span class="k">if</span> <span class="n">enPlot3d</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">fig2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">minN</span><span class="p">,</span> <span class="n">maxN</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">neuronsVect</span><span class="p">:</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">timeSteps</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">minN</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">maxN</span><span class="p">)))</span>
+                <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">neuronsFireRate</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">minN</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">maxN</span><span class="p">)])</span>
+                <span class="n">ax2</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">)</span>
+            <span class="c1"># Append plot handles</span>
+            <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig2</span><span class="p">)</span>    
+            <span class="n">axList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax2</span><span class="p">)</span>
+        
+        <span class="c1"># Plot the imshow of the firing rates </span>
+        <span class="k">if</span> <span class="n">enImshow</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">fig3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig3</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">neuronsFireRate</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;hot&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">orientation</span> <span class="o">=</span> <span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
+            <span class="c1"># Append plot handles</span>
+            <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig3</span><span class="p">)</span>
+            <span class="n">axList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax3</span><span class="p">)</span></div>
+
+<span class="c1">### ===========================================================================        </span>
+<span class="k">def</span> <span class="nf">plot_settings</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">enLegend</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">zlabel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>  
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">enLegend</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Cattaneo Roberto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

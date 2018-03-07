@@ -1,5 +1,5 @@
-Neuron
-======
+DeviceNeuron
+============
 
 .. automodule:: classes.DeviceNeuron
    :members:

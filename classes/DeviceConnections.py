@@ -72,12 +72,12 @@ They can be specified insert in connType one of the following strings:
         # If specified only one, copy it for all connections
         # Convert connections from string to integer (format of connection type in Dynap-se)
         if connTypes is not None:
-            if isinstance(connType, str):
-                self.connTypes = [dynapseNeuronTypes[self.connTypes]] * len(self.i)
+            if isinstance(connTypes, str):
+                self.connTypes = [dynapseNeuronTypes[connTypes]] * len(self.i)
             else:
                 self.connTypes = []
                 for type in connTypes:
-                    self.connTypes.append(dynapseNeuronTypes[connType])
+                    self.connTypes.append(dynapseNeuronTypes[type])
         else:
             self.connTypes = None
 
