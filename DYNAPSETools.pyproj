@@ -58,7 +58,6 @@
     <Compile Include="Examples\DynapseOutDecoderExample.py" />
     <Compile Include="Examples\DynapseSpikesFitterExample.py" />
     <Compile Include="Examples\DynapseSpikesGeneratorExample.py" />
-    <Compile Include="parameters\DynapseParam.py" />
     <Compile Include="Examples\Tutorial.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
@@ -66,6 +65,7 @@
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
     <Content Include="docs\images\spikeGen.jpg" />
+    <Content Include="docs\index.html" />
     <Content Include="docs\index.rst" />
     <Content Include="docs\make.bat" />
     <Content Include="docs\Makefile" />

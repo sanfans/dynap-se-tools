@@ -53,10 +53,13 @@
 <p>Contains a class that represent connections between populations</p>
 <dl class="class">
 <dt id="classes.DeviceConnections.DeviceConnections">
-<em class="property">class </em><code class="descclassname">classes.DeviceConnections.</code><code class="descname">DeviceConnections</code><span class="sig-paren">(</span><em>sourcePop</em>, <em>targetPop</em>, <em>i=None</em>, <em>j=None</em>, <em>w=None</em>, <em>synapsesObj=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/DeviceConnections.html#DeviceConnections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.DeviceConnections.DeviceConnections" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">classes.DeviceConnections.</code><code class="descname">DeviceConnections</code><span class="sig-paren">(</span><em>sourcePop</em>, <em>targetPop</em>, <em>connTypes=None</em>, <em>synapsesObj=None</em>, <em>i=None</em>, <em>j=None</em>, <em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/DeviceConnections.html#DeviceConnections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.DeviceConnections.DeviceConnections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class that represent connections between populations</p>
 <p>Return a new DeviceConnections object</p>
-<p>Manual connection works as brian2 one. See this link: &lt;<a class="reference external" href="http://brian2.readthedocs.io/en/2.0rc/user/synapses.html">http://brian2.readthedocs.io/en/2.0rc/user/synapses.html</a>&gt;</p>
+<p>It is possible to connect neurons in two different ways, in the following order of priority:
+1. specifying a Brian2 synapse object. See this link: &lt;<a class="reference external" href="http://brian2.readthedocs.io/en/2.0rc/user/synapses.html">http://brian2.readthedocs.io/en/2.0rc/user/synapses.html</a>&gt; for more details
+2. specifying connection manually, writing i, j and w. Is the same way used by Brian2 simulator</p>
+<p>If more than one method is specified, the one with higher priority will be applied.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -64,16 +67,26 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>sourcePop</strong> (<em>DevicePopulation obj</em>) – population that represent the source of the connection</li>
 <li><strong>targetPop</strong> (<em>DevicePopulation obj</em>) – population that represent the destination of the connection</li>
+<li><strong>connTypes</strong> (<em>string</em>) – type of the connections to be implemented (see below)</li>
+<li><strong>synapseObj</strong> (<em>Synapses obj</em>) – brian2 synapse object containing all the connections</li>
 <li><strong>i</strong> (<em>array</em><em>, </em><em>int</em>) – list of indexes of the source neurons to be connected (can be also a single value)</li>
 <li><strong>j</strong> (<em>array</em><em>, </em><em>int</em>) – list of indexes of the destination neurons to be connected (can be also a single value)</li>
 <li><strong>w</strong> (<em>array</em><em>, </em><em>int</em>) – list of connection weights</li>
-<li><strong>synapseObj</strong> (<em>Synapses obj</em><em>, </em><em>optional</em>) – brian2 synapse object containing all the connections</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Pay attention that synapseObj overwrite both connections specified with i and j, and weights w</p>
+<p>In Dynap-se there are 4 types of connections: fast excitatory, fast inhibitory, slow excitatory and slow inhibitory.
+They can be specified insert in connType one of the following strings:</p>
+<blockquote>
+<div><ul class="simple">
+<li>fast excitatory: “fExc”</li>
+<li>slow excitatory: “sExc”</li>
+<li>fast inhibitory: “fInh”</li>
+<li>slow inhibitory: “sInh”</li>
+</ul>
+</div></blockquote>
 </dd></dl>
 
 </div>
