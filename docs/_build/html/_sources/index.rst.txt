@@ -13,6 +13,7 @@ This documentation is meant to give information about DYNAPSETools python librar
    :caption: Contents:
 
    scripts/API
+   scripts/Dynap-se Spikes Generator
 
 Indices and tables
 ==================

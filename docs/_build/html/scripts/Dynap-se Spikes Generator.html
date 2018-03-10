@@ -1,0 +1,160 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dynap-se Spike Generator &#8212; DYNAPSETools 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="DeviceConnections" href="DeviceConnections.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DeviceConnections.html" title="DeviceConnections"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dynap-se-spike-generator">
+<span id="dynap-se-spike-generator"></span><h1>Dynap-se Spike Generator<a class="headerlink" href="#dynap-se-spike-generator" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<span id="description"></span><h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>DYNAP-se contains an useful module called FPGASpikeGenerator. This module allows the user to send customized (in address and interspike interval) spike patterns in specific location inside DYNAP-se.</p>
+<p>A very simple way to understand the behavior of the Spike Generator is thinking about it as a VIRTUAL external chip outside DYNAP-se.
+His main advanatage, with respect to the physical ones, is the flexibility. Events can be completely customized: you can select which neurons will spike and the interspike interval between spikes.</p>
+<p>Virtual chip can be “connected” to the physical ones and stimulated whenever you want, making simpler the creation of customize tests for neural structure in DYNAP-se.</p>
+<p>His main drawback is the connectivity limitation. Unfortunately only one physical chip can be connected, at the same time, to the virtual one, although this is enough to run complex test patterns.
+For instance making a connection between one neuron in the virtual chip and Chip 0 will make impossible any other connection with the other 3 Chips.
+Selection of the destination chip is done directly on the module interface.</p>
+<p>Customized spiking patterns must be specified preparing a .txt file, containing two parameters:</p>
+<ul class="simple">
+<li><strong>Source Neuron Address :</strong>  number resulting by the combination of parameters <code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">Address</span></code>, <code class="docutils literal"><span class="pre">Virtual</span> <span class="pre">source</span> <span class="pre">chip</span></code> and <code class="docutils literal"><span class="pre">Core</span> <span class="pre">Dest</span></code>. The first two are represent can be seen as neuron address and neuron core (yes, core, not chip) of the virtual chip. The third one, instead, is used for event routing. It specify, in fact, on which cores of the destination chip the spike will be trasmitted. For more informations visit <a class="reference external" href="https://inilabs.com/support/hardware/user-guide-dynap-se/#h.3prdeugulxol">DYNAP-se user guide</a></li>
+<li><strong>Interspike Interval</strong> : number that represent the time between the current event and the previous one specified in the file, expressed in ISI base multiple (the first event delay can be considered as an initial delay). For more information visit <a class="reference external" href="https://inilabs.com/support/hardware/user-guide-dynap-se/#h.3prdeugulxol">DYNAP-se user guide</a></li>
+</ul>
+<p>In the following image isummarized the main characteristics of the Spike Generator. As said before, can be considered as a virtual chip (U4) made with Virtual Neurons. The txt file specify the characteristics of the generated events: address of the source neuron, interspike interval and core destinations. Note that in this case U2 has been chosen as destination chip.</p>
+<p><img alt="altText" src="../_images/spikeGen.jpg" /></p>
+<p>An example of .txt file is the following one:</p>
+<blockquote>
+<div>ISIBase = 90 corresponding to 1 us time step</div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">79</span><span class="p">,</span> <span class="mi">20000</span>
+<span class="mi">79</span><span class="p">,</span> <span class="mi">20000</span>
+<span class="mi">79</span><span class="p">,</span> <span class="mi">20000</span>
+<span class="mi">79</span><span class="p">,</span> <span class="mi">20000</span>
+<span class="mi">79</span><span class="p">,</span> <span class="mi">10000</span>
+<span class="mi">79</span><span class="p">,</span> <span class="mi">10000</span>
+<span class="mi">142</span><span class="p">,</span> <span class="mi">20000</span>
+<span class="mi">142</span><span class="p">,</span> <span class="mi">20000</span>
+</pre></div>
+</div>
+<p>In this example address 79 is:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">Address</span></code> 1</li>
+<li><code class="docutils literal"><span class="pre">Virtual</span> <span class="pre">source</span> <span class="pre">chip</span></code> 0</li>
+<li><code class="docutils literal"><span class="pre">Core</span> <span class="pre">dest</span></code> 15 (hot-encoded 1111, meaning to all cores)</li>
+</ul>
+<p>While address 143 is:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">Address</span></code> 2</li>
+<li><code class="docutils literal"><span class="pre">Virtual</span> <span class="pre">source</span> <span class="pre">chip</span></code> 0</li>
+<li><code class="docutils literal"><span class="pre">Core</span> <span class="pre">dest</span></code> 14 (hot-encoded 1110, meaning to cores 1, 2 and 3)</li>
+</ul>
+<p>This file will generate 4 events with 20 ms of interspike interval (corresponding to 50Hz) on <code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">1</span></code>, then 2 events with 10 ms delay between them, finally 2 events on <code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">2</span></code> with 20 ms delay</p>
+<p>It is evident that generating this file manually is not easy. Here is where class SpikesGenerator come to help. Inside there are functions that permit the user to create in many ways desired event patterns.</p>
+</div>
+<div class="section" id="functionalities">
+<span id="functionalities"></span><h2>Functionalities<a class="headerlink" href="#functionalities" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Create events from lists containing informations about the neurons and absolute times</li>
+<li>Create constant frequency events as well as linear frequency modulation</li>
+<li>Encode a certain signal in spikes with two different encoding types:<ul>
+<li>Slope encoding: firing frequency depend on the ratio between the current slope of the signal and the maximum one</li>
+<li>Threshold encoding: every time the signal step up or step down of an amount bigger than a threshold, a spike is generated. Maximum and minimum firing frequency depend on threshold amplitude</li>
+</ul>
+</li>
+<li>Plot generated spike pattern. If they come from an encoded signal, it can be plotted too</li>
+<li>Write output .txt file containing coded events</li>
+<li>Possibility to import events from a .txt file, plot them and add new patters</li>
+<li>Possibility to stack as many patterns as needed just calling the apposite functions</li>
+</ul>
+</div>
+<div class="section" id="limitations-work-in-progress">
+<span id="limitations-work-in-progress"></span><h2>Limitations (work in progress)<a class="headerlink" href="#limitations-work-in-progress" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="DeviceConnections.html"
+                        title="previous chapter">DeviceConnections</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DeviceConnections.html" title="DeviceConnections"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Cattaneo Roberto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>
