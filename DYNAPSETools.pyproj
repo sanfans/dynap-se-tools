@@ -59,11 +59,13 @@
     <Compile Include="Examples\DynapseSpikesFitterExample.py" />
     <Compile Include="Examples\DynapseSpikesGeneratorExample.py" />
     <Compile Include="Examples\Tutorial.py" />
+    <Compile Include="parameters\dynapseParameters.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
+    <Content Include="docs\.nojekyll" />
     <Content Include="docs\images\spikeGen.jpg" />
     <Content Include="docs\index.html" />
     <Content Include="docs\index.rst" />

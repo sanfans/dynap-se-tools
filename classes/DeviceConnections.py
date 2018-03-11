@@ -4,6 +4,7 @@
 import numpy as np
 import sys
 import warnings
+from brian2 import Synapses
 from DYNAPSETools.parameters.dynapseParameters import dynapseNeuronTypes
 
 class DeviceConnections():
@@ -46,7 +47,10 @@ They can be specified insert in connType one of the following strings:
         if synapsesObj is not None:
             self.i = synapsesObj.i
             self.j = synapsesObj.j
-            self.weights = synapsesObj.w
+            # If "Synapse" type -> brian2 object
+            # If not -> brian2 Library object
+            try: self.weights = synapsesObj.w
+            except: self.weights = synapsesObj.weight
         elif (i is not None) & (j is not None) & (w is not None):
             self.i = i
             self.j = j
@@ -60,13 +64,14 @@ They can be specified insert in connType one of the following strings:
         self.sourceNeurons = []
         self.targetNeurons = []
         
-        # If there is only one element, put it in a list
-        if isinstance(self.i, int):
-            self.i = [self.i]
-        if isinstance(self.j, int):
-            self.j = [self.j]
-        if isinstance(self.weights, int):
-            self.weights = [self.weights]
+        # If there is only one element, put it in a list and convert to array (to get rid of all units)
+        try: iter(self.i)
+        except: self.i = np.array([self.i])
+        try: iter(self.j)
+        except: self.j = np.array([self.j])
+        try: iter(self.weights)
+        except: self.weights = np.array([self.weights])
+        else: self.weights = np.array(self.weights)
 
         # Check if user specified connection types. If not, for now set to None
         # If specified only one, copy it for all connections
