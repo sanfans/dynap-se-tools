@@ -1,5 +1,0 @@
-dynapseNetGenerator
-===================
-
-.. automodule:: dynapseNetGenerator
-   :members:

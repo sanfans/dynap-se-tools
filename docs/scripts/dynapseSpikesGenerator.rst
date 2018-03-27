@@ -1,5 +1,0 @@
-dynapseSpikesGenerator
-======================
-
-.. automodule:: dynapseSpikesGenerator
-   :members:

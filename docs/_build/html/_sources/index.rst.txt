@@ -6,18 +6,24 @@
 Welcome to DYNAPSETools's documentation!
 ========================================
 
-This documentation is meant to give information about DYNAPSETools python library, its API and the tutorial that has been created to make the library more understandable.
+DYNAPSETools is a set of python classes and modules that simplify the life when using DYNAP-se board.
+It interacts with some of the modules present in cAER, as:  outDecoder, netParser, FPGASpikeGen,
+performing OFFLINE elaborations.
+
+It is possible to create complex networks, design input patterns, decode and analyze the recorded outputs.
 
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
-   scripts/API
-   scripts/Dynap-se Spikes Generator
+   scripts/Dynap-se Net Generator.md
+   scripts/Dynap-se Out Decoder.md
+   scripts/Dynap-se Spikes Fitter.md
+   scripts/Dynap-se Spikes Generator.md
+
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`

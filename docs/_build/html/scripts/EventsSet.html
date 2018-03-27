@@ -1,64 +1,171 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>EventsSet &#8212; DYNAPSETools 1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="InputPattern" href="InputPattern.html" />
-    <link rel="prev" title="dynapseSpikesFitter" href="dynapseSpikesFitter.html" /> 
-  </head>
-  <body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="InputPattern.html" title="InputPattern"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="dynapseSpikesFitter.html" title="dynapseSpikesFitter"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="API.html" accesskey="U">API</a> &#187;</li> 
-      </ul>
-    </div>  
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>EventsSet &mdash; DYNAPSETools 1.0 documentation</title>
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="DYNAPSETools 1.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DYNAPSETools
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="module-classes.EventsSet">
-<span id="eventsset"></span><h1>EventsSet<a class="headerlink" href="#module-classes.EventsSet" title="Permalink to this headline">¶</a></h1>
-<p>Contains a class that represent a set of DYNAP-se events</p>
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Net Generator.html">Dynap-se Net Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Out Decoder.html">Dynap-se Out Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Spikes Fitter.html">Dynap-se Spikes Fitter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Spikes Generator.html">Dynap-se Spike Generator</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DYNAPSETools</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>EventsSet</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/scripts/EventsSet.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="eventsset">
+<span id="eventsset"></span><h1>EventsSet<a class="headerlink" href="#eventsset" title="Permalink to this headline">¶</a></h1>
+</div>
+<span class="target" id="module-classes.EventsSet"></span><p>Contains a class that represent a set of DYNAP-se events</p>
 <dl class="class">
 <dt id="classes.EventsSet.EventsSet">
 <em class="property">class </em><code class="descclassname">classes.EventsSet.</code><code class="descname">EventsSet</code><span class="sig-paren">(</span><em>ts</em>, <em>chip_id</em>, <em>core_id</em>, <em>neuron_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>A set of DYNAP-se events</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A set of DYNAP-se events</p>
 <p>Return a new EventsSet object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -74,26 +181,111 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The event set contains only <em>normal</em> events, not <em>special</em> ones.</p>
+<p>Events has the following structure:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="21%" />
+<col width="19%" />
+<col width="19%" />
+<col width="19%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Vect</th>
+<th class="head">Event 0</th>
+<th class="head">Event 1</th>
+<th class="head">Event 2</th>
+<th class="head">Event …</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>chip_id</td>
+<td>0</td>
+<td>1</td>
+<td>3</td>
+<td>…</td>
+</tr>
+<tr class="row-odd"><td>core_id</td>
+<td>0</td>
+<td>3</td>
+<td>1</td>
+<td>…</td>
+</tr>
+<tr class="row-even"><td>neuron_id</td>
+<td>1</td>
+<td>100</td>
+<td>255</td>
+<td>…</td>
+</tr>
+<tr class="row-odd"><td>ts</td>
+<td>150000</td>
+<td>150064</td>
+<td>150128</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>Accessing directly events from an .aedat is very simple, after having imported them:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="o">=</span> <span class="n">import_events</span><span class="p">(</span><span class="s2">&quot;recording.aedat&quot;</span><span class="p">)</span> <span class="c1"># event set of the recording</span>
+<span class="n">chip_id</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">chip_id</span>
+<span class="n">core_id</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">core_id</span>
+<span class="n">neuron_id</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">neuron_id</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">ts</span>
+</pre></div>
+</div>
+<p>We can now access every event:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chip_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">    0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">core_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">    0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">neuron_id</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">    100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">    150128</span>
+</pre></div>
+</div>
+</div>
+<dl class="method">
+<dt id="classes.EventsSet.EventsSet.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a time filtered EventsSet object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>tuple</em><em>, </em><em>ints</em>) – a tuple containing an init and an end index</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This attribute is very useful when you want to isolate some events for which you know
+the indexes.</p>
+</div>
+<p class="rubric">Example</p>
+<ul>
+<li><p class="first">Isolate first 10 events:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="o">=</span> <span class="n">import_events</span><span class="p">(</span><span class="s2">&quot;recording.aedat&quot;</span><span class="p">)</span> <span class="c1"># event set of the recording</span>
+<span class="n">filteredSet</span> <span class="o">=</span> <span class="nb">set</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
 <dl class="method">
 <dt id="classes.EventsSet.EventsSet.calculate_firing_rate_matrix">
 <code class="descname">calculate_firing_rate_matrix</code><span class="sig-paren">(</span><em>totNeurons</em>, <em>numBins=10</em>, <em>timeBin=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.calculate_firing_rate_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.calculate_firing_rate_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Derive a firing rate matrix starting from the current EventSet</p>
-<p>Data have the following form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">timeSteps</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">t0</span> <span class="n">t0</span><span class="o">+</span><span class="n">tBin</span> <span class="n">t0</span><span class="o">+</span><span class="mi">2</span><span class="n">tBin</span> <span class="o">...</span> <span class="n">tn</span><span class="o">-</span><span class="n">tBin</span><span class="p">]</span>
-    <span class="n">tBin</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">temporal</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">firing</span> <span class="n">rate</span> <span class="ow">is</span> <span class="n">evaluated</span> <span class="p">(</span><span class="n">tBin</span> <span class="o">=</span> <span class="p">(</span><span class="n">tn</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">numBins</span><span class="p">))</span> <span class="ow">or</span> <span class="n">directly</span> <span class="n">the</span> <span class="n">specified</span> <span class="n">tBin</span>
-<span class="n">neuronsFireRate</span> <span class="p">(</span><span class="n">fr</span> <span class="n">stays</span> <span class="k">for</span> <span class="n">firing</span> <span class="n">rate</span> <span class="n">at</span> <span class="n">a</span> <span class="n">certain</span> <span class="n">time</span> <span class="n">step</span> <span class="p">(</span><span class="mf">0.</span><span class="o">..</span><span class="mf">1.</span><span class="o">..</span><span class="mf">2.</span><span class="o">..</span><span class="n">ecc</span><span class="o">.</span><span class="p">)</span>
-    <span class="n">neuron0</span>    <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
-    <span class="n">neuron1</span>    <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
-    <span class="o">...</span>
-    <span class="n">neuron1023</span> <span class="n">fr0</span> <span class="n">fr1</span> <span class="n">fr2</span> <span class="o">...</span> <span class="n">frn</span>
-</pre></div>
-</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>totNeurons</strong> (<em>int</em>) – Maximum number of neurons for which firing rate is calculated</li>
+<li><strong>totNeurons</strong> (<em>int</em>) – Maximum number of neurons for which firing rate is calculated (from id = 0 to totNeuron number)</li>
 <li><strong>numBins</strong> (<em>int</em>) – Default parameter. Number of intervals in which firing rate must be evaluated</li>
 <li><strong>tBin</strong> (<em>int</em><em>, </em><em>[</em><em>s</em><em>]</em><em>, </em><em>optional</em>) – Amplitude of each interval in which firing rate must be evaluated</li>
 </ul>
@@ -114,25 +306,86 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>To evaluate the firing rate the average of the spikes is made over a certain time step. The rate value is then associated
+to the first time in the time bin, as here below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">timeSteps</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">t0</span> <span class="n">t0</span><span class="o">+</span><span class="n">tBin</span> <span class="n">t0</span><span class="o">+</span><span class="mi">2</span><span class="n">tBin</span> <span class="o">...</span> <span class="n">tn</span><span class="o">-</span><span class="n">tBin</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>where tBin is the temporal step in which firing rate is evaluated (tBin = (tn - t0) / numBins)) or directly the specified tBin</p>
+<p>The firing rate is calculated for every specified neuron, obtaining the following matrix (number are expressed in Hz):</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="16%" />
+<col width="19%" />
+<col width="22%" />
+<col width="21%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">neuron id</th>
+<th class="head">fr at t0</th>
+<th class="head">fr at t0+tBin</th>
+<th class="head">…</th>
+<th class="head">fr at t0+ntBin</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>neuron 0</td>
+<td>5</td>
+<td>0</td>
+<td>…</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>neuron 1</td>
+<td>0</td>
+<td>10</td>
+<td>…</td>
+<td>10</td>
+</tr>
+<tr class="row-even"><td>…</td>
+<td>2</td>
+<td>2</td>
+<td>…</td>
+<td>2</td>
+</tr>
+<tr class="row-odd"><td>neuron n</td>
+<td>20</td>
+<td>10</td>
+<td>…</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Initialize set importing all events</span>
+<span class="nb">set</span> <span class="o">=</span> <span class="n">import_events</span><span class="p">(</span><span class="s2">&quot;recording.aedat&quot;</span><span class="p">)</span> <span class="c1"># event set of the recording</span>
+
+<span class="c1"># obtain firing rate from number of bins</span>
+<span class="n">timeSteps</span><span class="p">,</span> <span class="n">neuronsFireRate</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">calculate_firing_rate_matrix</span><span class="p">(</span><span class="n">totNeurons</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+                                                              <span class="n">numBins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># obtain firing rate from bin size</span>
+<span class="n">timeSteps</span><span class="p">,</span> <span class="n">neuronsFireRate</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">calculate_firing_rate_matrix</span><span class="p">(</span><span class="n">totNeurons</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+                                                              <span class="n">timeBin</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="classes.EventsSet.EventsSet.filter_events">
 <code class="descname">filter_events</code><span class="sig-paren">(</span><em>chip_id</em>, <em>core_id</em>, <em>neuron_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.filter_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.filter_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a EventsSet containing only the wanted events</p>
-<p>Filter is specified selecting certain chip_id, core_id and neuron_id.
-It supports only one chip at a time (so chip_id must be a integer from 0 to 3).</p>
-<p>It could filter a single neuron data or data from range of neurons, indipendently from each core</p>
-<p>If neuron_id is left as “None”, all neurons are selected.
-If core_id is left as “None”, all cores are selected.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>chip_id</strong> (<em>int</em>) – For now is only possible to filter one chip</li>
-<li><strong>core_id</strong> (<em>list of int; int</em>) – Represent the cores included in the filter</li>
-<li><strong>neuron_id</strong> (<em>2D list of int; list of int; int</em>) – Represent the neurons included in the filter</li>
+<li><strong>chip_id</strong> (<em>int</em>) – id of the chip you want to take events from (for now is only possible to filter one chip events)</li>
+<li><strong>core_id</strong> (<em>list</em><em>, </em><em>int; int</em>) – id of the cores you want to take event from</li>
+<li><strong>neuron_id</strong> (<em>2D list</em><em>, </em><em>int; list</em><em>, </em><em>int; int</em>) – id of the neurons you want to take events from</li>
 </ul>
 </td>
 </tr>
@@ -144,44 +397,83 @@ If core_id is left as “None”, all cores are selected.</p>
 </tr>
 </tbody>
 </table>
-<p>Examples:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">]])</span>
-    <span class="n">take</span> <span class="n">chip</span> <span class="mi">0</span><span class="p">,</span> <span class="n">neuron</span> <span class="kn">from</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">100</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">neurons</span> <span class="kn">from</span> <span class="mi">100</span> <span class="n">to</span> <span class="mi">200</span> <span class="n">on</span> <span class="n">core</span> <span class="mi">1</span>
-<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">take</span> <span class="nb">all</span> <span class="n">neurons</span> <span class="ow">in</span> <span class="nb">all</span> <span class="n">cores</span> <span class="n">of</span> <span class="n">chip</span> <span class="mi">1</span>
-<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">take</span> <span class="nb">all</span> <span class="n">neurons</span> <span class="ow">in</span> <span class="n">cores</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">1</span> <span class="n">of</span> <span class="n">chip</span> <span class="mi">2</span>
-<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">take</span> <span class="n">traces</span> <span class="n">of</span> <span class="n">neuron</span> <span class="mi">3</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">chip</span> <span class="mi">3</span>
-<span class="o">-</span> <span class="n">chip_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">127</span><span class="p">])</span>
-    <span class="n">take</span> <span class="n">traces</span> <span class="n">of</span> <span class="n">neuron</span> <span class="mi">20</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">neuron</span> <span class="mi">127</span> <span class="n">of</span> <span class="n">core</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="n">chip</span> <span class="mi">0</span>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Filter is specified selecting certain chip_id, core_id and neuron_id.
+It supports only one chip at a time (so chip_id must be a integer from 0 to 3), so you cannot take, for example,
+events from core 0 of chip 0 and core 1 of chip 1.</p>
+<p>After selecting the chip_id you have two alternatives: Or don’t apply filters to the cores, by leaving core_id as None.
+In this way the events of all cores can be potentially taken, <strong>if no neuron_id is specified</strong>. The other alternative is to
+specify the cores you want to take events from, filtering the ones not specified by you. You can at this point define:</p>
+<ol class="arabic simple">
+<li>a single core id, between 0 and 3.</li>
+<li>list of cores id, for example [0, 2].</li>
+</ol>
+<p>At this point you have two alternatives: Or don’t apply a filter to the neurons inside a core, by neuron_id as None.
+In this way you will take all the events from the 256 neuron per core (only the one specified in the core filter, of course).
+The other alternative is to specify the neurons you want to take events from, filtering the ones that are not specified by you.
+If this is the case, you <strong>must define something for all cores selected in the previous point</strong>. You can define:</p>
+<ol class="arabic simple">
+<li>a single neuron id, between 0 and 255</li>
+<li>a list of neurons id, for example [1, 5, 22, 128, …]</li>
+</ol>
+<p class="last">The types can be mixed, so you can take a single neuron from one core and a list from another, indipendently.</p>
+</div>
+<p class="rubric">Examples</p>
+<p>Initialize set importing all events:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="o">=</span> <span class="n">import_events</span><span class="p">(</span><span class="s2">&quot;recording.aedat&quot;</span><span class="p">)</span> <span class="c1"># event set of the recording</span>
 </pre></div>
 </div>
+<ul>
+<li><p class="first">Take events from chip 0, neuron from 0 to 99 of core 0 and neurons from 100 to 199 on core 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filterCore0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">filterCore1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">199</span><span class="p">))</span>
+<span class="n">neuronIdFilter</span> <span class="o">=</span> <span class="p">[</span><span class="n">filterCore0</span><span class="p">,</span> <span class="n">filterCore1</span><span class="p">]</span>
+<span class="n">filteredSet</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">filter_events</span><span class="p">(</span><span class="n">chip_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="n">core_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                <span class="n">neuron_id</span> <span class="o">=</span> <span class="n">neuronIdFilter</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Take all events from chip 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filteredSet</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">filter_events</span><span class="p">(</span><span class="n">chip_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Take all events from core 0 and 1 of chip 2:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filteredSet</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">filter_events</span><span class="p">(</span><span class="n">chip_id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Take only events from neuron 3 of core 0 and chip 3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filteredSet</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">filter_events</span><span class="p">(</span><span class="n">chip_id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Take events from chip 0, neuron 20 of core 0 and neuron 127 of core 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filteredSet</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">filter_events</span><span class="p">(</span><span class="n">chip_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">neuron_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">127</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="classes.EventsSet.EventsSet.isolate_events_sets">
 <code class="descname">isolate_events_sets</code><span class="sig-paren">(</span><em>startTriggerNeuron</em>, <em>stopTriggerNeuron</em>, <em>maxNumber=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.isolate_events_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.isolate_events_sets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Isolate events between start trigger neuron and the stop trigger neuron</p>
-<p>A good way to synchronize with DYNAP-se is using two neurons to trigger the start and the end of the experiment:</p>
-<ul class="simple">
-<li>send a spike to a neuron that will represent my starting trigger</li>
-<li>send the experiment input spikes after small delay (1 ms should be enough)</li>
-<li>send a spike to a neuron that will represent my ending trigger</li>
-</ul>
-<p>Then this function can be used to filter all events but for the ones that are between this two neurons</p>
+<dd><p>Returns a list of Event sets each one containing an experiment.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>startTriggerNeuron</strong> (<em>tuple of ints</em><em> (</em><em>chip id</em><em>, </em><em>core id</em><em>, </em><em>neuron id</em><em>)</em>) – Neuron which events triggers the start of the experiment</li>
-<li><strong>stopTriggerNeuron</strong> (<em>tuple of ints</em><em> (</em><em>chip id</em><em>, </em><em>core id</em><em>, </em><em>neuron id</em><em>)</em>) – </li>
+<li><strong>startTriggerNeuron</strong> (<em>tuple</em><em>, </em><em>int</em><em> (</em><em>chip id</em><em>, </em><em>core id</em><em>, </em><em>neuron id</em><em>)</em>) – Neuron which events triggers the start of the experiment</li>
+<li><strong>stopTriggerNeuron</strong> (<em>tuple</em><em>, </em><em>int</em><em> (</em><em>chip id</em><em>, </em><em>core id</em><em>, </em><em>neuron id</em><em>)</em>) – </li>
 <li><strong>maxNumber</strong> (<em>int</em>) – max number of experiments that can be extracted from the Set of events</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Each item represent a set of events included in one experiment</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list of Event sets each one containing an experiment</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list, obj EventsSet</p>
@@ -189,20 +481,55 @@ If core_id is left as “None”, all cores are selected.</p>
 </tr>
 </tbody>
 </table>
-<p>Examples:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
-    <span class="n">take</span> <span class="nb">all</span> <span class="n">experiments</span> <span class="n">included</span> <span class="n">between</span> <span class="n">neuron</span> <span class="mi">64</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">neuron</span> <span class="mi">128</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">maxNumber</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">take</span> <span class="n">up</span> <span class="n">to</span> <span class="mi">5</span> <span class="n">experiments</span> <span class="n">included</span> <span class="n">between</span> <span class="n">neuron</span> <span class="mi">64</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="n">neuron</span> <span class="mi">128</span> <span class="p">(</span><span class="n">chip</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">core</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>When dealing with Dynap-se output recordings, one of the main problems is “how get only events that are associated only with my input?”
+You can, of course, filter events manually using custom functions, but this is expensive in terms of time.
+An automatic solution, however, can be to use two Dynap-se neurons to trigger the start and the end of the events correlated to my input.</p>
+<p>The experiment would be constructed in this way:</p>
+<ol class="arabic simple">
+<li>send a spike to a neuron that will represent my starting trigger</li>
+<li>send the experiment input spikes after small delay, negligible with respect to the delays involved in the input stream</li>
+<li>send a spike to a neuron that will represent my ending trigger, with a small delay, as for the input</li>
+</ol>
+<p>So each experiment is the repetition of these 3 passages. Make sure there is enough delay between the stop trigger event and the
+start of the new one. You should avoid overlapping of them, because this can create confusion while extracting events.
+The code is able to handle multiple spikes of start and trigger neurons for the same experiment, so don’t much worry about that.</p>
+<p>This function should be applied to the output recording in order to filter all events but for the ones that are between
+the start and stop neurons. In this way you can automatically synchronize your analysis with the events generated only by your input.</p>
+<p class="last">It is possible to specify also a maximum number of experiments that are extracted from the set using maxNumber parameter.</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Initialize set importing all events</span>
+<span class="nb">set</span> <span class="o">=</span> <span class="n">import_events</span><span class="p">(</span><span class="s2">&quot;recording.aedat&quot;</span><span class="p">)</span> <span class="c1"># event set of the recording</span>
 </pre></div>
 </div>
+<ul>
+<li><p class="first">startTriggerNeuron neuron 64 of core 2 of chip 0, stopTriggerNeuron is neuron 128 of core 2 of chip 0. Take all experiments (no maxNumber specified) included between these two neurons:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+<span class="n">extractedEvents</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">isolate_events_sets</span><span class="p">(</span><span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="n">startTriggerNeuron</span><span class="p">,</span>
+                                          <span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="n">stopTriggerNeuron</span><span class="p">,</span>
+                                          <span class="n">maxNumber</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">startTriggerNeuron neuron 64 of core 2 of chip 0, stopTriggerNeuron neuron 128 of core 2 of chip 0. Take UP TO 5 experiments between these two neurons:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+<span class="n">extractedEvents</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">isolate_events_sets</span><span class="p">(</span><span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="n">startTriggerNeuron</span><span class="p">,</span>
+                                          <span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="n">stopTriggerNeuron</span><span class="p">,</span>
+                                          <span class="n">maxNumber</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="classes.EventsSet.EventsSet.normalize">
 <code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the time of the current EventSet</p>
-<p>The time of the first event is set to 0. The subsequent are changed accordingly</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -213,20 +540,16 @@ If core_id is left as “None”, all cores are selected.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The time of the first event is set to 0. The subsequent are changed accordingly</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="classes.EventsSet.EventsSet.plot_events">
 <code class="descname">plot_events</code><span class="sig-paren">(</span><em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/EventsSet.html#EventsSet.plot_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.EventsSet.EventsSet.plot_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raster plot of events included in the current EventsSet</p>
-<p>Colors has been chosen to be clearly visible and to match the DYNAP-se core color enconding:</p>
-<ul class="simple">
-<li>core 0: green</li>
-<li>core 1: magenta</li>
-<li>core 2: red</li>
-<li>core 3: yellow</li>
-</ul>
-<p>Note that there is no distinguish between different chips events</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -246,60 +569,95 @@ If core_id is left as “None”, all cores are selected.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-</dd></dl>
-
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Colors has been chosen to be clearly visible and to match the DYNAP-se core color enconding:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">core</span> <span class="mi">0</span><span class="p">:</span> <span class="n">green</span>
+<span class="o">-</span> <span class="n">core</span> <span class="mi">1</span><span class="p">:</span> <span class="n">magenta</span>
+<span class="o">-</span> <span class="n">core</span> <span class="mi">2</span><span class="p">:</span> <span class="n">red</span>
+<span class="o">-</span> <span class="n">core</span> <span class="mi">3</span><span class="p">:</span> <span class="n">yellow</span>
+</pre></div>
 </div>
+<p>With this classification there there is no distinguish between different chips events. It is much better
+to filter them and display them separately.</p>
+<p class="last">The input ax value can be used to make it plot over a pre-created figure. Fig, ax and handles can be used instead
+by the user to specify in detail the properties of the graph (see Example for how to do it)</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Initialize set importing all events</span>
+<span class="nb">set</span> <span class="o">=</span> <span class="n">import_events</span><span class="p">(</span><span class="s2">&quot;recording.aedat&quot;</span><span class="p">)</span> <span class="c1"># event set of the recording</span>
+<span class="n">figList</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">handles</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">plot_events</span><span class="p">()</span> <span class="c1"># plot events</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Raster plot Recording&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time [us]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Neuron id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
 
 
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Cattaneo Roberto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="dynapseSpikesFitter.html"
-                        title="previous chapter">dynapseSpikesFitter</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="InputPattern.html"
-                        title="next chapter">InputPattern</a></p>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="InputPattern.html" title="InputPattern"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="dynapseSpikesFitter.html" title="dynapseSpikesFitter"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="API.html" >API</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Cattaneo Roberto.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

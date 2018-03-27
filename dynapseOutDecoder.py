@@ -4,29 +4,41 @@
 import struct
 import numpy as np
 from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from DYNAPSETools.classes.EventsSet import EventsSet
 
 ### ===========================================================================
 def import_events(fileName):
     """Read events from the from cAER aedat 3.0 file format
 
-OUTPUT FORMAT EXAMPLE
-::
-
-    VECT POSITION -> |       0       |        1       |       2       |
-    chip_id_tot   -> |  chip 0       |  chip 1        |  chip 3       |
-    core_id_tot   -> |  core 0       |  core 3        |  core 1       |
-    neuron_id_tot -> |  neuron 1     |  neuron 100    |  neuron 255   |
-    ts_tot        -> |  time 150000  |  time 15068    |  time 150127  |
-        
-the same for special events
-
 Parameters:
     fileName (string): Name (with path) of the source .aedat file
 
 Returns:
     obj EventsSet: A set containing the events imported from the file
+
+Note:
+    Events has the following structure:
+
+    +------------+------------+-----------+-----------+-----------+ 
+    | Vect       | Event 0    |  Event 1  | Event 2   | Event ... |
+    +============+============+===========+===========+===========+ 
+    | chip_id    | 0          | 1         | 3         | ...       | 
+    +------------+------------+-----------+-----------+-----------+ 
+    | core_id    | 0          | 3         | 1         | ...       |
+    +------------+------------+-----------+-----------+-----------+ 
+    | neuron_id  | 1          | 100       | 255       | ...       | 
+    +------------+------------+-----------+-----------+-----------+
+    | ts         | 150000     | 150064    | 150128    | ...       |
+    +------------+------------+-----------+-----------+-----------+
+        
+    the same structure is for special events
+
+    Time is absolute (first value is not zero), and expressed in [us] units
+
+Example:
+    - Retrieve events from .aedat::
+        
+        set = import_events("recording.aedat") # event set of the recording
 """
        
     try:
@@ -89,20 +101,9 @@ Parameters:
 ### ===========================================================================
 def read_packet(file, debug = False):
     """Read DYNAP-se packet from cAER aedat 3.0 file format
-        
-OUTPUT FORMAT EXAMPLE
-::
-
-    VECT POSITION -> |       0       |        1       |       2       |
-    chip_id_tot   -> |  chip 0       |  chip 1        |  chip 3       |
-    core_id_tot   -> |  core 0       |  core 3        |  core 1       |
-    neuron_id_tot -> |  neuron 1     |  neuron 100    |  neuron 255   |
-    ts_tot        -> |  time 150000  |  time 15068    |  time 150127  |
-        
-the same for special events
-
+     
 Parameters:
-    file (obj file handle): handle of the recording file
+    file (obj, file handle): handle of the recording file
     debug (bool, optional): print debug data
 
 Returns:
@@ -114,6 +115,25 @@ Returns:
         - **ts_tot** (*list, float*): Contains the time of the events in the packet
         - **spec_type_tot** (*list, int*): Contains the types of the special events in the packet
         - **spec_ts_tot** (*list, float*): Contains the time of special events in the packet
+
+Note:
+    Events has the following structure:
+
+    +------------+------------+-----------+-----------+-----------+ 
+    | Vect       | Event 0    |  Event 1  | Event 2   | Event ... |
+    +============+============+===========+===========+===========+ 
+    | chip_id    | 0          | 1         | 3         | ...       | 
+    +------------+------------+-----------+-----------+-----------+ 
+    | core_id    | 0          | 3         | 1         | ...       |
+    +------------+------------+-----------+-----------+-----------+ 
+    | neuron_id  | 1          | 100       | 255       | ...       | 
+    +------------+------------+-----------+-----------+-----------+
+    | ts         | 150000     | 150064    | 150128    | ...       |
+    +------------+------------+-----------+-----------+-----------+
+        
+    the same structure is for special events
+
+    Time is absolute (first value is not zero), and expressed in [us] units
 """
         
     # raise Exception at end of file
@@ -189,6 +209,19 @@ Returns:
         - **figList** (*list of fig handles*): To modify properties of the figure
         - **axList** (*list of ax handles*): To modify properties of the plot
         - **handlesList** (*list of lines handles*): To create custom legends
+ 
+Example:
+    - Retrieve and plot events from .aedat::
+        
+        set1 = import_events("recording1.aedat") # event set of the recording
+        set2 = import_events("recording2.aedat") # event set of the recording
+        figList, axList, handlesList = plot_events([set1, set2]) # plot events
+        axList[0].set_title("Raster plot Recording 1")
+        axList[0].set_xlabel('time [us]')
+        axList[0].set_ylabel('Neuron id')
+        axList[1].set_title("Raster plot Recording 2")
+        axList[1].set_xlabel('time [us]')
+        axList[1].set_ylabel('Neuron id')
 """
 
     # Initialize lists
@@ -204,77 +237,3 @@ Returns:
         handlesList.append(handles)
 
     return figList, axList, handlesList
-
-### ===========================================================================
-def plot_firing_rate(timeSteps, neuronsFireRate, ax = None, enPlot3d = False, enImshow = False):
-        """Plot the firing rate of every neuron present in the chip
-        
-It is available a 3d view and a Imshow view
-
-Parameters:
-    timeSteps (array, float): Time steps in which firing rate has been calculated
-    neuronsFireRate (2D array, float): Contain firing rate for every neuron and for every time step
-    ax (ax handle, optional): Plot graph on this handle
-    enPlot3d (bool, optional): Activate 3D visualization
-    enImshow (bool, optional): Activate ImShow visualization
-
-Returns:
-    (tuple): tuple containing:
-
-        - **figList** (*list, fig handles*): To modify properties of the figure
-        - **axList** (*list, ax handles*): To modify properties of the plot
-"""
-        
-        fig = None
-
-        # If no subplot is specified, create new plot
-        if ax == None: 
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
-
-        figList = []
-        axList = []
-
-        neuronsVect = np.array([(0, 256, 'g'), (256, 512, 'm'), (512, 768, 'r'), (768, 1024, 'y')])
-        
-        # Plot
-        for minN, maxN, color in neuronsVect:
-            ax.plot(timeSteps, np.transpose(neuronsFireRate[int(minN):int(maxN)]), marker = 'o', color = color)
-        # Append plot handles
-        axList.append(ax)
-        figList.append(fig)
-        
-        # Plot a 3d view of the firing rate
-        if enPlot3d == True:
-            fig2 = plt.figure()
-            ax2 = fig2.add_subplot(111, projection='3d')
-            for minN, maxN, color in neuronsVect:
-                X, Y = np.meshgrid(timeSteps, np.arange(int(minN), int(maxN)))
-                Z = np.array(neuronsFireRate[int(minN):int(maxN)])
-                ax2.plot_wireframe(X, Y, Z, rstride=1, cstride=1, color = color)
-            # Append plot handles
-            figList.append(fig2)    
-            axList.append(ax2)
-        
-        # Plot the imshow of the firing rates 
-        if enImshow == True:
-            fig3 = plt.figure()
-            ax3 = fig3.add_subplot(111)
-            im = ax3.imshow(neuronsFireRate, cmap = 'hot', aspect='auto')
-            plt.colorbar(im, orientation = 'vertical')
-            # Append plot handles
-            figList.append(fig3)
-            axList.append(ax3)
-
-### ===========================================================================        
-def plot_settings(xlabel, ylabel, enLegend = True, zlabel = None, title = None):
-    if title != None:
-        plt.title(title)
-    plt.xlabel(xlabel)  
-    plt.ylabel(ylabel)
-    plt.grid(b=True, which='major', color='k', linestyle='-')
-    plt.grid(b=True, which='minor', color='r', linestyle='-', alpha=0.2)
-    plt.minorticks_on()
-    if enLegend:
-        plt.legend(loc = 1)
-    plt.show()

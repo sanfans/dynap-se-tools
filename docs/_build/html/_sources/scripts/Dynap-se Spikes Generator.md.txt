@@ -1,4 +1,13 @@
 # Dynap-se Spike Generator
+## API
+* [dynapseSpikesGenerator](dynapseSpikesGenerator.html) module
+* [InputPattern](InputPattern.html) class
+* [InputEvent](InputEvent.html) class
+
+## Table of content
+* [Description](#description)
+* [Functionalities](#functionalities)
+
 ## Description
 DYNAP-se contains an useful module called FPGASpikeGenerator. This module allows the user to send customized (in address and interspike interval) spike patterns in specific location inside DYNAP-se.
 
@@ -56,5 +65,3 @@ It is evident that generating this file manually is not easy. Here is where clas
 * Write output .txt file containing coded events
 * Possibility to import events from a .txt file, plot them and add new patters
 * Possibility to stack as many patterns as needed just calling the apposite functions
-
-## Limitations (work in progress)

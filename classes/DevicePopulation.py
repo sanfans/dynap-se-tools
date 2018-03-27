@@ -22,15 +22,54 @@ Parameters:
     core_id (int): Core id in which the population is located
     start_neuron (int): Neuron id where to start allocating neurons for the population.
     size (int): Dimension of the population
-    neurons_id (list of int): Permit to specify a list of neuron id that are chosen for the population.
-    Pay attention that it will overwrite start_neuron and size
-    neuronType (string):\n
-    - sInh -> slow inhibitory (code 0)
-    - fInh -> fast inhibitory (code 1)
-    - sExc -> slow excitatory (code 2)
-    - fExc -> fast excitatory (code 3)
+    neurons_id (list, int): Permit to specify a list of neuron id that are chosen for the population.
 
-All this parameters can also be not specified, look at the default values
+Note:
+    All this parameters can also be not specified, look at the **default values!**
+
+    Remember that in Dynap-se there are 4 types of connections: fast excitatory, fast inhibitory, slow excitatory and slow inhibitory.
+    They can be specified insert in neuronsType one of the following strings:
+
+    - fast excitatory: "fExc"
+    - slow excitatory: "sExc"
+    - fast inhibitory: "fInh"
+    - slow inhibitory: "sInh"
+
+    This function is the first step for the creation of connections between neurons in Dynap-se board. There are two ways to procede:
+
+    1. specifying a Brian2 neuron object containing a population that you want to *transport* to Dynap-se.
+        Is necessary to specify, moreover, the position of the population in the board, i.e 
+        chip_id, core_id, start_neuron and eventually the neuronsType. The name is automatically imported from the
+        population one
+    2. specifying only chip_id, core_id, start_neuron, size and neuronsType. In this case it is possible to create connections
+        in Dynap-se that are not related to any Brian2 population. Useful for **control** connections.
+
+    In both cases, it is possible to specify a list (or only one) of neurons in **neurons_id** (i.e. [1, 3, 5]).
+    They represent the indexes of the physical neurons in a core in Dynap-se (still chip_id and core_id must be specified) and they
+    have the priority with respect to **start_neuron** and **size**.
+
+Note:
+    It is also compatible with **NCSBrian2Lib (Neurons object)**
+
+Examples:
+    - Create a Device population of 2 neurons from brian2. Locate it in chip 0, core 1, starting from neuron 0 (type fast excitatory)::
+    
+        p1 = NeuronGroup(2, "dv/dt = -v/tau : volt", name = "p1") # define neuron group with brian2
+        _p1 = DevicePopulation(neuronsObj = p1, chip_id = 0, core_id = 1,
+                                start_neuron = 0, neuronsType = "fExc")
+
+    - Create without using brian2, using automatic location from size::
+
+        _p1 = DevicePopulation(chip_id = 0, core_id = 1, start_neuron = 0,
+                                size = 2, neuronsType = "fExc",
+                                name = "p1")
+
+    - Create same population but specifying the position of each neuron::
+
+        neurons = np.array([0, 1]) # Defining the two neurons positions
+        _p1 = DevicePopulation(chip_id = 0, core_id = 1,
+                                neurons_id = neurons, neuronsType = "fExc",
+                                name = "p1")
 """
         
         # Set population parameters
@@ -101,7 +140,7 @@ Parameters:
     chip_id (int): Chip id in which the population is located
     core_id (int): Core id in which the population is located
     start_neuron (int): Neuron id where to start allocating neurons for the population.
-    neurons_id (list of int): Permit to specify a list of neuron id that are chosen for the population.
+    neurons_id (list, int): Permit to specify a list of neuron id that are chosen for the population.
     Pay attention that it will overwrite start_neuron and size
     neuronType (string):\n
     - sInh -> slow inhibitory (code 0)
@@ -168,5 +207,6 @@ Returns:
         
         # Update neurons and shape
         self.neurons = np.append(self.neurons, population)
-        
+        self.size = np.size(self.neurons)
+
         return population

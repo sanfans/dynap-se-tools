@@ -24,9 +24,14 @@ Parameters:
 ### ===========================================================================
     def create_neuron_string(self):
         """Crete the connection neuron string (UxxCxxNxxx) from chip, core and neuron id
-        Includes also synaptic type
-        
-        EX: chip_id = 0; core_id = 0; neuron_id = 1 /// return -> U00C00N001"""
+
+Includes also synaptic type
+
+Example:
+    - Neuron string return::
+
+        chip_id = 0; core_id = 0; neuron_id = 1 /// return -> U00C00N001
+"""
             
         outString = "U{:02d}C{:02d}N{:03d}".format(self.chip_id, self.core_id, self.neuron_id)
         return outString
