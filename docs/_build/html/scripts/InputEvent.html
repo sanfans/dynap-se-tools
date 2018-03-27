@@ -1,145 +1,318 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>InputEvent &#8212; DYNAPSETools 1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="DevicePopulation" href="DevicePopulation.html" />
-    <link rel="prev" title="InputPattern" href="InputPattern.html" /> 
-  </head>
-  <body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="DevicePopulation.html" title="DevicePopulation"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="InputPattern.html" title="InputPattern"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="API.html" accesskey="U">API</a> &#187;</li> 
-      </ul>
-    </div>  
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>InputEvent &mdash; DYNAPSETools 1.0 documentation</title>
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="DYNAPSETools 1.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DYNAPSETools
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="module-classes.InputEvent">
-<span id="inputevent"></span><h1>InputEvent<a class="headerlink" href="#module-classes.InputEvent" title="Permalink to this headline">¶</a></h1>
-<p>Contains a class that represent an input event to DYNAP-se</p>
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Net Generator.html">Dynap-se Net Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Out Decoder.html">Dynap-se Out Decoder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Spikes Fitter.html">Dynap-se Spikes Fitter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dynap-se Spikes Generator.html">Dynap-se Spike Generator</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DYNAPSETools</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>InputEvent</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/scripts/InputEvent.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="inputevent">
+<span id="inputevent"></span><h1>InputEvent<a class="headerlink" href="#inputevent" title="Permalink to this headline">¶</a></h1>
+</div>
+<span class="target" id="module-classes.InputEvent"></span><p>Contains a class that represent an input event to DYNAP-se</p>
 <dl class="class">
 <dt id="classes.InputEvent.InputEvent">
 <em class="property">class </em><code class="descclassname">classes.InputEvent.</code><code class="descname">InputEvent</code><span class="sig-paren">(</span><em>virtualSourceCoreId=None</em>, <em>neuronAddress=None</em>, <em>coreDest=None</em>, <em>address=None</em>, <em>time=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/InputEvent.html#InputEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.InputEvent.InputEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that represent an input event in DYNAP-se</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class that represent an input event in DYNAP-se</p>
 <p>Return a new InputEvent object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>virtualSourceCoreId</strong> (<em>int</em>) – id of the core where is located the virtual neuron</li>
+<li><strong>neuronAddress</strong> (<em>int</em>) – id of virtual source neuron</li>
+<li><strong>coreDest</strong> (<em>int</em><em>, </em><em>hot coded</em>) – id of the destination cores where the spike is delivered</li>
+<li><strong>address</strong> (<em>int</em>) – address of the event (for manual insertions of events)</li>
+<li><strong>time</strong> (<em>float</em>) – time delay associated with the event</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>coreDest is a 16-bit hot coded number. This means that every coded bit can activate or
+deactivate a destination core, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">0001</span> <span class="o">-&gt;</span> <span class="n">to</span> <span class="n">core</span> <span class="mi">0</span>
+<span class="o">-</span> <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">0010</span> <span class="o">-&gt;</span> <span class="n">to</span> <span class="n">core</span> <span class="mi">1</span>
+<span class="o">-</span> <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">0100</span> <span class="o">-&gt;</span> <span class="n">to</span> <span class="n">core</span> <span class="mi">2</span>
+<span class="o">-</span> <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">-&gt;</span> <span class="n">to</span> <span class="n">core</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>Every combination is accepted, for example:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">0011</span> <span class="o">-&gt;</span> <span class="n">to</span> <span class="n">core</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">1</span>
+<span class="o">-</span> <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">0110</span> <span class="o">-&gt;</span> <span class="n">to</span> <span class="n">core</span> <span class="mi">2</span> <span class="ow">and</span> <span class="mi">3</span>
+<span class="o">-</span> <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">1111</span> <span class="o">-&gt;</span> <span class="n">to</span> <span class="nb">all</span> <span class="n">cores</span>
+</pre></div>
+</div>
+</div>
 <dl class="method">
 <dt id="classes.InputEvent.InputEvent.create_address_event">
 <code class="descname">create_address_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/InputEvent.html#InputEvent.create_address_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.InputEvent.InputEvent.create_address_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an address and time for an event in the spike generator</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Bit</span> <span class="n">structure</span><span class="p">:</span>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The final address is composed in the following way:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">Bits</span><span class="p">:</span>
 <span class="mi">13</span> <span class="mi">12</span> <span class="mi">11</span> <span class="mi">10</span> <span class="mi">9</span> <span class="mi">8</span> <span class="mi">7</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span>
 <span class="o">|-----------------|</span> <span class="n">neuronAddress</span>
                     <span class="o">|-|</span> <span class="n">virtualSourceCoreId</span>
                         <span class="o">|-----|</span> <span class="n">coreDest</span>
 </pre></div>
 </div>
-<p>coreDest is hard coded -&gt; 1111 (15 decimal) means to all cores</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="classes.InputEvent.InputEvent.decode_address_event">
 <code class="descname">decode_address_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/classes/InputEvent.html#InputEvent.decode_address_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.InputEvent.InputEvent.decode_address_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decode event characteristics starting from time and address</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Bit</span> <span class="n">structure</span><span class="p">:</span>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The final address is composed in the following way:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">Bits</span><span class="p">:</span>
 <span class="mi">13</span> <span class="mi">12</span> <span class="mi">11</span> <span class="mi">10</span> <span class="mi">9</span> <span class="mi">8</span> <span class="mi">7</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span>
 <span class="o">|-----------------|</span> <span class="n">neuronAddress</span>
                     <span class="o">|-|</span> <span class="n">virtualSourceCoreId</span>
                         <span class="o">|-----|</span> <span class="n">coreDest</span>
 </pre></div>
 </div>
-<p>coreDest is hard coded -&gt; 1111 (15 decimal) means to all cores</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
+</dd></dl>
+
+</dd></dl>
 
 
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Cattaneo Roberto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="InputPattern.html"
-                        title="previous chapter">InputPattern</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="DevicePopulation.html"
-                        title="next chapter">DevicePopulation</a></p>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="DevicePopulation.html" title="DevicePopulation"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="InputPattern.html" title="InputPattern"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">DYNAPSETools 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="API.html" >API</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Cattaneo Roberto.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

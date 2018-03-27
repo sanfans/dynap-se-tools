@@ -10,14 +10,16 @@ class InputPattern:
     """
 
     def __init__(self, name, isiBase = 90.0):
-        """Return a new InputPattern object
+        """Returns a new InputPattern object
 
 Parameters:
     name (string): Name of the pattern (useful for debug)
     isiBase (int): Time base for time event generation.
-        Every delay is represented as multiple of this base. Knowing that an isiBase = 90 correspond to 1 us
-        a delay = 10 -> 10 * isiBase = 10 us
-        With isiBase = 900 a delay = 10 -> 10 * isiBase = 100 us
+
+Note:
+    Every delay is represented as multiple of this base. Knowing that an isiBase = 90 correspond to 1 us
+    a delay = 10 -> 10 * isiBase = 10 us
+    With isiBase = 900 a delay = 10 -> 10 * isiBase = 100 us
 """
 
         self.name = name
@@ -44,10 +46,13 @@ Parameters:
     firePeriod (float, [s]): Event delay (after delay the event is generated)
 
 Examples:
-::
+    - send a single event with 0.1s delay from neuron 0 of core 1, to all cores::
+            
+            single_event(1, 15, 0, firePeriod = 0.1)
 
-    - single_event(1, 15, 0, firePeriod = 0.1)
-    - single_event(2, 1, 0, fireFreq = 50)
+    - send a single event with 0.02s delay (50Hz) from neuron 0 of core 2, to all cores::
+    
+            single_event(2, 1, 0, fireFreq = 50)
 """
 
         if (firePeriod == None) & (fireFreq != None):
@@ -65,10 +70,6 @@ Examples:
     def multiple_events(self, virtualSourceCoreId, neuronAddress, coreDest, absTimes = None, fireFreq = None, firePeriod = None):
         """Create multiple events for specified neurons and times.
         
-It is possible to specify a sequence of absolute times for the spikes (absTimes)
-It is possible to specify a sequence of firing frequencies for the spikes (fireFreq)
-It is possible to specify a sequence of firing periods for the spikes (firePeriod)
-
 Parameters:
     virtualSourceCoreId (list of int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
     neuronAddress (list of int): Represent the address of the virtual neuron that will generate the event
@@ -77,10 +78,19 @@ Parameters:
     fireFreq (list of int, [Hz]): Firing frequency you want to achieve ; event delay is calculate as 1/frequency
     firePeriod (float, [s]): Event delay (after delay the event is generated)
 
-Examples:\n
-- sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], absTimes = [20e-3, 40e-3, 60e-3])
-- sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], fireFreq = [50, 50, 50])
-- sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], firePeriod = [20e-3, 20e-3, 20e-3])
+Note:
+    It is possible to specify a sequence of absolute times for the spikes (absTimes)
+
+    It is possible to specify a sequence of firing frequencies for the spikes (fireFreq)
+    
+    It is possible to specify a sequence of firing periods for the spikes (firePeriod)
+
+Examples:
+    - The following three examples create a pattern of three spikes with 20ms interspike interval. The spikes come from virtual neuron 0 of core 1, and are sent to all cores::
+
+            sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], absTimes = [20e-3, 40e-3, 60e-3])
+            sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], fireFreq = [50, 50, 50])
+            sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], firePeriod = [20e-3, 20e-3, 20e-3])
 """
         
         # Find which type of event series must be generated
@@ -122,10 +132,9 @@ Parameters:
     duration (float, [s]): Duration of the event pattern
 
 Examples:
-::
+    - Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration::
 
-    - constant_freq(1, 15, 0, 50, 1/50, 1)
-        Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration
+        constant_freq(1, 15, 0, 50, 1/50, 1)     
 """
         
         freqPhase = (1.0 / duration) # in Hz
@@ -142,11 +151,6 @@ Examples:
     def linear_freq_modulation(self, virtualSourceCoreId, neuronAddress, coreDest, freqStart, freqStop, freqSteps, freqPhaseDuration, initDelay):
         """Create addresses and time steps for a linear firing frequency modulation
         
-The modulation starts at <freqStart> and stops at <freqStop>, with <freqSteps> number of steps
-of duration <freqPhaseDuration>.
-
-It is possible to specify an initial delay of the first spike changing <initDelay>
-
 Parameters:
     virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
     neuronAddress (int): Represent the address of the virtual neuron that will generate the event
@@ -157,11 +161,15 @@ Parameters:
     freqPhaseDuration (float, [s]): Duration of each frequency step
     initDelay (float, [s]): Delay of the first event
 
-Examples:
-::
+Note:
+    The modulation starts at <freqStart> and stops at <freqStop>, with <freqSteps> number of steps of duration <freqPhaseDuration>.
 
-    - linear_freq_modulation(1, 15, 0, 50, 100, 6, 0.1, 0)
-        modulation from 50Hz to 100Hz with 6 steps (50, 60, 70, 80, 90, 100)Hz, 100ms of duration of each step, zero initial delay
+    It is possible to specify an initial delay of the first spike changing <initDelay>
+
+Examples:
+    - modulation from 50Hz to 100Hz with 6 steps (50, 60, 70, 80, 90, 100)Hz, 100ms of duration of each step, zero initial delay::
+        
+        linear_freq_modulation(1, 15, 0, 50, 100, 6, 0.1, 0) 
 """
         
         # Generate (address, time) event list
@@ -182,21 +190,6 @@ Examples:
     def threshold_encoder(self, virtualSourceCoreId, neuronAddressUpCH, neuronAddressDwCH, coreDest, threshold, t, y, noiseVar, initDelay):
         """Create spikes with variable frequency, in the form of a specified function      
         
-A spike is generated when the signal does a step up or step down bigger than the threshold <threshold>.
-
-Spikes are encoded in two channels (<neuronAddressUpCH> and <neuronAddressDwCH>)
-according to the direction of the jump (depending on the slope of the signal):\n
-- deltaY > threshold --> Up channel spike
-- deltaY < -threshold --> Dw channel spike
-
-It is possible to specify an initial delay of the first spike changing <initDelay>
-It is possible to specify the variance <noiseVar> of a Gaussian noise added to the spike times
-With <plotEn> True the signal shape is included in the list of signals to be plotted
-        
-Note that the algorithm does not constrain the firing frequencies to a minimum or maximum,
-but they depend on the signal and the threshold. Minimum and maximum
-firing rates are calculated and printed.
-
 Parameters:
     virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
     neuronAddressUpCH (int): Represent the address of the virtual neuron that will generate the event on Up channel
@@ -208,12 +201,28 @@ Parameters:
     noiseVar (float, [s]): Variance of a gaussian distribution from which noise is applied to event times
     initDelay (float, [s]): Delay of the first event
 
-Examples:
-::
+Note:
+    A spike is generated when the signal does a step up or step down bigger than the threshold <threshold>.
 
-    t = np.arange(0, 1, 1e-6)
-    y = np.sin(2 * np.pi * 1 * t)
-    spikeGen.threshold_encoder(1, 2, 15, 0, 0.05, t, y, 0, 1e-3, plotEn = True)
+    Spikes are encoded in two channels (<neuronAddressUpCH> and <neuronAddressDwCH>)
+    according to the direction of the jump (depending on the slope of the signal):\n
+    - deltaY > threshold --> Up channel spike
+    - deltaY < -threshold --> Dw channel spike
+
+    It is possible to specify an initial delay of the first spike changing <initDelay>
+    It is possible to specify the variance <noiseVar> of a Gaussian noise added to the spike times
+    With <plotEn> True the signal shape is included in the list of signals to be plotted
+        
+    Note that the algorithm does not constrain the firing frequencies to a minimum or maximum,
+    but they depend on the signal and the threshold. Minimum and maximum
+    firing rates are calculated and printed.
+
+Examples:
+    - SineWave 2 Hz conversion in spikes::
+
+        t = np.arange(0, 1, 1e-6)
+        y = np.sin(2 * np.pi * 1 * t)
+        spikeGen.threshold_encoder(1, 2, 15, 0, 0.05, t, y, 0, 1e-3, plotEn = True)
 """
         
         # Initialization

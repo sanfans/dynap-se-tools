@@ -1,5 +1,0 @@
-dynapseSpikesFitter
-===================
-
-.. automodule:: dynapseSpikesFitter
-   :members:
