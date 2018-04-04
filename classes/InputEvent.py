@@ -38,9 +38,9 @@ Note:
             self.create_address_event()
             self.time = time
         elif (address != None) & (time != None):
-            self.decode_address_event()
             self.address = address
             self.time = time
+            self.decode_address_event()
 
 ### ===========================================================================
     def create_address_event(self):

@@ -97,6 +97,28 @@
 <li class="toctree-l2"><a class="reference internal" href="#table-of-content">Table of content</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functionalities">Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tutorial">Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-libraries">Import libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-network-from-scratch-method-1">Create Network from scratch (Method 1)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-populations">Create populations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-connections">Create Connections</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#create-network-from-brian2-one-method-2">Create Network from Brian2 one (Method 2)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#convert-populations">Convert populations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convert-connections">Convert connections</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#create-network-from-ncsbrian2-one-method-3">Create Network from NCSBrian2 one (Method 3)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-biologically-plausible-connections">Non biologically plausible connections</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#method-1">Method 1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#method-2">Method 2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#write-connections-on-output-file">Write connections on output file</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Dynap-se Out Decoder.html">Dynap-se Out Decoder</a></li>
@@ -181,13 +203,380 @@
 <ul class="simple">
 <li><a class="reference external" href="#description">Description</a></li>
 <li><a class="reference external" href="#functionalities">Functionalities</a></li>
+<li><a class="reference external" href="#tutorial">Tutorial</a></li>
 </ul>
 </div>
 <div class="section" id="description">
 <span id="description"></span><h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>DYNAP-se control software cAER contains an useful module called netParser.
+This module allows the user to implement networks in Dynap-se directly writing them
+in a .txt, using a userfriendly format.
+In this way is easy to construct and check the connections
+that has been performed. However manual approach works for simple networks
+that does not require fancy probability evaluations or strange connectivity shapes.</p>
+<p>For complex networks an higher level of abstraction is required. This part of Dynap-se
+tools take care of this functionality of cAER, trying to help the user using high
+level structures as Population and Connections in order to create the final .txt file
+with all the connections that must be written on Dynap-se.</p>
+<p>An example of a .txt connections file is the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!======================================== Connecting InputLayer-&gt;MiddleLayer</span>
+<span class="n">U04C00N001</span><span class="o">-&gt;</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">U00C01N000</span>
+<span class="n">U04C00N001</span><span class="o">-&gt;</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">U00C01N001</span>
+<span class="n">U04C00N001</span><span class="o">-&gt;</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">U00C01N002</span>
+<span class="c1">#!======================================== Connecting MiddleLayer-&gt;OutputLayer</span>
+<span class="n">U00C02N000</span><span class="o">-&gt;</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">U00C03N016</span>
+<span class="n">U00C02N001</span><span class="o">-&gt;</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">U00C03N016</span>
+<span class="n">U00C02N002</span><span class="o">-&gt;</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">U00C03N016</span>
+</pre></div>
+</div>
+<p>Every line is a connection between a source neuron (on the left of the arrow,
+i.e. U04C00N001) and a destination one (on the right of the arrow, i.e. U00C01N000).
+Connection type and weight are specified just after the arrow, i.e. 3-1 (3 is the type
+and 1 is the connection weight).</p>
+<p>The library, moreover, try to create a bridge between Brian2 network simulation software
+and Dynap-se, creating a compatibility between them. From a Brian2 network it is
+possible, with few lines, transform in a loadable Dynap-se network.</p>
 </div>
 <div class="section" id="functionalities">
 <span id="functionalities"></span><h2>Functionalities<a class="headerlink" href="#functionalities" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Create network for Dynap-se using high level concept as Population and Connection</li>
+<li>Use the power of Brian2 to create complex connectivity, and than translate them into
+Dynap-se one.</li>
+</ul>
+</div>
+<div class="section" id="tutorial">
+<span id="tutorial"></span><h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial explain a reasonable way of using Dynap-se net generator module
+to create interconnected networks of neurons. During the tutorial we will create
+a network with a total of 20 neurons organized in the following way:</p>
+<ul class="simple">
+<li>InputLayer: 1 input neuron coming from Dynap-se virtual chip</li>
+<li>MiddleLayer: 1 column of 10 neurons connected to the input</li>
+<li>OutputLayer: 2 neuron connected to the MiddleLayer with a certain connectivity</li>
+</ul>
+<p>In a first approach we will define biologically plausible connections. This means that
+every neuron will have an associated type, excitatory/inhibitory. The connections
+that a neuron can perform depend esclusively on his type. If excitatory,
+will be excitatory, if inhibitory, will be inhibitory. The topology of the network
+will be:</p>
+<ul class="simple">
+<li>InputLayer: excitatory</li>
+<li>MiddleLayer: first 50% excitatory, second 50% inhibitory</li>
+<li>OutputLayer: excitatory (not really important since there are no recurrent connections)</li>
+</ul>
+<p>The same network will be created in different ways, according the situation in which you are in:</p>
+<ol class="simple">
+<li>You want to create the network from scratch</li>
+<li>You have a Brian2 network already created</li>
+<li>You have an NCSBrian2 network already created</li>
+</ol>
+<p>In the second part we will break biology rules, allowing our excitatory input neuron
+be inhibitory for some of MiddleLayer neurons. This is possible in Dynap-se but
+leads to networks that are not biologically plausible.</p>
+<div class="section" id="import-libraries">
+<span id="import-libraries"></span><h3>Import libraries<a class="headerlink" href="#import-libraries" title="Permalink to this headline">¶</a></h3>
+<p>As said in the Repository README, is recommended to setup your python environment
+such to have the working directory in the same parent folder as the one of the library.
+As alternative, you can add the library directory to the python path.</p>
+<p>To import the module:</p>
+<pre class="code highlight python literal-block">
+<span class="kn">import</span> <span class="nn">DYNAPSETools.dynapseNetGenerator</span> <span class="kn">as</span> <span class="nn">DSG</span>
+</pre>
+<p>We will need also numpy and matplot lib for our elaborations:</p>
+<pre class="code highlight python literal-block">
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</pre>
+</div>
+<div class="section" id="initialization">
+<span id="initialization"></span><h3>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h3>
+<p>Before starting creating the network, i suggest to write all preliminary code, like:</p>
+<pre class="code highlight python literal-block">
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># Set seed for the random number generation</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="c1"># Close all the plots that has been created</span>
+                 <span class="c1"># in the previous run</span>
+</pre>
+</div>
+<div class="section" id="create-network-from-scratch-method-1">
+<span id="create-network-from-scratch-method-1"></span><h3>Create Network from scratch (Method 1)<a class="headerlink" href="#create-network-from-scratch-method-1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="create-populations">
+<span id="create-populations"></span><h4>Create populations<a class="headerlink" href="#create-populations" title="Permalink to this headline">¶</a></h4>
+<p>In this section we start creating the populations we need for the network and
+locate them inside Dynap-se board:</p>
+<ul class="simple">
+<li>InputLayer: Virtual Chip (U = 4), Core 0 (C = 0), Neuron 1 (N = 1)</li>
+<li>MiddleLayer: Physical Chip 0 (U = 0), Core 0 (C = 0), 10 Neurons starting from
+position 0</li>
+<li>OutputLayer: Physical Chip 0 (U = 0), Core 1 (C = 1), Neurons 16 and 32</li>
+</ul>
+<p>We start from the InputLayer population. This will be a population present in
+the virtual chip, so not physically present in Dynap-se. It can be used to
+create spike patterns with certain timings, and send them to physical populations.</p>
+<pre class="code highlight python literal-block">
+<span class="n">U</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">start_neuron</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">InputLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DevicePopulation</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;InputLayer&quot;</span><span class="p">,</span>
+                                  <span class="n">chip_id</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                                  <span class="n">start_neuron</span> <span class="o">=</span> <span class="n">start_neuron</span><span class="p">,</span>
+                                  <span class="n">size</span> <span class="o">=</span> <span class="n">size</span><span class="p">,</span> <span class="n">neuronsType</span> <span class="o">=</span> <span class="s2">&quot;fExc&quot;</span><span class="p">)</span>
+</pre>
+<p>A possible alternative to define the population is using neurons_id parameter:</p>
+<pre class="code highlight python literal-block">
+<span class="n">U</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">InputLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DevicePopulation</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;InputLayer&quot;</span><span class="p">,</span>
+                                  <span class="n">chip_id</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                                  <span class="n">neurons_id</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span> <span class="n">neuronsType</span> <span class="o">=</span> <span class="s2">&quot;fExc&quot;</span><span class="p">)</span>
+</pre>
+<p>The type of neuron if “fExc” (fast excitatory), one of 4 available in Dynap-se.</p>
+<p>In the same way as before we define the MiddleLayer population:</p>
+<pre class="code highlight python literal-block">
+<span class="n">U</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">start_neuron</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">MiddleLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DevicePopulation</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;MiddleLayer&quot;</span><span class="p">,</span>
+                                   <span class="n">chip_id</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                                   <span class="n">start_neuron</span> <span class="o">=</span> <span class="n">start_neuron</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">size</span><span class="p">)</span>
+</pre>
+<p>Differently as before, here we have not specified a population type. For default
+configuration, it will be set as fast excitatory. But we want 50% excitatory
+and 50% random inhibitory. How can be procede? We can select manually which
+neurons we want as excitatory and which inhibitory:</p>
+<pre class="code highlight python literal-block">
+<span class="n">neuronsIndexes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="c1"># Choose neurons</span>
+<span class="n">MiddleLayer</span><span class="p">[</span><span class="n">neuronsIndexes</span><span class="p">][</span><span class="s2">&quot;neuronsType&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;fInh&quot;</span> <span class="c1"># Set to fast inhibitory</span>
+</pre>
+<p>With this method we are extracting a portion of the MiddleLayer population, i.e.
+<code class="docutils literal"><span class="pre">MiddleLayer[neuronsIndexes]</span></code>, assigning the property “neuronsType” of the neurons in
+this portion to fast inhibitory.</p>
+<p>In this way we set 5 neurons to fInh. As alternative, if we wanted random indexes
+for the inhibitory neurons, here is an example:</p>
+<pre class="code highlight python literal-block">
+<span class="n">populationIndexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="c1"># From 0 to size - 1</span>
+<span class="c1"># Get a shuffled list</span>
+<span class="n">neuronsIndexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">populationIndexes</span><span class="p">)</span>
+<span class="c1"># Take half of them</span>
+<span class="n">neuronsIndexes</span> <span class="o">=</span> <span class="n">neuronsIndexes</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="c1"># Set to fast inhibitory</span>
+<span class="n">MiddleLayer</span><span class="p">[</span><span class="n">neuronsIndexes</span><span class="p">][</span><span class="s2">&quot;neuronsType&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;fInh&quot;</span> 
+</pre>
+<p>We can now create the OutputLayer:</p>
+<pre class="code highlight python literal-block">
+<span class="n">U</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+<span class="n">OutputLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DevicePopulation</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;OutputLayer&quot;</span><span class="p">,</span>
+                                   <span class="n">chip_id</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span> <span class="n">neurons_id</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                                   <span class="n">neuronsType</span> <span class="o">=</span> <span class="s2">&quot;fExc&quot;</span><span class="p">)</span>
+</pre>
+<p>In this case we have specified the neurons id directly with neurons_id parameter.
+Given the separation between the two neurons, it would have been impossible to do it
+using just “start_neuron” and “size” parameters.</p>
+</div>
+<div class="section" id="create-connections">
+<span id="create-connections"></span><h4>Create Connections<a class="headerlink" href="#create-connections" title="Permalink to this headline">¶</a></h4>
+<p>Now is time to create connections between the neurons. To do so, we have to create
+a DeviceConnection object for each pair of populations we want to connect. The way
+in which connections are specified is very simple and, unfortunately, not flexible.
+If you want more flexibility, consider moving to Method 2 of defining a network i.e.
+creating a brian2 network.</p>
+<p>To create a connection you have to specify 3 arrays:</p>
+<ul class="simple">
+<li>i : vector containing the source connections neurons id</li>
+<li>j : vector containing the destination connections neurons id</li>
+<li>w : vector containing the weight of the connections</li>
+</ul>
+<p>They must have the same lenght, equal to the number of connections you want to perform.</p>
+<p>Connections between InputLayer and MiddleLayer are all to all:</p>
+<pre class="code highlight python literal-block">
+<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># 10 connections</span>
+<span class="c1"># i = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] -&gt; the only input neuron</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="c1"># j = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] -&gt; all MiddleLayer neurons</span>
+<span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="c1"># all weights equal to 1 </span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> 
+<span class="n">InputLayerToMiddleLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DeviceConnections</span><span class="p">(</span><span class="n">sourcePop</span> <span class="o">=</span> <span class="n">InputLayer</span><span class="p">,</span>
+                                                <span class="n">targetPop</span> <span class="o">=</span> <span class="n">MiddleLayer</span><span class="p">,</span>
+                                                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="p">)</span>
+</pre>
+<p>Connections between MiddleLayer and OutputLayer are manually specified. First 5
+neurons of MiddleLayer are connected to neuron 0 of OutputLayer, the other ones
+to neuron 1 of OutputLayer:</p>
+<pre class="code highlight python literal-block">
+<span class="n">i</span> <span class="o">=</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="c1"># All Middle neurons</span>
+<span class="n">j</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Half to 0 and half to 1</span>
+<span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># all weights equal to 1</span>
+<span class="n">MiddleLayerToOutputLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DeviceConnections</span><span class="p">(</span><span class="n">sourcePop</span> <span class="o">=</span> <span class="n">MiddleLayer</span><span class="p">,</span>
+                                                 <span class="n">targetPop</span> <span class="o">=</span> <span class="n">OutputLayer</span><span class="p">,</span>
+                                                 <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="p">)</span>
+</pre>
+<p>Now that we have the connections, we have to write them in the output txt file.
+To do so, go to <a class="reference external" href="#write-connections-on-output-file">Write Connections</a> section.</p>
+</div>
+</div>
+<div class="section" id="create-network-from-brian2-one-method-2">
+<span id="create-network-from-brian2-one-method-2"></span><h3>Create Network from Brian2 one (Method 2)<a class="headerlink" href="#create-network-from-brian2-one-method-2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="convert-populations">
+<span id="convert-populations"></span><h4>Convert populations<a class="headerlink" href="#convert-populations" title="Permalink to this headline">¶</a></h4>
+<p>With respect to method 1, here we have already populations and connections specified, but
+we need to place them in Dynap-se. To do so, we use the same functions as in method 1,
+but we don’t define some informations, because already contained in the Brian2
+population object.</p>
+<p>Before going on, i assume that are present population objects specified as here below
+(… indicate custom user settings):</p>
+<pre class="code highlight python literal-block">
+<span class="n">brianInputLayer</span> <span class="o">=</span> <span class="n">NeuronGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">brianMiddleLayer</span> <span class="o">=</span> <span class="n">NeuronGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">brianOutputLayer</span> <span class="o">=</span> <span class="n">NeuronGroup</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre>
+<p>and the topology of MiddleLayer is defined as here below:</p>
+<pre class="code highlight python literal-block">
+<span class="n">middleLayerInhNeurons</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+</pre>
+<p>Here is an example of Brian2 code that perform the same connections as in Method 1,
+with the same populations. In this case, since no simulation is performed, no neuron
+model has been defined. Pay attention that, instead, a weight value “w” in the model must
+appear in Synapses model, otherwise no weight is set for the device connections.</p>
+<pre class="code highlight python literal-block">
+<span class="c1"># Populations definition</span>
+<span class="n">brianInputLayer</span> <span class="o">=</span> <span class="n">NeuronGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'brianInputLayer'</span><span class="p">)</span>
+<span class="n">brianMiddleLayer</span> <span class="o">=</span> <span class="n">NeuronGroup</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'brianMiddleLayer'</span><span class="p">)</span>
+<span class="n">brianOutputLayer</span> <span class="o">=</span> <span class="n">NeuronGroup</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'brianOutputLayer'</span><span class="p">)</span>
+
+<span class="n">middleLayerInhNeurons</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+
+<span class="c1"># Connections definition</span>
+<span class="n">brianInputLayerTobrianMiddleLayer</span> <span class="o">=</span> <span class="n">Synapses</span><span class="p">(</span><span class="n">brianInputLayer</span><span class="p">,</span>
+                                             <span class="n">brianMiddleLayer</span><span class="p">,</span>
+                                             <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;w : 1&quot;</span><span class="p">,</span>
+                                             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;brianInputLayerTobrianMiddleLayer&quot;</span><span class="p">)</span>
+<span class="n">brianInputLayerTobrianMiddleLayer</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">brianInputLayerTobrianMiddleLayer</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">brianMiddleLayerTobrianOutputLayer</span> <span class="o">=</span> <span class="n">Synapses</span><span class="p">(</span><span class="n">brianMiddleLayer</span><span class="p">,</span>
+                                              <span class="n">brianOutputLayer</span><span class="p">,</span>
+                                              <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;w : 1&quot;</span><span class="p">,</span>
+                                              <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;brianInputLayerTobrianMiddleLayer&quot;</span><span class="p">)</span>
+<span class="n">brianMiddleLayerTobrianOutputLayer</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">condition</span> <span class="o">=</span> <span class="s2">&quot;i &lt; 5 and j == 0&quot;</span><span class="p">)</span>
+<span class="n">brianMiddleLayerTobrianOutputLayer</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">condition</span> <span class="o">=</span> <span class="s2">&quot;i &gt;= 5 and j == 1&quot;</span><span class="p">)</span>
+<span class="n">brianMiddleLayerTobrianOutputLayer</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>
+</pre>
+<p>To convert them in Dynap-se 2 population, we can use the same code as for Method 1,
+this time using neuronsObj option:</p>
+<pre class="code highlight python literal-block">
+<span class="n">U</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">InputLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DevicePopulation</span><span class="p">(</span><span class="n">neuronsObj</span> <span class="o">=</span> <span class="n">brianInputLayer</span><span class="p">,</span>
+                                  <span class="n">chip_id</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                                  <span class="n">neurons_id</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                                  <span class="n">neuronsType</span> <span class="o">=</span> <span class="s2">&quot;fExc&quot;</span><span class="p">)</span>
+
+<span class="n">U</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">start_neuron</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">MiddleLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DevicePopulation</span><span class="p">(</span><span class="n">neuronsObj</span> <span class="o">=</span> <span class="n">brianMiddleLayer</span><span class="p">,</span>
+                                   <span class="n">chip_id</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                                   <span class="n">start_neuron</span> <span class="o">=</span> <span class="n">start_neuron</span><span class="p">)</span>
+
+<span class="c1"># Set to fast inhibitory</span>
+<span class="n">MiddleLayer</span><span class="p">[</span><span class="n">middleLayerInhNeurons</span><span class="p">][</span><span class="s2">&quot;neuronsType&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;fInh&quot;</span> 
+
+<span class="n">U</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+<span class="n">OutputLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DevicePopulation</span><span class="p">(</span><span class="n">neuronsObj</span> <span class="o">=</span> <span class="n">brianOutputLayer</span><span class="p">,</span>
+                                   <span class="n">chip_id</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                                   <span class="n">neurons_id</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                                   <span class="n">neuronsType</span> <span class="o">=</span> <span class="s2">&quot;fExc&quot;</span><span class="p">)</span>
+</pre>
+<p>As you can notice, comparing with Method 1, we don’t specify any “size” and “name”
+parameter. In fact, these values are already encoded inside the brian2 population object,
+indicated with the “neuronsObj” parameter. All we need to specify is the location
+in Dynap-se of the first neuron of the population, or the list of neurons we want
+to select. In this last case we should make sure that the lenght of the list is equal
+to the population size.</p>
+<p>At this point, we can go on converting the connections</p>
+</div>
+<div class="section" id="convert-connections">
+<span id="convert-connections"></span><h4>Convert connections<a class="headerlink" href="#convert-connections" title="Permalink to this headline">¶</a></h4>
+<p>Converting brian2 connections is pretty simple. We should just specify, for each connection,
+which Device population are involved, and supply the link to the brian2 synapse object.
+The following code does this for the two synapses objects:</p>
+<pre class="code highlight python literal-block">
+<span class="n">InputLayerToMiddleLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DeviceConnections</span><span class="p">(</span><span class="n">sourcePop</span> <span class="o">=</span> <span class="n">InputLayer</span><span class="p">,</span>
+                                                <span class="n">targetPop</span> <span class="o">=</span> <span class="n">MiddleLayer</span><span class="p">,</span>
+                                                <span class="n">synapsesObj</span> <span class="o">=</span> <span class="n">brianInputLayerTobrianMiddleLayer</span><span class="p">)</span>
+
+<span class="n">MiddleLayerToOutputLayer</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DeviceConnections</span><span class="p">(</span><span class="n">sourcePop</span> <span class="o">=</span> <span class="n">MiddleLayer</span><span class="p">,</span>
+                                                 <span class="n">targetPop</span> <span class="o">=</span> <span class="n">OutputLayer</span><span class="p">,</span>
+                                                 <span class="n">synapsesObj</span> <span class="o">=</span> <span class="n">brianMiddleLayerTobrianOutputLayer</span><span class="p">)</span>
+</pre>
+<p>Now that we have the connections, we have to write them in the output txt file.
+To do so, go to <a class="reference external" href="#write-connections-on-output-file">Write Connections</a> section.</p>
+</div>
+</div>
+<div class="section" id="create-network-from-ncsbrian2-one-method-3">
+<span id="create-network-from-ncsbrian2-one-method-3"></span><h3>Create Network from NCSBrian2 one (Method 3)<a class="headerlink" href="#create-network-from-ncsbrian2-one-method-3" title="Permalink to this headline">¶</a></h3>
+<p>If your network is defined using the NCSBrian2, no problem. Follow the steps of Method 2,
+substituting accordingly:</p>
+<ul class="simple">
+<li>NeuronGroup object with the corrispondend Neurons object of NCSBrian2 library</li>
+<li>Synapses object with the corrispondent Connection object of NCSBrian2 library</li>
+</ul>
+</div>
+<div class="section" id="non-biologically-plausible-connections">
+<span id="non-biologically-plausible-connections"></span><h3>Non biologically plausible connections<a class="headerlink" href="#non-biologically-plausible-connections" title="Permalink to this headline">¶</a></h3>
+<p>Now lets suppose we want to create some connections and be able to specify their
+type, indipendenly from the type of the source connection neuron. For example, we
+want to connect the first 5 neurons of MiddleLayer, that are excitatory neurons,
+to neuron 1 of OutputLayer, with inhibitory connections. To do so, we can procede in
+different ways:</p>
+<ul class="simple">
+<li>Create connections manually, like Method 1. This can be also applied when using Method 2 or 3</li>
+<li>Create new synapse object and create connetions through brian2, as in Method 2</li>
+</ul>
+<div class="section" id="method-1">
+<span id="method-1"></span><h4>Method 1<a class="headerlink" href="#method-1" title="Permalink to this headline">¶</a></h4>
+<p>Proceeding as done for the connections of method 1, we can create this new connections</p>
+<pre class="code highlight python literal-block">
+<span class="n">i</span> <span class="o">=</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="c1"># First half Middle Layer neurons</span>
+<span class="n">j</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># All to neuron 1 of Output Layer</span>
+<span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># all weights equal to 1</span>
+<span class="n">MiddleLayerToOutputLayer2</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DeviceConnections</span><span class="p">(</span><span class="n">sourcePop</span> <span class="o">=</span> <span class="n">MiddleLayer</span><span class="p">,</span>
+                                                 <span class="n">targetPop</span> <span class="o">=</span> <span class="n">OutputLayer</span><span class="p">,</span>
+                                                 <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="p">,</span>
+                                                 <span class="n">connTypes</span> <span class="o">=</span> <span class="s2">&quot;fInh&quot;</span><span class="p">)</span>
+</pre>
+<p>With respect to the other connections performed, in this case we specify the
+“connTypes” parameter, forcing the first 5 neurons (excitatory) to create an
+inhibitory connection with neuron 1 of OutputLayer.</p>
+</div>
+<div class="section" id="method-2">
+<span id="method-2"></span><h4>Method 2<a class="headerlink" href="#method-2" title="Permalink to this headline">¶</a></h4>
+<p>Supposing that the new connections between MiddleLayer and OutputLayer are
+included in the brian2 network, as shown in the code below:</p>
+<pre class="code highlight python literal-block">
+<span class="n">brianMiddleLayerTobrianOutputLayer2</span> <span class="o">=</span> <span class="n">Synapses</span><span class="p">(</span><span class="n">brianMiddleLayer</span><span class="p">,</span>
+                                               <span class="n">brianOutputLayer</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;w : 1&quot;</span><span class="p">,</span>
+                                               <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;brianMiddleLayerTobrianOutputLayer2&quot;</span><span class="p">)</span>
+<span class="n">brianMiddleLayerTobrianOutputLayer2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">condition</span> <span class="o">=</span> <span class="s2">&quot;i &lt; 5 and j == 1&quot;</span><span class="p">)</span>
+<span class="n">brianMiddleLayerTobrianOutputLayer2</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>
+</pre>
+<p>We can simply add the new inhibitory connections as done for Method 2, specifying this
+time the connTypes parameter such to obtain fast inhibitory connections:</p>
+<pre class="code highlight python literal-block">
+<span class="n">MiddleLayerToOutputLayer2</span> <span class="o">=</span> <span class="n">DNG</span><span class="o">.</span><span class="n">DeviceConnections</span><span class="p">(</span><span class="n">sourcePop</span> <span class="o">=</span> <span class="n">MiddleLayer</span><span class="p">,</span>
+                                                  <span class="n">targetPop</span> <span class="o">=</span> <span class="n">OutputLayer</span><span class="p">,</span>
+                                                  <span class="n">synapsesObj</span> <span class="o">=</span> <span class="n">brianMiddleLayerTobrianOutputLayer2</span><span class="p">,</span>
+                                                  <span class="n">connTypes</span> <span class="o">=</span> <span class="s2">&quot;fInh&quot;</span><span class="p">)</span>
+</pre>
+</div>
+</div>
+<div class="section" id="write-connections-on-output-file">
+<span id="write-connections-on-output-file"></span><h3>Write connections on output file<a class="headerlink" href="#write-connections-on-output-file" title="Permalink to this headline">¶</a></h3>
+<p>To write the created connections in the output file, procede in the following way:</p>
+<pre class="code highlight python literal-block">
+<span class="n">DNG</span><span class="o">.</span><span class="n">write_connections</span><span class="p">(</span><span class="n">InputLayerToMiddleLayer</span><span class="p">,</span> <span class="n">MiddleLayerToOutputLayer</span><span class="p">,</span>
+                      <span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;NetGenTutorial.txt&quot;</span><span class="p">)</span>
+</pre>
+<p>An output file will be written in the folder where are you working in with python</p>
+</div>
 </div>
 </div>
 

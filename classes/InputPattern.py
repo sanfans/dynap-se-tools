@@ -17,9 +17,26 @@ Parameters:
     isiBase (int): Time base for time event generation.
 
 Note:
-    Every delay is represented as multiple of this base. Knowing that an isiBase = 90 correspond to 1 us
-    a delay = 10 -> 10 * isiBase = 10 us
-    With isiBase = 900 a delay = 10 -> 10 * isiBase = 100 us
+    isiBase parameter tune the minimum and the maximum inter-spike delay that can be created
+    by FPGA spike generator. The general formula to evaluate this parameters is::
+    
+        resolution [s] = 1/90000000 Hz * isiBase
+        maxDelay [s] = resolution * 2^16 = resolution * 65535
+
+    Common used isiBase are 90 and 900::
+
+        isiBase = 90
+        resolution = 1 us
+        maxDelay = 65,535 ms
+
+        isiBase = 900
+        resolution = 10 us
+        maxDelay = 655,535 ms
+
+    isiBase must be in the range [1, 1000]
+
+    Note that the maximum delay stated by the isiBase can be overcomed using the freeNeuron.
+    See "setFreeNeuron" function for more informations
 """
 
         self.name = name
@@ -41,18 +58,33 @@ Note:
 Parameters:
     virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
     neuronAddress (int): Represent the address of the virtual neuron that will generate the event
-    coreDest (int): (4 bit hot coded, from 0 to 15). Represent the destination cores in which the spike will be routed
-    fireFreq (int, [Hz]): Firing frequency you want to achieve ; event delay is calculate as 1/frequency
+    coreDest (int): (4 bit hot coded). Represent the destination cores in which the spike will be routed
+    fireFreq (float, [Hz]): Firing frequency you want to achieve ; event delay is calculate as 1/frequency
     firePeriod (float, [s]): Event delay (after delay the event is generated)
 
-Examples:
-    - send a single event with 0.1s delay from neuron 0 of core 1, to all cores::
-            
-            single_event(1, 15, 0, firePeriod = 0.1)
+Note:
+    - virtualSourceCoreId must be in the range [0, 3]
+    - neuronAddress must be in the range [0, 255]
+    - coreDest is a 4 bit hot coded number, must be in the range [0, 15]
 
-    - send a single event with 0.02s delay (50Hz) from neuron 0 of core 2, to all cores::
+Examples:
+    Initialize the pattern istantiating the object::
+
+        pattern = InputPattern(name = "pattern", isiBase = 900)
+
+    - send a single event with 0.1s delay from virtual neuron 0 of virtual core 0, to all physical cores::
+            
+            virtualSourceCoreId = 1
+            neuronAddress = 0
+            coreDest = 15
+            pattern.single_event(virtualSourceCoreId, neuronAddress, coreDest, firePeriod = 0.1)
+
+    - send a single event with 0.02s delay (50Hz) from virtual neuron 2 of virtual core 1, to physical cores 0 and 1::
     
-            single_event(2, 1, 0, fireFreq = 50)
+            virtualSourceCoreId = 1
+            neuronAddress = 2
+            coreDest = 3 # 0011 -> core 0 and 1
+            pattern.single_event(virtualSourceCoreId, neuronAddress, coreDest, fireFreq = 50)
 """
 
         if (firePeriod == None) & (fireFreq != None):
@@ -71,26 +103,43 @@ Examples:
         """Create multiple events for specified neurons and times.
         
 Parameters:
-    virtualSourceCoreId (list of int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
-    neuronAddress (list of int): Represent the address of the virtual neuron that will generate the event
-    coreDest (list of int): (4 bit hot coded, from 0 to 15). Represent the destination cores in which the spike will be routed
-    absTimes (list of float, [s]): Represent the absolute times for spikes, interspike interval is derived automatically
-    fireFreq (list of int, [Hz]): Firing frequency you want to achieve ; event delay is calculate as 1/frequency
-    firePeriod (float, [s]): Event delay (after delay the event is generated)
+    virtualSourceCoreId (array, int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
+    neuronAddress (array, int): Represent the address of the virtual neuron that will generate the event
+    coreDest (array, int): (4 bit hot coded). Represent the destination cores in which the spike will be routed
+    absTimes (array, float [s]): Represent the absolute times for spikes, interspike interval is derived automatically
+    fireFreq (array, float [Hz]): Firing frequency you want to achieve ; event delay is calculate as 1/frequency
+    firePeriod (array, float [s]): Event delay (after delay the event is generated)
 
 Note:
-    It is possible to specify a sequence of absolute times for the spikes (absTimes)
+    With this function is possible to create a custom pattern of spikes in three ways:
 
-    It is possible to specify a sequence of firing frequencies for the spikes (fireFreq)
-    
-    It is possible to specify a sequence of firing periods for the spikes (firePeriod)
+    1. Defining a sequence of absolute times for the spikes (absTimes), for example: 1.1s, 1.2s, 1.3s
+    2. Defining a sequence of firing frequencies for the spikes (fireFreq), for example: 50Hz, 20Hz, 10Hz
+    3. Defining a sequence of firing periods for the spikes (firePeriod), for example: 0.1s, 0.2s, 0.3s
+
+    - virtualSourceCoreId must be in the range [0, 3]
+    - neuronAddress must be in the range [0, 255]
+    - coreDest is a 4 bit hot coded number, must be in the range [0, 15]
 
 Examples:
-    - The following three examples create a pattern of three spikes with 20ms interspike interval. The spikes come from virtual neuron 0 of core 1, and are sent to all cores::
+    Initialize the pattern istantiating the object::
 
-            sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], absTimes = [20e-3, 40e-3, 60e-3])
-            sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], fireFreq = [50, 50, 50])
-            sparse_events([1, 1, 1], [15, 15, 15], [0, 0, 0], firePeriod = [20e-3, 20e-3, 20e-3])
+        pattern = InputPattern(name = "pattern", isiBase = 900)
+
+    - The following three examples create a pattern of three spikes with 20ms interspike interval
+        using three different approaches. The spikes come from virtual neuron 2 of virtual core 1,
+        and are sent to physical cores 0 and 2::
+
+            virtualSourceCoreId = [1, 1, 1]
+            neuronAddress = [2, 2, 2]
+            coreDest = [5, 5, 5] # 0101 -> core 0 and 2
+
+            pattern.multiple_events(virtualSourceCoreId, neuronAddress, coreDest,
+                                    absTimes = [20e-3, 40e-3, 60e-3])
+            pattern.multiple_events(virtualSourceCoreId, neuronAddress, coreDest,
+                                    fireFreq = [50, 50, 50])
+            pattern.multiple_events(virtualSourceCoreId, neuronAddress, coreDest,
+                                    firePeriod = [20e-3, 20e-3, 20e-3])
 """
         
         # Find which type of event series must be generated
@@ -127,14 +176,28 @@ Parameters:
     virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
     neuronAddress (int): Represent the address of the virtual neuron that will generate the event
     coreDest (int, 4 bit hot coded): Represent the destination cores in which the spike will be routed
-    fireFreq (int, [Hz]): Desidered Firing frequency
+    fireFreq (float, [Hz]): Desidered Firing frequency
     initDelay (float, [s]): Delay of the first event
     duration (float, [s]): Duration of the event pattern
 
-Examples:
-    - Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration::
+Note:
+    - virtualSourceCoreId must be in the range [0, 3]
+    - neuronAddress must be in the range [0, 255]
+    - coreDest is a 4 bit hot coded number, must be in the range [0, 15]
 
-        constant_freq(1, 15, 0, 50, 1/50, 1)     
+Examples:
+    Initialize the pattern istantiating the object::
+
+        pattern = InputPattern(name = "pattern", isiBase = 900)
+
+    Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration,
+    from virtual neuron 22 of virtual core 3, to physical cores 0, 1 and 2::
+            
+        virtualSourceCoreId = 3
+        neuronAddress = 22
+        coreDest = 7 # 0111 -> core 0, 1 and 2
+        pattern.constant_freq(virtualSourceCoreId, neuronAddress, coreDest,
+                              fireFreq = 50, initDelay = 1/50, duration = 1)     
 """
         
         freqPhase = (1.0 / duration) # in Hz
@@ -155,21 +218,36 @@ Parameters:
     virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
     neuronAddress (int): Represent the address of the virtual neuron that will generate the event
     coreDest (int, 4 bit hot coded): Represent the destination cores in which the spike will be routed
-    freqStart (int): Starting modulation frequency
-    freqStop (int): Stop modulation frequency
+    freqStart (float): Starting modulation frequency
+    freqStop (float): Stop modulation frequency
     freqSteps (int): Number of steps of the modulation frequency
     freqPhaseDuration (float, [s]): Duration of each frequency step
     initDelay (float, [s]): Delay of the first event
 
 Note:
-    The modulation starts at <freqStart> and stops at <freqStop>, with <freqSteps> number of steps of duration <freqPhaseDuration>.
+    The modulation starts at <freqStart> and stops at <freqStop>, with <freqSteps> number of steps
+    of duration <freqPhaseDuration>.
 
     It is possible to specify an initial delay of the first spike changing <initDelay>
 
+    - virtualSourceCoreId must be in the range [0, 3]
+    - neuronAddress must be in the range [0, 255]
+    - coreDest is a 4 bit hot coded number, must be in the range [0, 15]
+
 Examples:
-    - modulation from 50Hz to 100Hz with 6 steps (50, 60, 70, 80, 90, 100)Hz, 100ms of duration of each step, zero initial delay::
-        
-        linear_freq_modulation(1, 15, 0, 50, 100, 6, 0.1, 0) 
+    Initialize the pattern istantiating the object::
+
+        pattern = InputPattern(name = "pattern", isiBase = 900)
+
+    Create spikes from 50Hz to 100Hz with 6 steps (50, 60, 70, 80, 90, 100)Hz, 100ms of duration of each step,
+    initial delay of 0.5s and 1s duration, from virtual neuron 5 of virtual core 0, to physical core 3::
+
+        virtualSourceCoreId = 0
+        neuronAddress = 5
+        coreDest = 8 # 1000 -> core 3
+        pattern.linear_freq_modulation(virtualSourceCoreId, neuronAddress, coreDest,
+                                       freqStart = 50,  freqStop = 100, freqSteps = 6,
+                                       freqPhaseDuration = 0.1, initDelay = 0.5) 
 """
         
         # Generate (address, time) event list
@@ -211,18 +289,36 @@ Note:
 
     It is possible to specify an initial delay of the first spike changing <initDelay>
     It is possible to specify the variance <noiseVar> of a Gaussian noise added to the spike times
-    With <plotEn> True the signal shape is included in the list of signals to be plotted
         
     Note that the algorithm does not constrain the firing frequencies to a minimum or maximum,
     but they depend on the signal and the threshold. Minimum and maximum
-    firing rates are calculated and printed.
+    firing rates are calculated and printed (<TODO>)
+
+    - virtualSourceCoreId must be in the range [0, 3]
+    - neuronAddressUpCH must be in the range [0, 255]
+    - neuronAddressDwCH must be in the range [0, 255]
+
+    coreDest is a 4 bit hot coded number, must be in the range [0, 15]
 
 Examples:
-    - SineWave 2 Hz conversion in spikes::
+    Initialize the pattern istantiating the object::
 
+        pattern = InputPattern(name = "pattern", isiBase = 900)
+
+    - 1 s of 2 Hz sinewave converted in spikes with a threshold of 0.05, no jitter and initial delay of 0.1s.
+      Spikes come 2 neurons: Up channel from virtual neuron 20 of virtual core 0,
+      Down channel from virtual neuron 21 of virtual core 0, and are routed to physical core 1::
+
+        virtualSourceCoreId = 0
+        neuronAddressUpCH = 20
+        neuronAddressDwCH = 21
+        coreDest = 1 # 0001 -> core 1
+        
         t = np.arange(0, 1, 1e-6)
         y = np.sin(2 * np.pi * 1 * t)
-        spikeGen.threshold_encoder(1, 2, 15, 0, 0.05, t, y, 0, 1e-3, plotEn = True)
+        pattern.threshold_encoder(virtualSourceCoreId, neuronAddressUpCH, neuronAddressDwCH,
+                                   threshold = 0.05, t = t, y = y,
+                                   noiseVar = 0, initDelay = 0.1)
 """
         
         # Initialization
@@ -290,6 +386,18 @@ Parameters:
     color (string): Color of the pattern
     timeShift (int, optional): Add this time to all the events
     ax (ax handle, optional): Plot graph on this handle, otherwise a new figure will be created
+
+Note:
+    When plotting, different colors will be used according to the different virtual neuron addresses that are
+    present in the pattern. For example virtual neuron 0 events and virtual neuron 1 events, even if in the same
+    pattern, will be plotted with different colors.
+
+    This is useful because you can, just with a glance to the plot, understand the contributions of all virtual neurons
+
+    The label of each trace is constructed such to let you recognize who is the source, for example:
+
+    - virtual neuron 0 of virtual core 0, to all cores (1111) -> label = "Virtual Neuron C0N1"
+    - virtual neuron 20 of virtual core 1, to core 1 (0001) -> label = "Virtual Neuron C1N20"
 """
 
         fig = None
@@ -335,14 +443,17 @@ Parameters:
 #                               angles = 'xy', scale_units = 'xy', scale = 1,
 #                               label = self.name)
 #            ax.plot(times, arrowDim * np.ones(len(times)), linestyle  = 'None', color = "C" + str(idx), marker = '^')
+            decodedEvent = InputEvent(address = address, time = 0)
+            label = "Virtual Neuron C{}N{}".format(decodedEvent.virtualSourceCoreId,
+                                           decodedEvent.neuronAddress)
             handle = ax.vlines(x = times, ymin = 0, ymax = arrowDim, colors = "C" + str(idx),
-                              label = str(idx))
+                              label = label)
             handles.append(handle)
         
         # Plot signal shape
-        if  len(self.tSig) != []:
-            handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
-        handles.append(handle)
+#        if  len(self.tSig) != []:
+#            handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
+#        handles.append(handle)
         
         return fig, ax, handles
 
@@ -352,7 +463,7 @@ Parameters:
 
 Parameters:
     address (int): Encoded address of the virtual neuron
-    time (int): Delay after which the event is generated. It is expressed as multiple of ISIBase
+    time (int): Delay after which the event is generated. It is expressed as multiple of isiBase
 """
 
         np.append(self.eventList, InputEvent(address = address, time = time))

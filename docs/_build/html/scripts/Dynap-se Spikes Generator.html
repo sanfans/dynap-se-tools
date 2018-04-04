@@ -183,19 +183,39 @@
 </div>
 <div class="section" id="description">
 <span id="description"></span><h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>DYNAP-se contains an useful module called FPGASpikeGenerator. This module allows the user to send customized (in address and interspike interval) spike patterns in specific location inside DYNAP-se.</p>
-<p>A very simple way to understand the behavior of the Spike Generator is thinking about it as a VIRTUAL external chip outside DYNAP-se.
-His main advanatage, with respect to the physical ones, is the flexibility. Events can be completely customized: you can select which neurons will spike and the interspike interval between spikes.</p>
-<p>Virtual chip can be “connected” to the physical ones and stimulated whenever you want, making simpler the creation of customize tests for neural structure in DYNAP-se.</p>
-<p>His main drawback is the connectivity limitation. Unfortunately only one physical chip can be connected, at the same time, to the virtual one, although this is enough to run complex test patterns.
-For instance making a connection between one neuron in the virtual chip and Chip 0 will make impossible any other connection with the other 3 Chips.
+<p>DYNAP-se control software cAER contains an useful module called FPGASpikeGenerator.
+This module allows the user to send customized (in address and interspike interval)
+spike patterns in specific location inside DYNAP-se.</p>
+<p>A very simple way to understand the behavior of the Spike Generator is thinking
+about it as a VIRTUAL external chip outside DYNAP-se.
+His main advanatage, with respect to the physical ones, is the flexibility.
+Events can be completely customized: you can select which neurons will spike and
+the interspike interval between spikes.</p>
+<p>Virtual chip can be “connected” to the physical ones and stimulated whenever you
+want, making simpler the creation of customize tests for neural structure in DYNAP-se.</p>
+<p>His main drawback is the connectivity limitation. Unfortunately only one physical
+chip can be connected, at the same time, to the virtual one, although this is enough
+to run complex test patterns.
+For instance making a connection between one neuron in the virtual chip and Chip 0
+will make impossible any other connection with the other 3 Chips.
 Selection of the destination chip is done directly on the module interface.</p>
-<p>Customized spiking patterns must be specified preparing a .txt file, containing two parameters:</p>
+<p>Customized spiking patterns must be specified preparing a .txt file, containing
+two parameters:</p>
 <ul class="simple">
-<li><strong>Source Neuron Address :</strong>  number resulting by the combination of parameters <code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">Address</span></code>, <code class="docutils literal"><span class="pre">Virtual</span> <span class="pre">source</span> <span class="pre">chip</span></code> and <code class="docutils literal"><span class="pre">Core</span> <span class="pre">Dest</span></code>. The first two are represent can be seen as neuron address and neuron core (yes, core, not chip) of the virtual chip. The third one, instead, is used for event routing. It specify, in fact, on which cores of the destination chip the spike will be trasmitted. For more informations visit <a class="reference external" href="https://inilabs.com/support/hardware/user-guide-dynap-se/#h.3prdeugulxol">DYNAP-se user guide</a></li>
-<li><strong>Interspike Interval</strong> : number that represent the time between the current event and the previous one specified in the file, expressed in ISI base multiple (the first event delay can be considered as an initial delay). For more information visit <a class="reference external" href="https://inilabs.com/support/hardware/user-guide-dynap-se/#h.3prdeugulxol">DYNAP-se user guide</a></li>
+<li><strong>Source Neuron Address :</strong>  number resulting by the combination of parameters
+<code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">Address</span></code>, <code class="docutils literal"><span class="pre">Virtual</span> <span class="pre">source</span> <span class="pre">chip</span></code> and <code class="docutils literal"><span class="pre">Core</span> <span class="pre">Dest</span></code>.
+The first two are represent can be seen as neuron address and neuron core
+(yes, core, not chip) of the virtual chip. The third one, instead, is used for event routing. It specify, in fact, on which cores of the destination chip the spike will be trasmitted. For more informations visit <a class="reference external" href="https://inilabs.com/support/hardware/user-guide-dynap-se/#h.3prdeugulxol">DYNAP-se user guide</a></li>
+<li><strong>Interspike Interval</strong> : number that represent the time between the current
+event and the previous one specified in the file, expressed in ISI base multiple
+(the first event delay can be considered as an initial delay). For more information
+visit <a class="reference external" href="https://inilabs.com/support/hardware/user-guide-dynap-se/#h.3prdeugulxol">DYNAP-se user guide</a></li>
 </ul>
-<p>In the following image isummarized the main characteristics of the Spike Generator. As said before, can be considered as a virtual chip (U4) made with Virtual Neurons. The txt file specify the characteristics of the generated events: address of the source neuron, interspike interval and core destinations. Note that in this case U2 has been chosen as destination chip.</p>
+<p>In the following image isummarized the main characteristics of the Spike Generator.
+As said before, can be considered as a virtual chip (U4) made with Virtual Neurons.
+The txt file specify the characteristics of the generated events: address of the
+source neuron, interspike interval and core destinations. Note that in this case
+U2 has been chosen as destination chip.</p>
 <p><img alt="altText" src="../_images/spikeGen.jpg" /></p>
 <p>An example of .txt file is the following one:</p>
 <blockquote>
@@ -222,8 +242,12 @@ Selection of the destination chip is done directly on the module interface.</p>
 <li><code class="docutils literal"><span class="pre">Virtual</span> <span class="pre">source</span> <span class="pre">chip</span></code> 0</li>
 <li><code class="docutils literal"><span class="pre">Core</span> <span class="pre">dest</span></code> 14 (hot-encoded 1110, meaning to cores 1, 2 and 3)</li>
 </ul>
-<p>This file will generate 4 events with 20 ms of interspike interval (corresponding to 50Hz) on <code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">1</span></code>, then 2 events with 10 ms delay between them, finally 2 events on <code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">2</span></code> with 20 ms delay</p>
-<p>It is evident that generating this file manually is not easy. Here is where class SpikesGenerator come to help. Inside there are functions that permit the user to create in many ways desired event patterns.</p>
+<p>This file will generate 4 events with 20 ms of interspike interval (corresponding to 50Hz)
+on <code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">1</span></code>, then 2 events with 10 ms delay between them, finally 2 events on
+<code class="docutils literal"><span class="pre">Neuron</span> <span class="pre">2</span></code> with 20 ms delay</p>
+<p>It is evident that generating this file manually is not easy. Here is where class
+SpikesGenerator come to help. Inside there are functions that permit the user to
+create in many ways desired event patterns.</p>
 </div>
 <div class="section" id="functionalities">
 <span id="functionalities"></span><h2>Functionalities<a class="headerlink" href="#functionalities" title="Permalink to this headline">¶</a></h2>
