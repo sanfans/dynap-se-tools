@@ -99,6 +99,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#table-of-content">Table of content</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functionalities">Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tutorial">Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-libraries">Import libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-inputpatterns">Create InputPatterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#combining-input-patterns">Combining input patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-final-pattern-to-txt-file">Writing final pattern to txt file</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -179,6 +187,7 @@
 <ul class="simple">
 <li><a class="reference external" href="#description">Description</a></li>
 <li><a class="reference external" href="#functionalities">Functionalities</a></li>
+<li><a class="reference external" href="#tutorial">Tutorial</a></li>
 </ul>
 </div>
 <div class="section" id="description">
@@ -193,12 +202,20 @@ Events can be completely customized: you can select which neurons will spike and
 the interspike interval between spikes.</p>
 <p>Virtual chip can be “connected” to the physical ones and stimulated whenever you
 want, making simpler the creation of customize tests for neural structure in DYNAP-se.</p>
-<p>His main drawback is the connectivity limitation. Unfortunately only one physical
+<p>His main drawback is, for now, the connectivity limitation. Unfortunately only one physical
 chip can be connected, at the same time, to the virtual one, although this is enough
 to run complex test patterns.
-For instance making a connection between one neuron in the virtual chip and Chip 0
-will make impossible any other connection with the other 3 Chips.
-Selection of the destination chip is done directly on the module interface.</p>
+For instance, making a connection between one neuron in the virtual chip and Chip 0,
+will make impossible any other connection with the other 3 Chips.</p>
+<p>To specify event in the library, we have to provide two info:</p>
+<ul class="simple">
+<li>event address: the virtual neurons that has to spike</li>
+<li>core destination: to which of the cores in the destination chip we want to
+send spikes. It goes from 0000 (0) -&gt; no core,
+to 1111 (15) -&gt; all 4 cores. Is recommended to use this
+last one, to be sure all core are stimulated</li>
+<li>time : it’s the delay from the previous spike (no matter which neuron)</li>
+</ul>
 <p>Customized spiking patterns must be specified preparing a .txt file, containing
 two parameters:</p>
 <ul class="simple">
@@ -254,16 +271,230 @@ create in many ways desired event patterns.</p>
 <ul class="simple">
 <li>Create events from lists containing informations about the neurons and absolute times</li>
 <li>Create constant frequency events as well as linear frequency modulation</li>
-<li>Encode a certain signal in spikes with two different encoding types:<ul>
-<li>Slope encoding: firing frequency depend on the ratio between the current slope of the signal and the maximum one</li>
-<li>Threshold encoding: every time the signal step up or step down of an amount bigger than a threshold, a spike is generated. Maximum and minimum firing frequency depend on threshold amplitude</li>
-</ul>
-</li>
+<li>Encode a certain signal in spikes with threshold encoding methodology:
+every time the signal step up or step down of an amount bigger than a threshold, a spike is generated. Maximum and minimum firing frequency depend on threshold amplitude</li>
 <li>Plot generated spike pattern. If they come from an encoded signal, it can be plotted too</li>
 <li>Write output .txt file containing coded events</li>
 <li>Possibility to import events from a .txt file, plot them and add new patters</li>
 <li>Possibility to stack as many patterns as needed just calling the apposite functions</li>
 </ul>
+</div>
+<div class="section" id="tutorial">
+<span id="tutorial"></span><h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial explain a reasonable way of using Dynap-se spikes generator
+to create input patterns for Dynap-se board.</p>
+<p>The main key of DynapseSpikesGenerator module stays on the InputPattern class.
+With this class you can create, using different functions, a custom pattern of
+spikes. Every InputPattern, moreover, can be used as a building block to
+build the final pattern that will be uploaded into Dynap-se. It is like
+using LEGO blocks.</p>
+<p>The general flow for creating a global pattern is:</p>
+<ul>
+<li><p class="first">define an InputPattern object, specifying the name and isiBase.
+the isiBase parameter is related to the time resolution of the
+spikes sent to Dynap-se and the maximum delay that can be obtained.
+It goes from 0 to 1000 and the usual values are:
+—–&gt; 90 (1 us resolution, 65 ms maximum delay)
+—–&gt; 900 (10 us resolution, 650 ms maximum delay)</p>
+<p>With a isiBase of 900 (resolution of 10us), for example, a spike with a
+delay of 13 us will be sent instead after 10 us, while a 17 us
+delay becomes 20 us (rounding is applyed)</p>
+</li>
+<li><p class="first">define for that InputPattern which type of pattern you want to create:
+single event, multiples, constant frequency,  linear modulation,
+encoding of a signal, ecc. look at InputPattern documentation for more
+informations.</p>
+</li>
+<li><p class="first">create as many InputPattern you want and then combine them together to
+obtain the final pattern</p>
+</li>
+</ul>
+<p>In this tutorial we will create a pattern that will involve all the types of
+pattern that can be created with the library.</p>
+<div class="section" id="import-libraries">
+<span id="import-libraries"></span><h3>Import libraries<a class="headerlink" href="#import-libraries" title="Permalink to this headline">¶</a></h3>
+<p>As said in the Repository README, is recommended to setup your python environment
+such to have the working directory in the same parent folder as the one of the library.
+As alternative, you can add the library directory to the python path.</p>
+<p>To import the module:</p>
+<pre class="code highlight python literal-block">
+<span class="kn">import</span> <span class="nn">DYNAPSETools.dynapseSpikesGenerator</span> <span class="kn">as</span> <span class="nn">DSG</span>
+</pre>
+<p>We will need also numpy and matplot lib for our elaborations:</p>
+<pre class="code highlight python literal-block">
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</pre>
+</div>
+<div class="section" id="initialization">
+<span id="initialization"></span><h3>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h3>
+<p>Before starting creating the network, i suggest to write all preliminary code, like:</p>
+<pre class="code highlight python literal-block">
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="c1"># Close all the plots that has been created</span>
+                 <span class="c1"># in the previous run</span>
+
+<span class="n">isiBase</span> <span class="o">=</span> <span class="mi">900</span> <span class="c1"># Setting isiBase for all patterns</span>
+</pre>
+<p>In this case we have set isiBase to 900. This means that our patterns should have
+a resolution of 10us and a maximum delay of 655ms. We cannot ask the library to
+create, for example, events with a delay of 5us (it will be set as 0). At the same
+time we cannot ask for an interspike delay of 1s.</p>
+</div>
+<div class="section" id="create-inputpatterns">
+<span id="create-inputpatterns"></span><h3>Create InputPatterns<a class="headerlink" href="#create-inputpatterns" title="Permalink to this headline">¶</a></h3>
+<p>In this first part we create all the patterns that then we will use for our
+final one.</p>
+<p>We start with a single event:</p>
+<pre class="code highlight python literal-block">
+<span class="c1"># Create pattern</span>
+<span class="n">Pattern1</span> <span class="o">=</span> <span class="n">DSG</span><span class="o">.</span><span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Pattern1&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="n">isiBase</span><span class="p">)</span>
+
+<span class="c1"># Choose virtual neuron address</span>
+<span class="n">C</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+
+<span class="c1"># Define pattern</span>
+<span class="n">Pattern1</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                      <span class="n">neuronAddress</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                      <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+                      <span class="n">firePeriod</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre>
+<p>With this first pattern we make virtual neuron 1 of core 0 spike after a delay
+of 0.5s (firePeriod = 0.5). All neurons in the physical core connected to this
+virtual neuron will react to this event.</p>
+<p>Then we create a pattern of events with custom interspike intervals:</p>
+<pre class="code highlight python literal-block">
+<span class="c1"># Create pattern</span>
+<span class="n">Pattern2</span> <span class="o">=</span> <span class="n">DSG</span><span class="o">.</span><span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Pattern2&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="n">isiBase</span><span class="p">)</span>
+<span class="n">firePeriod</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+
+<span class="c1"># Choose virtual neuron address and parameters</span>
+<span class="n">firePeriod</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+
+<span class="c1"># Define pattern</span>
+<span class="n">Pattern2</span><span class="o">.</span><span class="n">multiple_events</span><span class="p">(</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                         <span class="n">neuronAddress</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                         <span class="n">coreDest</span> <span class="o">=</span> <span class="n">coreDest</span><span class="p">,</span>
+                         <span class="n">absTimes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fireFreq</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">firePeriod</span> <span class="o">=</span> <span class="n">firePeriod</span><span class="p">)</span>
+</pre>
+<p>In this example virtual neuron 1 of core 1 spikes 4 times with interspike delays
+chosen in firePeriod list (first spike after 0.2s, second one after 0.3 from first
+one, etc.). As can be observed, at every spike time must correspond a neuron address
+(C, N) and a destination core value.</p>
+<p>An alternative way to define this pattern would be using absTimes or
+fireFreq parameters instead than firePeriod one:</p>
+<pre class="code highlight python literal-block">
+<span class="c1"># Equivalent with absTimes</span>
+<span class="n">absTimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="n">Pattern2</span><span class="o">.</span><span class="n">multiple_events</span><span class="p">(</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                         <span class="n">neuronAddress</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                         <span class="n">coreDest</span> <span class="o">=</span> <span class="n">coreDest</span><span class="p">,</span>
+                         <span class="n">absTimes</span> <span class="o">=</span> <span class="n">absTimes</span><span class="p">,</span>
+                         <span class="n">fireFreq</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span>
+
+<span class="c1"># Equivalent with fireFreq</span>
+<span class="n">fireFreq</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">N</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="n">Pattern2</span><span class="o">.</span><span class="n">multiple_events</span><span class="p">(</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                         <span class="n">neuronAddress</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                         <span class="n">coreDest</span> <span class="o">=</span> <span class="n">coreDest</span><span class="p">,</span>
+                         <span class="n">absTimes</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+                         <span class="n">fireFreq</span> <span class="o">=</span> <span class="n">fireFreq</span><span class="p">,</span>
+                         <span class="n">firePeriod</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span>
+</pre>
+<p>We create then a pattern with spikes at a constant frequency, lasting 1 second</p>
+<pre class="code highlight python literal-block">
+<span class="c1"># Create pattern</span>
+<span class="n">Pattern3</span> <span class="o">=</span> <span class="n">DSG</span><span class="o">.</span><span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Pattern3&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="n">isiBase</span><span class="p">)</span>
+
+<span class="c1"># Choose virtual neuron address</span>
+<span class="n">C</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+
+<span class="c1"># Define pattern</span>
+<span class="n">Pattern3</span><span class="o">.</span><span class="n">constant_freq</span><span class="p">(</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                       <span class="n">neuronAddress</span> <span class="o">=</span> <span class="n">N</span><span class="p">,</span>
+                       <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+                       <span class="n">fireFreq</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+                       <span class="n">initDelay</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+                       <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre>
+<p>In this case again neuron 1 of core 0 (the same one as the first pattern) spikes
+at 50Hz for 0.5s. The first spike that will be created will have 0.5s initial delay.</p>
+<p>Lastly we create a conversion in spikes of a sinusoidal signal using the threshold
+algorithm.</p>
+<pre class="code highlight python literal-block">
+<span class="c1"># Create pattern</span>
+<span class="n">Pattern4</span> <span class="o">=</span> <span class="n">DSG</span><span class="o">.</span><span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Pattern4&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="n">isiBase</span><span class="p">)</span>
+
+<span class="c1"># Define sinusoidal signal with 1000 samples</span>
+<span class="n">freq</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+
+<span class="c1"># Choose virtual neuron addresses</span>
+<span class="n">C</span><span class="p">,</span> <span class="n">NUp</span><span class="p">,</span> <span class="n">NDw</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span> 
+
+<span class="c1"># Define pattern</span>
+<span class="n">Pattern4</span><span class="o">.</span><span class="n">constant_freq</span><span class="p">(</span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="n">C</span><span class="p">,</span>
+                       <span class="n">neuronAddressUpCH</span> <span class="o">=</span> <span class="n">NUp</span><span class="p">,</span>
+                       <span class="n">neuronAddressDwCH</span> <span class="o">=</span> <span class="n">NDw</span><span class="p">,</span>
+                       <span class="n">coreDest</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+                       <span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+                       <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span>
+                       <span class="n">noiseVar</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                       <span class="n">initDelay</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre>
+<p>In this case virtual neurons 5 and 6 of core 2 encode a 1 period 1Hz sinusoidal
+signal, defined with 1000 time samples. Increasing the time resolution would for
+sure increase the time delay accuracy of the converted spikes, but there is a limit
+at that. Remember always that the isiBase put a limit to the delay precision that
+can be achieved. With an isiBase of 900, meaning a resolution of 10us, asking for an
+interspike delay of 21us is the same as asking for a spike delay of 20us.</p>
+</div>
+<div class="section" id="combining-input-patterns">
+<span id="combining-input-patterns"></span><h3>Combining input patterns<a class="headerlink" href="#combining-input-patterns" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have create all the patterns we need, we can combine them to create our
+definitive pattern. What we need to do is to create a list (or a tuple) of patterns,
+stacking them in such a way to compose the wanted pattern. For example:</p>
+<pre class="code highlight python literal-block">
+<span class="n">finalPattern</span> <span class="o">=</span> <span class="p">(</span><span class="n">Pattern1</span><span class="p">,</span> <span class="n">Pattern3</span><span class="p">,</span> <span class="n">Pattern2</span><span class="p">,</span> <span class="n">Pattern1</span><span class="p">)</span>
+<span class="n">DSG</span><span class="o">.</span><span class="n">plot_spikes</span><span class="p">(</span><span class="o">*</span><span class="n">finalPattern</span><span class="p">)</span>
+</pre>
+<p>Note: The * before finalPattern is used to unpack the tuple for the function.</p>
+<p>In fact, the same result could be obtained in the following way:</p>
+<pre class="code highlight python literal-block">
+<span class="n">DSG</span><span class="o">.</span><span class="n">plot_spikes</span><span class="p">(</span><span class="n">Pattern1</span><span class="p">,</span> <span class="n">Pattern3</span><span class="p">,</span> <span class="n">Pattern2</span><span class="p">,</span> <span class="n">Pattern1</span><span class="p">)</span>
+</pre>
+<p>This configuration will create the following pattern:</p>
+<p><img alt="altText" src="../_images/pattern1.png" /></p>
+<p>The following configuration, instead:</p>
+<pre class="code highlight python literal-block">
+<span class="n">finalPattern</span> <span class="o">=</span> <span class="p">(</span><span class="n">Pattern1</span><span class="p">,</span> <span class="n">Pattern2</span><span class="p">,</span> <span class="n">Pattern3</span><span class="p">,</span> <span class="n">Pattern4</span><span class="p">)</span>
+<span class="n">DSG</span><span class="o">.</span><span class="n">plot_spikes</span><span class="p">(</span><span class="o">*</span><span class="n">finalPattern</span><span class="p">)</span>
+</pre>
+<p>will result in this way:</p>
+<p><img alt="altText" src="../_images/pattern2.png" /></p>
+<p>So, combining different basic patterns is possible to create infinite number of
+combinations, or even create repetitive patterns for a certain time.</p>
+</div>
+<div class="section" id="writing-final-pattern-to-txt-file">
+<span id="writing-final-pattern-to-txt-file"></span><h3>Writing final pattern to txt file<a class="headerlink" href="#writing-final-pattern-to-txt-file" title="Permalink to this headline">¶</a></h3>
+<p>Once tuned the final pattern to match our needings, we need only to create the
+output .txt file with all the encoded spikes. Doing this operation is really
+trivial:</p>
+<pre class="code highlight python literal-block">
+<span class="n">DSG</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="o">*</span><span class="n">finalPattern</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;myPattern.txt)</span>
+</pre>
+<p>The output .txt file will be created in the python working folder.</p>
+</div>
 </div>
 </div>
 

@@ -85,7 +85,7 @@ As alternative, you can add the library directory to the python path.
 
 To import the module:
 ```python
-import DYNAPSETools.dynapseNetGenerator as DSG
+import DYNAPSETools.dynapseNetGenerator as DNG
 ``` 
 
 We will need also numpy and matplot lib for our elaborations:
