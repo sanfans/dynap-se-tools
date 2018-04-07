@@ -60,8 +60,8 @@ about the events of the registration, like chip_id, core_id, neuron_id
 and time of every event. To do so, we use:
 
 ```python
-    fileName = "./DYNAPSETools/tutorialFiles/outTutorial.aedat"
-    decEvents = DOD.import_events(fileName)
+fileName = "./DYNAPSETools/tutorialFiles/outTutorial.aedat"
+decEvents = DOD.import_events(fileName)
 ```
 
 fileName is name of the .aedat file from which you want to import the events. In this
@@ -77,7 +77,7 @@ Still absolute times can be useful to stack multiple recordings
 together, after having extracted event from them. However, writing:
 
 ```python
-    decEvents = decEvents.normalize()
+decEvents = decEvents.normalize()
 ```
 
 we replace the previous EventsSet with a new normalised one.
@@ -92,7 +92,7 @@ will be painted with these 4 colors. So, at this point, a green dot can refer to
 Chip 0, 1, 2 or 3. Be aware of that:
   
 ```python  
-    decEvents.plot_events()
+decEvents.plot_events()
 ```
 
 ### Filter events and extract experiments
@@ -109,24 +109,24 @@ In this example i filter all neurons but for the neurons in core0 and core1 of
 chip 0, the one i was using.
 
 ```python  
-    filterCore0 = np.arange(0, 64) # Taking neurons from 0 to 63
-    filterCore1 = np.arange(0, 256) # Taking neurons from 0 to 256
+filterCore0 = np.arange(0, 64) # Taking neurons from 0 to 63
+filterCore1 = np.arange(0, 256) # Taking neurons from 0 to 256
 ```
     
 Now we can combine the two filters together, one for each core and apply the
 filter. For cores we have jsut a list, while for neurons we have a list of lists
 
 ```python  
-    neuron_id_filter = [filterCore0, filterCore1]
-    core_id_filter = [0, 1]
-    decFilteredEvents = decEvents.filter_events(chip_id = 0, core_id = core_id_filter,
+neuron_id_filter = [filterCore0, filterCore1]
+core_id_filter = [0, 1]
+decFilteredEvents = decEvents.filter_events(chip_id = 0, core_id = core_id_filter,
                                                 neuron_id = neuron_id_filter) # Take only events i need
  ```
   
 If now we make a new raster plot we should notice that some events were filtered away:
 
 ```python      
-    decFilteredEvents.plot_events()
+decFilteredEvents.plot_events()
 ```
 
 Until now we have imported and filtered the events recorded from Dynap-se. Still
@@ -152,9 +152,9 @@ Start and Stop trigger neurons are included in the set, so that we have the
 same starting and ending times to help for future analysis
 
 ```python    
-    extractedEvents = decFilteredEvents.isolate_events_sets(startTriggerNeuron = (0, 0, 128),
-                                                            stopTriggerNeuron = (0, 0, 192),
-                                                            maxNumber = 5)
+extractedEvents = decFilteredEvents.isolate_events_sets(startTriggerNeuron = (0, 0, 128),
+                                                        stopTriggerNeuron = (0, 0, 192),
+                                                        maxNumber = 5)
 ```
 
 In this case i suppose to use two neurons: neurons 128 and 192 of core 0, chip 0 to encode
@@ -169,7 +169,7 @@ we will have a maximum 5 EventsSet, if the algorithm can find more or equal this
 TIt is possible to plot automatically all the EventsSet that has been extracted in the following way:
 
 ```python   
-    DOD.plot_events(*extractedEvents)_
+DOD.plot_events(*extractedEvents)_
 ```
 
 5 figures will be opened, plotting all the events contained in the 5 extracted EventsSet. Try changing
@@ -178,7 +178,7 @@ maxNumber parameter and see the effect in the plots (put it None to extract all 
 It is possible to plot a certain extracted experiment in the following way:
 
 ```python 
-    extractedEvents[2].plot_events()
+extractedEvents[2].plot_events()
 ```
 
 In this case i plot the events of the second eexperiment in the list
@@ -188,22 +188,22 @@ Now, for example, we suppose we want to calculate, for every extracted experimen
 rate matrix associated to the EventsSet. To do so, we can use the following code:
 
 ```python
-    # Create empty lists
-    timeStepsArray = []
-    firingRateMatrixes = []
+# Create empty lists
+timeStepsArray = []
+firingRateMatrixes = []
 
-    for experiment in extractedEvents:
-        # Filter events taking events from 0 to the last event before stop trigger
-        # (i take all useful events)
-        timeSteps, neuronsFireRate = experiment.calculate_firing_rate_matrix(totNeurons = 1024,
-                                                                             timeBin = 0.2)
+for experiment in extractedEvents:
+    # Filter events taking events from 0 to the last event before stop trigger
+    # (i take all useful events)
+    timeSteps, neuronsFireRate = experiment.calculate_firing_rate_matrix(totNeurons = 1024,
+                                                                            timeBin = 0.2)
                                                                              
-        timeStepsArray.append(timeSteps)
-        firingRateMatrixes.append(neuronsFireRate)
+    timeStepsArray.append(timeSteps)
+    firingRateMatrixes.append(neuronsFireRate)
     
-    # Transform into array
-    timeStepsArray = np.array(timeSteps)
-    firingRateMatrixes = np.array(firingRateMatrixes)
+# Transform into array
+timeStepsArray = np.array(timeSteps)
+firingRateMatrixes = np.array(firingRateMatrixes)
 ```
 
 In this code we simply create an empty list of time and firing rate matrixes. The time will contain the
