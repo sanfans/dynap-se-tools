@@ -29,3 +29,8 @@ DSG.functionToCall(...)
 Written code in the library is well documented. Every module and every function has a description, complete of all input and output parameters.
 
 At [this](https://sanfans.github.io/DYNAPSETools/_build/html/index.html) link is present the repository GitHub website with all the informations you need, as well as autogenerate code documentation, search engine and modules index visualization.
+
+### Tutorial
+Inside the repository is present a folder called "tutorialFiles". There inside are present some python scripts doing elaborations with the
+library modules. They are just a collection of instructions, for a complete guide look at the online guide, below the module you
+want to know more.
