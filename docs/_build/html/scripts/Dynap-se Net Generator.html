@@ -105,7 +105,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#create-connections">Create Connections</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#create-network-from-brian2-one-method-2">Create Network from Brian2 one (Method 2)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-network-from-brian2-one-method-2">Create Network from Brian2 one (Method 2)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#convert-populations">Convert populations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#convert-connections">Convert connections</a></li>
 </ul>
@@ -415,6 +416,22 @@ To do so, go to <a class="reference external" href="#write-connections-on-output
 </div>
 <div class="section" id="create-network-from-brian2-one-method-2">
 <span id="create-network-from-brian2-one-method-2"></span><h3>Create Network from Brian2 one (Method 2)<a class="headerlink" href="#create-network-from-brian2-one-method-2" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="initialization">
+<span id="id1"></span><h3>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h3>
+<p>In order to create a network starting from Brian2 one, we should first import brian2
+module:</p>
+<pre class="code highlight python literal-block">
+<span class="kn">from</span> <span class="nn">brian2</span> <span class="kn">import</span> <span class="n">start_scope</span><span class="p">,</span> <span class="n">Network</span><span class="p">,</span> <span class="n">NeuronGroup</span><span class="p">,</span> <span class="n">Synapses</span><span class="p">,</span>\
+<span class="n">SpikeGeneratorGroup</span><span class="p">,</span> <span class="n">SpikeMonitor</span><span class="p">,</span> <span class="n">metre</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">volt</span><span class="p">,</span> <span class="n">mV</span><span class="p">,</span> <span class="n">ms</span><span class="p">,</span> <span class="n">us</span><span class="p">,</span>\
+<span class="n">defaultclock</span><span class="p">,</span> <span class="n">prefs</span>
+</pre>
+<p>Usually i import from Brian2 only the objects that i need.</p>
+<p>Moreover add this instruction:</p>
+<pre class="code highlight python literal-block">
+<span class="n">prefs</span><span class="o">.</span><span class="n">codegen</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+</pre>
+<p>To prevent Brian2 using C++ compilation, if you have not the libraries installed on your pc.</p>
 <div class="section" id="convert-populations">
 <span id="convert-populations"></span><h4>Convert populations<a class="headerlink" href="#convert-populations" title="Permalink to this headline">¶</a></h4>
 <p>With respect to method 1, here we have already populations and connections specified, but
@@ -572,7 +589,7 @@ time the connTypes parameter such to obtain fast inhibitory connections:</p>
 <span id="write-connections-on-output-file"></span><h3>Write connections on output file<a class="headerlink" href="#write-connections-on-output-file" title="Permalink to this headline">¶</a></h3>
 <p>To write the created connections in the output file, procede in the following way:</p>
 <pre class="code highlight python literal-block">
-<span class="n">DNG</span><span class="o">.</span><span class="n">write_connections</span><span class="p">(</span><span class="n">InputLayerToMiddleLayer</span><span class="p">,</span> <span class="n">MiddleLayerToOutputLayer</span><span class="p">,</span>
+<span class="n">DNG</span><span class="o">.</span><span class="n">write_connections</span><span class="p">(</span><span class="n">InputLayerToMiddleLayer</span><span class="p">,</span> <span class="n">MiddleLayerToOutputLayer</span><span class="p">,</span> <span class="n">brianMiddleLayerTobrianOutputLayer2</span>
                       <span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;NetGenTutorial.txt&quot;</span><span class="p">)</span>
 </pre>
 <p>An output file will be written in the folder where are you working in with python</p>

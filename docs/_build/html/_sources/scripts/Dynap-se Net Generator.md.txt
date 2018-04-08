@@ -234,6 +234,27 @@ Now that we have the connections, we have to write them in the output txt file.
 To do so, go to [Write Connections](#write-connections-on-output-file) section.
 
 ### Create Network from Brian2 one (Method 2)
+### Initialization
+In order to create a network starting from Brian2 one, we should first import brian2
+module:
+
+```python
+from brian2 import start_scope, Network, NeuronGroup, Synapses,\
+SpikeGeneratorGroup, SpikeMonitor, metre, second, volt, mV, ms, us,\
+defaultclock, prefs
+```
+
+Usually i import from Brian2 only the objects that i need.
+
+Moreover add this instruction:
+
+```python
+prefs.codegen.target = "numpy"
+```
+
+To prevent Brian2 using C++ compilation, if you have not the libraries installed on your pc.
+
+
 #### Convert populations
 With respect to method 1, here we have already populations and connections specified, but 
 we need to place them in Dynap-se. To do so, we use the same functions as in method 1,
@@ -399,7 +420,7 @@ MiddleLayerToOutputLayer2 = DNG.DeviceConnections(sourcePop = MiddleLayer,
 To write the created connections in the output file, procede in the following way:
 
 ```python
-DNG.write_connections(InputLayerToMiddleLayer, MiddleLayerToOutputLayer,
+DNG.write_connections(InputLayerToMiddleLayer, MiddleLayerToOutputLayer, brianMiddleLayerTobrianOutputLayer2
                       fileName = "NetGenTutorial.txt")
 ```
 
