@@ -98,6 +98,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#table-of-content">Table of content</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functionalities">Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tutorial">Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-libraries">Import libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-events">Import events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-events-and-extract-experiments">Filter events and extract experiments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-of-events-post-processing">Example of events post processing</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Dynap-se Spikes Fitter.html">Dynap-se Spikes Fitter</a></li>
@@ -179,13 +187,188 @@
 <ul class="simple">
 <li><a class="reference external" href="#description">Description</a></li>
 <li><a class="reference external" href="#functionalities">Functionalities</a></li>
+<li><a class="reference external" href="#tutorial">Tutorial</a></li>
 </ul>
 </div>
 <div class="section" id="description">
 <span id="description"></span><h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Dynap-se contains a module called OutputFile, able to collect events from Dynap-se
+and storing them in a compressed file format, called AEDAT. This functionalities
+allow people to make offline analysis of data recorded from an experiment, for
+example for training.</p>
+<p>The library allow the user to import events from AEDAT file and make simple manipulations
+and plots.</p>
 </div>
 <div class="section" id="functionalities">
 <span id="functionalities"></span><h2>Functionalities<a class="headerlink" href="#functionalities" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Import events from AEDAT file</li>
+<li>Create raster plots</li>
+<li>Filter chip and neuron events, to take only the one you need</li>
+<li>Extract spikes between two neuron events</li>
+<li>Calculate firing rate matrix</li>
+</ul>
+</div>
+<div class="section" id="tutorial">
+<span id="tutorial"></span><h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial we decode events from a recording done in Dynap-se and make some
+simple elaborations.</p>
+<div class="section" id="import-libraries">
+<span id="import-libraries"></span><h3>Import libraries<a class="headerlink" href="#import-libraries" title="Permalink to this headline">¶</a></h3>
+<p>As said in the Repository README, is recommended to setup your python environment
+such to have the working directory in the same parent folder as the one of the library.
+As alternative, you can add the library directory to the python path.</p>
+<p>To import the module:</p>
+<pre class="code highlight python literal-block">
+<span class="kn">import</span> <span class="nn">DYNAPSETools.dynapseOutDecoder</span> <span class="kn">as</span> <span class="nn">DOD</span>
+</pre>
+<p>We will need also numpy and matplot lib for our elaborations:</p>
+<pre class="code highlight python literal-block">
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</pre>
+</div>
+<div class="section" id="initialization">
+<span id="initialization"></span><h3>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h3>
+<p>Before starting creating the network, i suggest to write all preliminary code, like:</p>
+<pre class="code highlight python literal-block">
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="c1"># Close all the plots that has been created</span>
+                 <span class="c1"># in the previous run</span>
+</pre>
+</div>
+<div class="section" id="import-events">
+<span id="import-events"></span><h3>Import events<a class="headerlink" href="#import-events" title="Permalink to this headline">¶</a></h3>
+<p>When we import the events we create an EventSet, an object containing all the informations
+about the events of the registration, like chip_id, core_id, neuron_id
+and time of every event. To do so, we use:</p>
+<pre class="code highlight python literal-block">
+<span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;./DYNAPSETools/tutorialFiles/outTutorial.aedat&quot;</span>
+<span class="n">decEvents</span> <span class="o">=</span> <span class="n">DOD</span><span class="o">.</span><span class="n">import_events</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+</pre>
+<p>fileName is name of the .aedat file from which you want to import the events. In this
+case is a reocrding</p>
+<p>decEvents is the EventsSet object containing all recorded events.</p>
+<p>Timestamp in Dynap-se are absolute times expressed in us scale and referes to the
+time when the control software was started. Sometime this could be annoying and
+would be better to have the recording starting from 0.</p>
+<p>Still absolute times can be useful to stack multiple recordings
+together, after having extracted event from them. However, writing:</p>
+<pre class="code highlight python literal-block">
+<span class="n">decEvents</span> <span class="o">=</span> <span class="n">decEvents</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+</pre>
+<p>we replace the previous EventsSet with a new normalised one.</p>
+<p>A good idea now would be to make a raster plot of the recording.
+The implemented raster plot let you see are all events in all 4 chips colored as
+the colors present in Dynap-se spike visualizer (green, purple, red, yellow
+respectevely for Core 0, 1, 2, 3).</p>
+<p>According to the core from which they come from, NO MATTER WHICH IS THE CHIP, events
+will be painted with these 4 colors. So, at this point, a green dot can refer to
+Chip 0, 1, 2 or 3. Be aware of that:</p>
+<pre class="code highlight python literal-block">
+<span class="n">decEvents</span><span class="o">.</span><span class="n">plot_events</span><span class="p">()</span>
+</pre>
+</div>
+<div class="section" id="filter-events-and-extract-experiments">
+<span id="filter-events-and-extract-experiments"></span><h3>Filter events and extract experiments<a class="headerlink" href="#filter-events-and-extract-experiments" title="Permalink to this headline">¶</a></h3>
+<p>Usually what happens is that you are interested only in the activity of a limited
+range of neurons present in the recording. What you need in this case is to filter
+the events of the neuron you are not interested on.</p>
+<p>To prepare a filter, we just have to create a list of neurons we want to keep,
+as well as a list of cores.
+For now it’s not possible to filter more than one chip at a time. This means
+that or you take event from all chips or just one.</p>
+<p>In this example i filter all neurons but for the neurons in core0 and core1 of
+chip 0, the one i was using.</p>
+<pre class="code highlight python literal-block">
+<span class="n">filterCore0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="c1"># Taking neurons from 0 to 63</span>
+<span class="n">filterCore1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span> <span class="c1"># Taking neurons from 0 to 256</span>
+</pre>
+<p>Now we can combine the two filters together, one for each core and apply the
+filter. For cores we have jsut a list, while for neurons we have a list of lists</p>
+<pre class="code highlight python literal-block">
+<span class="n">neuron_id_filter</span> <span class="o">=</span> <span class="p">[</span><span class="n">filterCore0</span><span class="p">,</span> <span class="n">filterCore1</span><span class="p">]</span>
+<span class="n">core_id_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">decFilteredEvents</span> <span class="o">=</span> <span class="n">decEvents</span><span class="o">.</span><span class="n">filter_events</span><span class="p">(</span><span class="n">chip_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core_id</span> <span class="o">=</span> <span class="n">core_id_filter</span><span class="p">,</span>
+                                                <span class="n">neuron_id</span> <span class="o">=</span> <span class="n">neuron_id_filter</span><span class="p">)</span> <span class="c1"># Take only events i need</span>
+</pre>
+<p>If now we make a new raster plot we should notice that some events were filtered away:</p>
+<pre class="code highlight python literal-block">
+<span class="n">decFilteredEvents</span><span class="o">.</span><span class="n">plot_events</span><span class="p">()</span>
+</pre>
+<p>Until now we have imported and filtered the events recorded from Dynap-se. Still
+remains a big problem: how can be synchronize with the input we have sent? in other
+words, how can we extract the analisys or, as we will call it later, the experiment
+we have done?</p>
+<p>We could certaintly manually filter the events until we are sure that the remaining
+one are part of our analysis but this would change for every recording so …
+how do that automatically?</p>
+<p>The idea is pretty simple: design the analysis such to stimulate just before and just
+after our experiment two physical neurons, that will become the start trigger neuron and the
+stop trigger neuron. Then, from the recorded event list, extract the events
+present between this two neurons. In other words, start and stop trigger works
+as synchronizers for the analysis, determining the timing borders in which that
+happened.</p>
+<p>Starting from the previous EventsSet, we separate each experiment from the other
+one, collecting them in a list. What we will obtain is a list of EventsSet objects, each one
+containing only the events belonging to a certain experiment.
+Start and Stop trigger neurons are included in the set, so that we have the
+same starting and ending times to help for future analysis</p>
+<pre class="code highlight python literal-block">
+<span class="n">extractedEvents</span> <span class="o">=</span> <span class="n">decFilteredEvents</span><span class="o">.</span><span class="n">isolate_events_sets</span><span class="p">(</span><span class="n">startTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+                                                        <span class="n">stopTriggerNeuron</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">192</span><span class="p">),</span>
+                                                        <span class="n">maxNumber</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+</pre>
+<p>In this case i suppose to use two neurons: neurons 128 and 192 of core 0, chip 0 to encode
+respectively the start and stop experiment. Before sending the actual input, i send an event
+to the start neuron, as well as just after the input has finished (or after a certain delay).
+extractedEvetns is a list of EventsSet with all the experiments that are present between start
+neuron event and stop neuron event.</p>
+<p>Note that we have set the maxNumber parameter on isolate_events_sets function. This means that in the list
+we will have a maximum 5 EventsSet, if the algorithm can find more or equal this number.</p>
+<p>TIt is possible to plot automatically all the EventsSet that has been extracted in the following way:</p>
+<pre class="code highlight python literal-block">
+<span class="n">DOD</span><span class="o">.</span><span class="n">plot_events</span><span class="p">(</span><span class="o">*</span><span class="n">extractedEvents</span><span class="p">)</span><span class="n">_</span>
+</pre>
+<p>5 figures will be opened, plotting all the events contained in the 5 extracted EventsSet. Try changing
+maxNumber parameter and see the effect in the plots (put it None to extract all experiments).</p>
+<p>It is possible to plot a certain extracted experiment in the following way:</p>
+<pre class="code highlight python literal-block">
+<span class="n">extractedEvents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot_events</span><span class="p">()</span>
+</pre>
+<p>In this case i plot the events of the second eexperiment in the list</p>
+</div>
+<div class="section" id="example-of-events-post-processing">
+<span id="example-of-events-post-processing"></span><h3>Example of events post processing<a class="headerlink" href="#example-of-events-post-processing" title="Permalink to this headline">¶</a></h3>
+<p>Now, for example, we suppose we want to calculate, for every extracted experiment, the firing
+rate matrix associated to the EventsSet. To do so, we can use the following code:</p>
+<pre class="code highlight python literal-block">
+<span class="c1"># Create empty lists</span>
+<span class="n">timeStepsArray</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">firingRateMatrixes</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="n">extractedEvents</span><span class="p">:</span>
+    <span class="c1"># Filter events taking events from 0 to the last event before stop trigger</span>
+    <span class="c1"># (i take all useful events)</span>
+    <span class="n">timeSteps</span><span class="p">,</span> <span class="n">neuronsFireRate</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">calculate_firing_rate_matrix</span><span class="p">(</span><span class="n">totNeurons</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+                                                                            <span class="n">timeBin</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
+                                                                             
+    <span class="n">timeStepsArray</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeSteps</span><span class="p">)</span>
+    <span class="n">firingRateMatrixes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neuronsFireRate</span><span class="p">)</span>
+    
+<span class="c1"># Transform into array</span>
+<span class="n">timeStepsArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">timeSteps</span><span class="p">)</span>
+<span class="n">firingRateMatrixes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">firingRateMatrixes</span><span class="p">)</span>
+</pre>
+<p>In this code we simply create an empty list of time and firing rate matrixes. The time will contain the
+end times of every time bin in which the firing rate is evaluated. Every matrix, instead, contains
+a matrix where in every line are present the firing rates of a the neurons for all the time bins.</p>
+<p>In general the timeBins are the same if the experiments lenghts are the same. If this is the case,
+it is possible to transform the list of matrixes and times in arrays. In this way is much simpler
+operating with these data.</p>
+<p>In case the lenght of each experiment is different, this transformation cannot be done and the
+conversion in array will raise an error. In this case is necessary to work with the lists or
+try to find a set of experiments with the same lenght.</p>
+</div>
 </div>
 </div>
 

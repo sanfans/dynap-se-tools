@@ -181,9 +181,25 @@
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Every delay is represented as multiple of this base. Knowing that an isiBase = 90 correspond to 1 us
-a delay = 10 -&gt; 10 * isiBase = 10 us
-With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
+<p>isiBase parameter tune the minimum and the maximum inter-spike delay that can be created
+by FPGA spike generator. The general formula to evaluate this parameters is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">resolution</span> <span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">90000000</span> <span class="n">Hz</span> <span class="o">*</span> <span class="n">isiBase</span>
+<span class="n">maxDelay</span> <span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">*</span> <span class="mi">2</span><span class="o">^</span><span class="mi">16</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">*</span> <span class="mi">65535</span>
+</pre></div>
+</div>
+<p>Common used isiBase are 90 and 900:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">isiBase</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">us</span>
+<span class="n">maxDelay</span> <span class="o">=</span> <span class="mi">65</span><span class="p">,</span><span class="mi">535</span> <span class="n">ms</span>
+
+<span class="n">isiBase</span> <span class="o">=</span> <span class="mi">900</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">10</span> <span class="n">us</span>
+<span class="n">maxDelay</span> <span class="o">=</span> <span class="mi">655</span><span class="p">,</span><span class="mi">535</span> <span class="n">ms</span>
+</pre></div>
+</div>
+<p>isiBase must be in the range [1, 1000]</p>
+<p class="last">Note that the maximum delay stated by the isiBase can be overcomed using the freeNeuron.
+See “setFreeNeuron” function for more informations</p>
 </div>
 <dl class="method">
 <dt id="classes.InputPattern.InputPattern.add_manually_event">
@@ -195,7 +211,7 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>address</strong> (<em>int</em>) – Encoded address of the virtual neuron</li>
-<li><strong>time</strong> (<em>int</em>) – Delay after which the event is generated. It is expressed as multiple of ISIBase</li>
+<li><strong>time</strong> (<em>int</em>) – Delay after which the event is generated. It is expressed as multiple of isiBase</li>
 </ul>
 </td>
 </tr>
@@ -215,7 +231,7 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 <li><strong>virtualSourceCoreId</strong> (<em>int</em>) – Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</li>
 <li><strong>neuronAddress</strong> (<em>int</em>) – Represent the address of the virtual neuron that will generate the event</li>
 <li><strong>coreDest</strong> (<em>int</em><em>, </em><em>4 bit hot coded</em>) – Represent the destination cores in which the spike will be routed</li>
-<li><strong>fireFreq</strong> (<em>int</em><em>, </em><em>[</em><em>Hz</em><em>]</em>) – Desidered Firing frequency</li>
+<li><strong>fireFreq</strong> (<em>float</em><em>, </em><em>[</em><em>Hz</em><em>]</em>) – Desidered Firing frequency</li>
 <li><strong>initDelay</strong> (<em>float</em><em>, </em><em>[</em><em>s</em><em>]</em>) – Delay of the first event</li>
 <li><strong>duration</strong> (<em>float</em><em>, </em><em>[</em><em>s</em><em>]</em>) – Duration of the event pattern</li>
 </ul>
@@ -223,14 +239,28 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>virtualSourceCoreId must be in the range [0, 3]</li>
+<li>neuronAddress must be in the range [0, 255]</li>
+<li>coreDest is a 4 bit hot coded number, must be in the range [0, 15]</li>
+</ul>
+</div>
 <p class="rubric">Examples</p>
-<ul>
-<li><p class="first">Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">constant_freq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">50</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<p>Initialize the pattern istantiating the object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="mi">900</span><span class="p">)</span>
 </pre></div>
 </div>
-</li>
-</ul>
+<p>Create spike with 50Hz frequency, initial delay of 1/50 s and 1 s duration,
+from virtual neuron 22 of virtual core 3, to physical cores 0, 1 and 2:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">neuronAddress</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="mi">7</span> <span class="c1"># 0111 -&gt; core 0, 1 and 2</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">constant_freq</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span>
+                      <span class="n">fireFreq</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">initDelay</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">50</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -261,8 +291,8 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 <li><strong>virtualSourceCoreId</strong> (<em>int</em>) – Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</li>
 <li><strong>neuronAddress</strong> (<em>int</em>) – Represent the address of the virtual neuron that will generate the event</li>
 <li><strong>coreDest</strong> (<em>int</em><em>, </em><em>4 bit hot coded</em>) – Represent the destination cores in which the spike will be routed</li>
-<li><strong>freqStart</strong> (<em>int</em>) – Starting modulation frequency</li>
-<li><strong>freqStop</strong> (<em>int</em>) – Stop modulation frequency</li>
+<li><strong>freqStart</strong> (<em>float</em>) – Starting modulation frequency</li>
+<li><strong>freqStop</strong> (<em>float</em>) – Stop modulation frequency</li>
 <li><strong>freqSteps</strong> (<em>int</em>) – Number of steps of the modulation frequency</li>
 <li><strong>freqPhaseDuration</strong> (<em>float</em><em>, </em><em>[</em><em>s</em><em>]</em>) – Duration of each frequency step</li>
 <li><strong>initDelay</strong> (<em>float</em><em>, </em><em>[</em><em>s</em><em>]</em>) – Delay of the first event</li>
@@ -273,17 +303,30 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>The modulation starts at &lt;freqStart&gt; and stops at &lt;freqStop&gt;, with &lt;freqSteps&gt; number of steps of duration &lt;freqPhaseDuration&gt;.</p>
-<p class="last">It is possible to specify an initial delay of the first spike changing &lt;initDelay&gt;</p>
+<p>The modulation starts at &lt;freqStart&gt; and stops at &lt;freqStop&gt;, with &lt;freqSteps&gt; number of steps
+of duration &lt;freqPhaseDuration&gt;.</p>
+<p>It is possible to specify an initial delay of the first spike changing &lt;initDelay&gt;</p>
+<ul class="last simple">
+<li>virtualSourceCoreId must be in the range [0, 3]</li>
+<li>neuronAddress must be in the range [0, 255]</li>
+<li>coreDest is a 4 bit hot coded number, must be in the range [0, 15]</li>
+</ul>
 </div>
 <p class="rubric">Examples</p>
-<ul>
-<li><p class="first">modulation from 50Hz to 100Hz with 6 steps (50, 60, 70, 80, 90, 100)Hz, 100ms of duration of each step, zero initial delay:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">linear_freq_modulation</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<p>Initialize the pattern istantiating the object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="mi">900</span><span class="p">)</span>
 </pre></div>
 </div>
-</li>
-</ul>
+<p>Create spikes from 50Hz to 100Hz with 6 steps (50, 60, 70, 80, 90, 100)Hz, 100ms of duration of each step,
+initial delay of 0.5s and 1s duration, from virtual neuron 5 of virtual core 0, to physical core 3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">neuronAddress</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># 1000 -&gt; core 3</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">linear_freq_modulation</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span>
+                               <span class="n">freqStart</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>  <span class="n">freqStop</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">freqSteps</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+                               <span class="n">freqPhaseDuration</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">initDelay</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -295,12 +338,12 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>virtualSourceCoreId</strong> (<em>list of int</em>) – Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</li>
-<li><strong>neuronAddress</strong> (<em>list of int</em>) – Represent the address of the virtual neuron that will generate the event</li>
-<li><strong>coreDest</strong> (<em>list of int</em>) – (4 bit hot coded, from 0 to 15). Represent the destination cores in which the spike will be routed</li>
-<li><strong>absTimes</strong> (<em>list of float</em><em>, </em><em>[</em><em>s</em><em>]</em>) – Represent the absolute times for spikes, interspike interval is derived automatically</li>
-<li><strong>fireFreq</strong> (<em>list of int</em><em>, </em><em>[</em><em>Hz</em><em>]</em>) – Firing frequency you want to achieve ; event delay is calculate as 1/frequency</li>
-<li><strong>firePeriod</strong> (<em>float</em><em>, </em><em>[</em><em>s</em><em>]</em>) – Event delay (after delay the event is generated)</li>
+<li><strong>virtualSourceCoreId</strong> (<em>array</em><em>, </em><em>int</em>) – Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</li>
+<li><strong>neuronAddress</strong> (<em>array</em><em>, </em><em>int</em>) – Represent the address of the virtual neuron that will generate the event</li>
+<li><strong>coreDest</strong> (<em>array</em><em>, </em><em>int</em>) – (4 bit hot coded). Represent the destination cores in which the spike will be routed</li>
+<li><strong>absTimes</strong> (<em>array</em><em>, </em><em>float</em><em> [</em><em>s</em><em>]</em>) – Represent the absolute times for spikes, interspike interval is derived automatically</li>
+<li><strong>fireFreq</strong> (<em>array</em><em>, </em><em>float</em><em> [</em><em>Hz</em><em>]</em>) – Firing frequency you want to achieve ; event delay is calculate as 1/frequency</li>
+<li><strong>firePeriod</strong> (<em>array</em><em>, </em><em>float</em><em> [</em><em>s</em><em>]</em>) – Event delay (after delay the event is generated)</li>
 </ul>
 </td>
 </tr>
@@ -308,18 +351,42 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>It is possible to specify a sequence of absolute times for the spikes (absTimes)</p>
-<p>It is possible to specify a sequence of firing frequencies for the spikes (fireFreq)</p>
-<p class="last">It is possible to specify a sequence of firing periods for the spikes (firePeriod)</p>
+<p>With this function is possible to create a custom pattern of spikes in three ways:</p>
+<ol class="arabic simple">
+<li>Defining a sequence of absolute times for the spikes (absTimes), for example: 1.1s, 1.2s, 1.3s</li>
+<li>Defining a sequence of firing frequencies for the spikes (fireFreq), for example: 50Hz, 20Hz, 10Hz</li>
+<li>Defining a sequence of firing periods for the spikes (firePeriod), for example: 0.1s, 0.2s, 0.3s</li>
+</ol>
+<ul class="last simple">
+<li>virtualSourceCoreId must be in the range [0, 3]</li>
+<li>neuronAddress must be in the range [0, 255]</li>
+<li>coreDest is a 4 bit hot coded number, must be in the range [0, 15]</li>
+</ul>
 </div>
 <p class="rubric">Examples</p>
-<ul>
-<li><p class="first">The following three examples create a pattern of three spikes with 20ms interspike interval. The spikes come from virtual neuron 0 of core 1, and are sent to all cores:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sparse_events</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">absTimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">20e-3</span><span class="p">,</span> <span class="mf">40e-3</span><span class="p">,</span> <span class="mf">60e-3</span><span class="p">])</span>
-<span class="n">sparse_events</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
-<span class="n">sparse_events</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="p">[</span><span class="mf">20e-3</span><span class="p">,</span> <span class="mf">20e-3</span><span class="p">,</span> <span class="mf">20e-3</span><span class="p">])</span>
+<p>Initialize the pattern istantiating the object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="mi">900</span><span class="p">)</span>
 </pre></div>
 </div>
+<ul>
+<li><dl class="first docutils">
+<dt>The following three examples create a pattern of three spikes with 20ms interspike interval</dt>
+<dd><p class="first">using three different approaches. The spikes come from virtual neuron 2 of virtual core 1,
+and are sent to physical cores 0 and 2:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">neuronAddress</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="c1"># 0101 -&gt; core 0 and 2</span>
+
+<span class="n">pattern</span><span class="o">.</span><span class="n">multiple_events</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span>
+                        <span class="n">absTimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">20e-3</span><span class="p">,</span> <span class="mf">40e-3</span><span class="p">,</span> <span class="mf">60e-3</span><span class="p">])</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">multiple_events</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span>
+                        <span class="n">fireFreq</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">multiple_events</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span>
+                        <span class="n">firePeriod</span> <span class="o">=</span> <span class="p">[</span><span class="mf">20e-3</span><span class="p">,</span> <span class="mf">20e-3</span><span class="p">,</span> <span class="mf">20e-3</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </li>
 </ul>
 </dd></dl>
@@ -341,6 +408,18 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>When plotting, different colors will be used according to the different virtual neuron addresses that are
+present in the pattern. For example virtual neuron 0 events and virtual neuron 1 events, even if in the same
+pattern, will be plotted with different colors.</p>
+<p>This is useful because you can, just with a glance to the plot, understand the contributions of all virtual neurons</p>
+<p>The label of each trace is constructed such to let you recognize who is the source, for example:</p>
+<ul class="last simple">
+<li>virtual neuron 0 of virtual core 0, to all cores (1111) -&gt; label = “Virtual Neuron C0N1”</li>
+<li>virtual neuron 20 of virtual core 1, to core 1 (0001) -&gt; label = “Virtual Neuron C1N20”</li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -354,23 +433,41 @@ With isiBase = 900 a delay = 10 -&gt; 10 * isiBase = 100 us</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>virtualSourceCoreId</strong> (<em>int</em>) – Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)</li>
 <li><strong>neuronAddress</strong> (<em>int</em>) – Represent the address of the virtual neuron that will generate the event</li>
-<li><strong>coreDest</strong> (<em>int</em>) – (4 bit hot coded, from 0 to 15). Represent the destination cores in which the spike will be routed</li>
-<li><strong>fireFreq</strong> (<em>int</em><em>, </em><em>[</em><em>Hz</em><em>]</em>) – Firing frequency you want to achieve ; event delay is calculate as 1/frequency</li>
+<li><strong>coreDest</strong> (<em>int</em>) – (4 bit hot coded). Represent the destination cores in which the spike will be routed</li>
+<li><strong>fireFreq</strong> (<em>float</em><em>, </em><em>[</em><em>Hz</em><em>]</em>) – Firing frequency you want to achieve ; event delay is calculate as 1/frequency</li>
 <li><strong>firePeriod</strong> (<em>float</em><em>, </em><em>[</em><em>s</em><em>]</em>) – Event delay (after delay the event is generated)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>virtualSourceCoreId must be in the range [0, 3]</li>
+<li>neuronAddress must be in the range [0, 255]</li>
+<li>coreDest is a 4 bit hot coded number, must be in the range [0, 15]</li>
+</ul>
+</div>
 <p class="rubric">Examples</p>
+<p>Initialize the pattern istantiating the object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="mi">900</span><span class="p">)</span>
+</pre></div>
+</div>
 <ul>
-<li><p class="first">send a single event with 0.1s delay from neuron 0 of core 1, to all cores:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">single_event</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span>
+<li><p class="first">send a single event with 0.1s delay from virtual neuron 0 of virtual core 0, to all physical cores:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">neuronAddress</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">firePeriod</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">send a single event with 0.02s delay (50Hz) from neuron 0 of core 2, to all cores:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">single_event</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span>
+<li><p class="first">send a single event with 0.02s delay (50Hz) from virtual neuron 2 of virtual core 1, to physical cores 0 and 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">neuronAddress</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="mi">3</span> <span class="c1"># 0011 -&gt; core 0 and 1</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">single_event</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddress</span><span class="p">,</span> <span class="n">coreDest</span><span class="p">,</span> <span class="n">fireFreq</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -410,18 +507,36 @@ according to the direction of the jump (depending on the slope of the signal):</
 <li>deltaY &lt; -threshold –&gt; Dw channel spike</li>
 </ul>
 <p>It is possible to specify an initial delay of the first spike changing &lt;initDelay&gt;
-It is possible to specify the variance &lt;noiseVar&gt; of a Gaussian noise added to the spike times
-With &lt;plotEn&gt; True the signal shape is included in the list of signals to be plotted</p>
-<p class="last">Note that the algorithm does not constrain the firing frequencies to a minimum or maximum,
+It is possible to specify the variance &lt;noiseVar&gt; of a Gaussian noise added to the spike times</p>
+<p>Note that the algorithm does not constrain the firing frequencies to a minimum or maximum,
 but they depend on the signal and the threshold. Minimum and maximum
-firing rates are calculated and printed.</p>
+firing rates are calculated and printed (&lt;TODO&gt;)</p>
+<ul class="simple">
+<li>virtualSourceCoreId must be in the range [0, 3]</li>
+<li>neuronAddressUpCH must be in the range [0, 255]</li>
+<li>neuronAddressDwCH must be in the range [0, 255]</li>
+</ul>
+<p class="last">coreDest is a 4 bit hot coded number, must be in the range [0, 15]</p>
 </div>
 <p class="rubric">Examples</p>
+<p>Initialize the pattern istantiating the object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="n">InputPattern</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="n">isiBase</span> <span class="o">=</span> <span class="mi">900</span><span class="p">)</span>
+</pre></div>
+</div>
 <ul>
-<li><p class="first">SineWave 2 Hz conversion in spikes:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span>
+<li><p class="first">1 s of 2 Hz sinewave converted in spikes with a threshold of 0.05, no jitter and initial delay of 0.1s.
+Spikes come 2 neurons: Up channel from virtual neuron 20 of virtual core 0,
+Down channel from virtual neuron 21 of virtual core 0, and are routed to physical core 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">virtualSourceCoreId</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">neuronAddressUpCH</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">neuronAddressDwCH</span> <span class="o">=</span> <span class="mi">21</span>
+<span class="n">coreDest</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># 0001 -&gt; core 1</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
-<span class="n">spikeGen</span><span class="o">.</span><span class="n">threshold_encoder</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="n">plotEn</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">threshold_encoder</span><span class="p">(</span><span class="n">virtualSourceCoreId</span><span class="p">,</span> <span class="n">neuronAddressUpCH</span><span class="p">,</span> <span class="n">neuronAddressDwCH</span><span class="p">,</span>
+                           <span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span>
+                           <span class="n">noiseVar</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">initDelay</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>

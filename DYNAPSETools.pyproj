@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ce044199-b1af-47d3-a9fc-c7aa7f1ef3bf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Examples\DynapseNetGeneratorExample.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>../</WorkingDirectory>
@@ -41,6 +42,7 @@
     <Folder Include="docs\_templates\" />
     <Folder Include="Examples\" />
     <Folder Include="parameters\" />
+    <Folder Include="tutorialFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\DeviceConnections.py" />
@@ -55,12 +57,11 @@
     <Compile Include="dynapseOutDecoder.py" />
     <Compile Include="dynapseSpikesFitter.py" />
     <Compile Include="dynapseSpikesGenerator.py" />
-    <Compile Include="Examples\DynapseNetGeneratorExample.py" />
-    <Compile Include="Examples\DynapseOutDecoderExample.py" />
-    <Compile Include="Examples\DynapseSpikesFitterExample.py" />
-    <Compile Include="Examples\DynapseSpikesGeneratorExample.py" />
-    <Compile Include="Examples\Tutorial.py" />
     <Compile Include="parameters\dynapseParameters.py" />
+    <Compile Include="tutorialFiles\inTutorial.py" />
+    <Compile Include="tutorialFiles\netTutorial.py" />
+    <Compile Include="tutorialFiles\netTutorialBrian2.py" />
+    <Compile Include="tutorialFiles\outTutorial.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +89,7 @@
     <Content Include="docs\scripts\images\spikeGen.jpg" />
     <Content Include="docs\scripts\InputEvent.md" />
     <Content Include="docs\scripts\InputPattern.md" />
-    <Content Include="docs\scripts\tutorial.md" />
+    <Content Include="docs\scripts\Tutorial.md" />
     <Content Include="docs\_build\doctrees\environment.pickle" />
     <Content Include="docs\_build\doctrees\index.doctree" />
     <Content Include="docs\_build\doctrees\scripts\API.doctree" />
@@ -160,12 +161,8 @@
     <Content Include="docs\_build\html\_static\up-pressed.png" />
     <Content Include="docs\_build\html\_static\up.png" />
     <Content Include="docs\_build\html\_static\websupport.js" />
-    <Content Include="Examples\DynapseOutDecoder.aedat" />
-    <Content Include="Examples\DynapseSpikesFitter_sine1.aedat" />
-    <Content Include="Examples\DynapseSpikesFitter_sine2.aedat" />
-    <Content Include="Examples\network.txt" />
-    <Content Include="Examples\stimulus.txt" />
     <Content Include="README.md" />
+    <Content Include="tutorialFiles\outTutorial.aedat" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
