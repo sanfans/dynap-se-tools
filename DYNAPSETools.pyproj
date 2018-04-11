@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="classes\" />
     <Folder Include="docs\" />
-    <Folder Include="docs\images\" />
     <Folder Include="docs\scripts\" />
     <Folder Include="docs\scripts\images\" />
     <Folder Include="docs\_build\" />
@@ -68,7 +67,6 @@
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
     <Content Include="docs\.nojekyll" />
-    <Content Include="docs\images\spikeGen.jpg" />
     <Content Include="docs\index.html" />
     <Content Include="docs\index.rst" />
     <Content Include="docs\make.bat" />
