@@ -1,4 +1,4 @@
-# DYNAPSETools (documentation work in progress)
+# DYNAPSETools
 # Examples not updated, i will ASAP
 The repository contains a set of tools that are useful to work with [DYNAP-se board](https://inilabs.com/products/dynap/).
 It contains:
