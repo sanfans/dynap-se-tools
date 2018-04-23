@@ -122,11 +122,11 @@ Examples:
         except: self.weights = np.array([self.weights])
         else: self.weights = np.array(self.weights)
 
-        if len(i) != len(j):
+        if len(self.i) != len(self.j):
             errorString = "Error while connecting populations {} -> {}, Cannot connect: ".format(self.sourcePop.name, self.targetPop.name)
             errorString += "insufficient parameters: i and j have different dimensions. There should be an i and j value for each connection you want to make"
             raise NameError(errorString)
-        elif len(w) != len(i):
+        elif len(self.weights) != len(self.i):
             errorString = "Error while connecting populations {} -> {}, Cannot connect: ".format(self.sourcePop.name, self.targetPop.name)
             errorString += "insufficient parameters: w has a different dimension than i and j. There must be a weight value for each connection"
             raise NameError(errorString)
