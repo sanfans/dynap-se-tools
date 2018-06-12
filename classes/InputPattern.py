@@ -52,7 +52,7 @@ Note:
         self.ySig = np.array([])
         
 ### ===========================================================================
-    def single_event(self, virtualSourceCoreId, neuronAddress, coreDest, fireFreq = None, firePeriod = None):
+    def single_event(self, virtualSourceCoreId, neuronAddress, coreDest, fireFreq = None, firePeriod = None, chipDest = 0):
         """Create a single address and time step for a specified neuron and a certain interspike interval
         
 Parameters:
@@ -96,10 +96,10 @@ Examples:
             raise NameError(errorString)
             
         # Create event
-        self.eventList = np.append(self.eventList, InputEvent(virtualSourceCoreId, neuronAddress, coreDest, time = time))
+        self.eventList = np.append(self.eventList, InputEvent(virtualSourceCoreId, neuronAddress, chipDest, coreDest, time = time, chipDest = chipDest))
 
 ### ===========================================================================
-    def multiple_events(self, virtualSourceCoreId, neuronAddress, coreDest, absTimes = None, fireFreq = None, firePeriod = None):
+    def multiple_events(self, virtualSourceCoreId, neuronAddress, coreDest, absTimes = None, fireFreq = None, firePeriod = None, chipDest = 0):
         """Create multiple events for specified neurons and times.
         
 Parameters:
@@ -164,12 +164,12 @@ Examples:
         # Scan the fireFreq or firePeriod vector and create all events
         for idx, addr in enumerate(neuronAddress):
             if freq:
-                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx], fireFreq = fireFreq[idx])
+                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx], fireFreq = fireFreq[idx], chipDest = chipDest)
             else:
-                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx],  firePeriod = firePeriod[idx])
+                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx],  firePeriod = firePeriod[idx], chipDest = chipDest)
 
 ### ===========================================================================
-    def constant_freq(self, virtualSourceCoreId, neuronAddress, coreDest, fireFreq, initDelay, duration):
+    def constant_freq(self, virtualSourceCoreId, neuronAddress, coreDest, fireFreq, initDelay, duration, chipDest = 0):
         """Create addresses and time steps for a constant firing frequency of a certain duration
          
 Parameters:
@@ -203,15 +203,15 @@ Examples:
         freqPhase = (1.0 / duration) # in Hz
         
         # Insert the first initial spike after an initial delay
-        self.single_event(virtualSourceCoreId, neuronAddress, coreDest, firePeriod = initDelay)
+        self.single_event(virtualSourceCoreId, neuronAddress, coreDest, firePeriod = initDelay, chipDest = chipDest)
         
         # Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ 
         num_events = int(np.round(fireFreq / freqPhase))       
         for event in range(num_events):
-            self.single_event(virtualSourceCoreId, neuronAddress, coreDest, fireFreq = fireFreq)
+            self.single_event(virtualSourceCoreId, neuronAddress, coreDest, fireFreq = fireFreq, chipDest = chipDest)
 
 ### ===========================================================================
-    def linear_freq_modulation(self, virtualSourceCoreId, neuronAddress, coreDest, freqStart, freqStop, freqSteps, freqPhaseDuration, initDelay):
+    def linear_freq_modulation(self, virtualSourceCoreId, neuronAddress, coreDest, freqStart, freqStop, freqSteps, freqPhaseDuration, initDelay, chipDest = 0):
         """Create addresses and time steps for a linear firing frequency modulation
         
 Parameters:
@@ -255,17 +255,17 @@ Examples:
         freqs = np.linspace(freqStart, freqStop, freqSteps) # in Hz
         
         # Insert the first initial spike after an initial delay
-        self.single_event(virtualSourceCoreId, neuronAddress, coreDest, firePeriod = initDelay)
+        self.single_event(virtualSourceCoreId, neuronAddress, coreDest, firePeriod = initDelay, chipDest = chipDest)
         
         # Step on all frequencies and create (address, time) events list
         for freq in freqs:
             # Repeat (address, time) to occupy the whole duration of the frequency phase duration*/ 
             num_events_this_freq = int(np.round(freq / freqPhase))
             for event in range(num_events_this_freq):
-                self.single_event(virtualSourceCoreId, neuronAddress, coreDest, fireFreq = freq)
+                self.single_event(virtualSourceCoreId, neuronAddress, coreDest, fireFreq = freq, chipDest = chipDest)
 
 ### ===========================================================================
-    def threshold_encoder(self, virtualSourceCoreId, neuronAddressUpCH, neuronAddressDwCH, coreDest, threshold, t, y, noiseVar, initDelay):
+    def threshold_encoder(self, virtualSourceCoreId, neuronAddressUpCH, neuronAddressDwCH, coreDest, threshold, t, y, noiseVar, initDelay, chipDest = 0):
         """Create spikes with variable frequency, in the form of a specified function      
         
 Parameters:
@@ -329,9 +329,9 @@ Examples:
         
         # Insert the first spike after an initial delay*/
         if y[1] >= y[0]: # Positive slope
-            self.single_event(virtualSourceCoreId, neuronAddressUpCH, coreDest, firePeriod = initDelay)
+            self.single_event(virtualSourceCoreId, neuronAddressUpCH, coreDest, firePeriod = initDelay, chipDest = chipDest)
         else: # Negative slope
-            self.single_event(virtualSourceCoreId, neuronAddressDwCH, coreDest, firePeriod = initDelay)
+            self.single_event(virtualSourceCoreId, neuronAddressDwCH, coreDest, firePeriod = initDelay, chipDest = chipDest)
         
         # Scan the whole sinewave and create spikes
         lastSpikeIndex = 0
@@ -343,7 +343,7 @@ Examples:
                 noise = np.random.normal(loc = 0, scale = noiseVar)
                 time = time + noise
                 # Create event
-                self.single_event(virtualSourceCoreId, neuronAddressUpCH, coreDest, firePeriod = time)
+                self.single_event(virtualSourceCoreId, neuronAddressUpCH, coreDest, firePeriod = time, chipDest = chipDest)
                 lastSpikeIndex = idy
                     
             elif (valy - y[lastSpikeIndex]) <= -(threshold): # If signal goes dows of a quantity higher than threshold
@@ -353,7 +353,7 @@ Examples:
                 noise = np.random.normal(loc = 0, scale = noiseVar)
                 time = time + noise
                 # Create event
-                self.single_event(virtualSourceCoreId, neuronAddressDwCH, coreDest, firePeriod = time)
+                self.single_event(virtualSourceCoreId, neuronAddressDwCH, coreDest, firePeriod = time, chipDest = chipDest)
                 lastSpikeIndex = idy
           
         # Calculate and print maximum and minimum firing frequencies obtained

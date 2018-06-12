@@ -5,7 +5,7 @@ class InputEvent:
     """Class that represent an input event in DYNAP-se
     """
 
-    def __init__(self, virtualSourceCoreId = None, neuronAddress = None, coreDest = None, address = None, time = None):
+    def __init__(self, virtualSourceCoreId = None, neuronAddress = None, coreDest = None, address = None, time = None, chipDest = 0):
         """Return a new InputEvent object
 
 Parameters:
@@ -34,6 +34,7 @@ Note:
         if (virtualSourceCoreId != None) & (neuronAddress != None) & (coreDest != None) & (time != None):
             self.virtualSourceCoreId = virtualSourceCoreId
             self.neuronAddress = neuronAddress
+            self.chipDest = chipDest
             self.coreDest = coreDest
             self.create_address_event()
             self.time = time
@@ -53,13 +54,17 @@ Note:
     The final address is composed in the following way::
 
         Bits:
-        13 12 11 10 9 8 7 6 5 4 3 2 1 0
-        |-----------------| neuronAddress
-                            |-| virtualSourceCoreId
-                                |-----| coreDest
+        15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
+        |---| chipDest
+              |-----------------| neuronAddress
+                                  |-| virtualSourceCoreId
+                                      |-----| coreDest
 """
         
-        self.address = (self.neuronAddress << 6) & 0xffff | self.coreDest & 0xf | (self.virtualSourceCoreId << 4) & 0x30
+        self.address = (self.chipDest << 14) & 0xffff |\
+                       (self.neuronAddress << 6) & 0xffff |\
+                       self.coreDest & 0xf |\
+                       (self.virtualSourceCoreId << 4) & 0x30
     
 ### ===========================================================================
     def decode_address_event(self):
