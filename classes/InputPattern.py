@@ -162,7 +162,8 @@ Examples:
             raise NameError(errorString)
         
         # Adapt chip_id vector to the length of the other parameters...if remains 0 can create problems when not specifying it
-        chipDest = [chipDest] * len(chipDest)
+        if np.size(chipDest) == 1:
+            chipDest = [chipDest] * len(coreDest)
 
         # Scan the fireFreq or firePeriod vector and create all events
         for idx, addr in enumerate(neuronAddress):
