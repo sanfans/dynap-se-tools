@@ -161,12 +161,15 @@ Examples:
             errorString = "Error while creating event, specify or fire frequency or fire period: "
             raise NameError(errorString)
         
+        # Adapt chip_id vector to the length of the other parameters...if remains 0 can create problems when not specifying it
+        chipDest = [chipDest] * len(chipDest)
+
         # Scan the fireFreq or firePeriod vector and create all events
         for idx, addr in enumerate(neuronAddress):
             if freq:
-                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx], fireFreq = fireFreq[idx], chipDest = chipDest)
+                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx], fireFreq = fireFreq[idx], chipDest = chipDest[idx])
             else:
-                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx],  firePeriod = firePeriod[idx], chipDest = chipDest)
+                self.single_event(virtualSourceCoreId[idx], addr, coreDest[idx],  firePeriod = firePeriod[idx], chipDest = chipDest[idx])
 
 ### ===========================================================================
     def constant_freq(self, virtualSourceCoreId, neuronAddress, coreDest, fireFreq, initDelay, duration, chipDest = 0):
