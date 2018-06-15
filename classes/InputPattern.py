@@ -96,7 +96,7 @@ Examples:
             raise NameError(errorString)
             
         # Create event
-        self.eventList = np.append(self.eventList, InputEvent(virtualSourceCoreId, neuronAddress, chipDest, coreDest, time = time, chipDest = chipDest))
+        self.eventList = np.append(self.eventList, InputEvent(virtualSourceCoreId, neuronAddress, coreDest, time = time, chipDest = chipDest))
 
 ### ===========================================================================
     def multiple_events(self, virtualSourceCoreId, neuronAddress, coreDest, absTimes = None, fireFreq = None, firePeriod = None, chipDest = 0):
