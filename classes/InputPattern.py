@@ -327,15 +327,20 @@ Examples:
         
         # Initialization
         t = t - t[0] # Time normalization
-        t = t*1e6 # Transform in us scale
-        self.tSig = t + initDelay * 1e6
+        t = t*1e6 # Transform in us scale\
+        
+        if initDelay != None:
+            self.tSig = t + initDelay * 1e6
+        else:
+            self.tSig = t
         self.ySig = y
         
         # Insert the first spike after an initial delay*/
-        if y[1] >= y[0]: # Positive slope
-            self.single_event(virtualSourceCoreId, neuronAddressUpCH, coreDest, firePeriod = initDelay, chipDest = chipDest)
-        else: # Negative slope
-            self.single_event(virtualSourceCoreId, neuronAddressDwCH, coreDest, firePeriod = initDelay, chipDest = chipDest)
+        if initDelay != None:
+            if y[1] >= y[0]: # Positive slope
+                self.single_event(virtualSourceCoreId, neuronAddressUpCH, coreDest, firePeriod = initDelay, chipDest = chipDest)
+            else: # Negative slope
+                self.single_event(virtualSourceCoreId, neuronAddressDwCH, coreDest, firePeriod = initDelay, chipDest = chipDest)
         
         # Scan the whole sinewave and create spikes
         lastSpikeIndex = 0
@@ -383,7 +388,7 @@ Examples:
         #print('=======================================')
 
 ### ===========================================================================
-    def plot_spikes(self, timeShift = 0, ax = None):
+    def plot_spikes(self, timeShift = 0, ax = None, plotSig = False):
         """ Plot the spikes of the current pattern
 
 Parameters:
@@ -455,9 +460,10 @@ Note:
             handles.append(handle)
         
         # Plot signal shape
-#        if  len(self.tSig) != []:
-#            handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
-#        handles.append(handle)
+        if plotSig:
+            if  len(self.tSig) != []:
+                handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
+            handles.append(handle)
         
         return fig, ax, handles
 
