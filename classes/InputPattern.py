@@ -520,7 +520,7 @@ Note:
         if plotSig:
             if  len(self.tSig) != []:
                 handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
-            handles.append(handle)
+            handles.extend(handle)
         
         return fig, ax, handles
 
