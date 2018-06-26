@@ -388,6 +388,63 @@ Examples:
         #print('=======================================')
 
 ### ===========================================================================
+    def threshold_encoder2(self, virtualSourceCoreId, neuronAddressUpCH, neuronAddressDwCH, coreDest, threshold, t, y, noiseVar, initDelay, chipDest = 0):
+        """Create spikes with variable frequency, in the form of a specified function  """
+        
+        # Initialization
+        t = t - t[0] # Time normalization
+        t = t*1e6 # Transform in us scale\
+        
+        if initDelay != None:
+            self.tSig = t + initDelay * 1e6
+        else:
+            self.tSig = t
+        self.ySig = y
+        
+        spikeTimes = []
+        spikeAddresses = []
+                
+        # Insert the first spike after an initial delay*/
+        if initDelay != None:
+            spikeTimes.append(initDelay)
+            if y[1] >= y[0]: # Positive slope
+                spikeAddresses.append(neuronAddressUpCH)
+            else: # Negative slope
+                spikeAddresses.append(neuronAddressDwCH)
+
+        # Scan the whole sinewave and create spikes
+        lastSpikeIndex = 0
+        for idy, valy in enumerate(y):
+            if (valy - y[lastSpikeIndex]) >= threshold: # If signal goes up of a quantity higher than threshold
+                # Evaluate interspike interval
+                time = t[idy] / 1e6
+                # Apply noise
+                noise = np.random.normal(loc = 0, scale = noiseVar)
+                time = time + noise
+                # Create event
+                spikeTimes.append(time)
+                spikeAddresses.append(neuronAddressUpCH)
+                lastSpikeIndex = idy
+                    
+            elif (valy - y[lastSpikeIndex]) <= -(threshold): # If signal goes dows of a quantity higher than threshold
+                # Evaluate interspike interval
+                time = t[idy] / 1e6
+                # Apply noise
+                noise = np.random.normal(loc = 0, scale = noiseVar)
+                time = time + noise
+                # Create event
+                spikeTimes.append(time)
+                spikeAddresses.append(neuronAddressDwCH)
+                lastSpikeIndex = idy
+        
+        virtualSourceCoreIds = [virtualSourceCoreId]*len(spikeTimes)
+        coreDests = [coreDest]*len(spikeTimes)
+        chipDests = [chipDest]*len(spikeTimes)
+        
+        self.multiple_events(virtualSourceCoreIds, spikeAddresses, coreDests,
+                             absTimes = spikeTimes, chipDest = chipDests)
+        
+### ===========================================================================
     def plot_spikes(self, timeShift = 0, ax = None, plotSig = False):
         """ Plot the spikes of the current pattern
 
