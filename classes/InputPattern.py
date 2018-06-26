@@ -9,7 +9,7 @@ class InputPattern:
     """Class that represent a pattern of inputs to DYNAP-se
     """
 
-    def __init__(self, name, isiBase = 90.0):
+    def __init__(self, name, isiBase = 90.0, dummyNeuron = None):
         """Returns a new InputPattern object
 
 Parameters:
@@ -45,11 +45,15 @@ Note:
         self.isiBase = isiBase # Base for the timing of the spikes
         self.isiForUs = 90.0 # ISI to have 1 us resolution
         self.isiRatio = self.isiBase / self.isiForUs
-
+        self.maxDelay = 2**16-1 # In ISI base
+        
         # Generate (address, time) event arrays
         self.eventList = np.array([])
         self.tSig = np.array([])
         self.ySig = np.array([])
+        
+        # Create dummyNeuron instance
+        self.dummyNeuron = dummyNeuron
         
 ### ===========================================================================
     def single_event(self, virtualSourceCoreId, neuronAddress, coreDest, fireFreq = None, firePeriod = None, chipDest = 0):
@@ -94,6 +98,13 @@ Examples:
         else:
             errorString = "Error while creating event {}, specify or fire frequency or fire period: ".format(self.name)
             raise NameError(errorString)
+            
+        # If dummy neuron specified, insert them with maximum delay until the time is not < max allowed
+        if self.dummyNeuron is not None:
+            while(time > self.maxDelay):
+                self.eventList = np.append(self.eventList, InputEvent(self.dummyNeuron[0], self.dummyNeuron[1],
+                                                                      coreDest = 0, time = self.maxDelay, chipDest = 0))
+                time -= self.maxDelay
             
         # Create event
         self.eventList = np.append(self.eventList, InputEvent(virtualSourceCoreId, neuronAddress, coreDest, time = time, chipDest = chipDest))
@@ -445,7 +456,7 @@ Examples:
                              absTimes = spikeTimes, chipDest = chipDests)
         
 ### ===========================================================================
-    def plot_spikes(self, timeShift = 0, ax = None, plotSig = False):
+    def plot_spikes(self, timeShift = 0, fig = None, ax = None, plotSig = False):
         """ Plot the spikes of the current pattern
 
 Parameters:
@@ -465,8 +476,6 @@ Note:
     - virtual neuron 0 of virtual core 0, to all cores (1111) -> label = "Virtual Neuron C0N1"
     - virtual neuron 20 of virtual core 1, to core 1 (0001) -> label = "Virtual Neuron C1N20"
 """
-
-        fig = None
 
         # If no subplot is specified, create new plot
         if ax == None: 
@@ -524,6 +533,19 @@ Note:
         
         return fig, ax, handles
 
+### ===========================================================================
+    def insert_dummy_neuron(self, virtualSourceCoreId, neuronAddress):
+        """Insert a dummy neuron that is addressed when required to create additional times
+        
+Parameters:
+    virtualSourceCoreId (int): Represent the ID of the virtual core where is located the virtual neuron (from 0 to 3)
+    neuronAddress (int): Represent the address of the virtual neuron that will generate the event
+    
+Note:
+    Do not use neuron 0 of core 0! and do not use a neuron that it may stimulate some physical neurons in the chip!
+"""
+        self.dummyNeuron = (virtualSourceCoreId, neuronAddress)
+        
 ### ===========================================================================
     def add_manually_event(self, address, time):
         """Add manually an event starting from address and time
