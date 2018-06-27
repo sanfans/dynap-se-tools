@@ -558,7 +558,7 @@ Parameters:
         np.append(self.eventList, InputEvent(address = address, time = time))
 
 ### ===========================================================================
-    def evaluate_duration(self):
+    def evaluate_duration(self, retSigTime = False):
         """Calculate the duration of the pattern
 
 Returns:
@@ -568,4 +568,9 @@ Returns:
         time = 0
         for event in self.eventList:
             time = time + event.time * self.isiRatio
+        
+        if retSigTime:
+            if len(self.tSig) != []:
+                time = self.tSig[-1]
+
         return time
