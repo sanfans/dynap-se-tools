@@ -3,6 +3,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import warnings
 from DYNAPSETools.classes.InputEvent import InputEvent
 
 class InputPattern:
@@ -100,11 +101,12 @@ Examples:
             raise NameError(errorString)
             
         # If dummy neuron specified, insert them with maximum delay until the time is not < max allowed
-        if self.dummyNeuron is not None:
-            while(time > self.maxDelay):
-                self.eventList = np.append(self.eventList, InputEvent(self.dummyNeuron[0], self.dummyNeuron[1],
-                                                                      coreDest = 0, time = self.maxDelay, chipDest = 0))
-                time -= self.maxDelay
+        if(time > self.maxDelay):
+            if self.dummyNeuron is not None:
+                while(time > self.maxDelay):
+                    self.eventList = np.append(self.eventList, InputEvent(self.dummyNeuron[0], self.dummyNeuron[1],
+                                                                          coreDest = 0, time = self.maxDelay, chipDest = 0))
+                    time -= self.maxDelay
             
         # Create event
         self.eventList = np.append(self.eventList, InputEvent(virtualSourceCoreId, neuronAddress, coreDest, time = time, chipDest = chipDest))
@@ -369,7 +371,8 @@ Examples:
                 # Apply noise
                 noise = np.random.uniform(low = -noiseVar, high = noiseVar)
                 time = time + noise
-                if(time < 0):
+                ## Delete noise if goes out from signal boundaries
+                if(time < 0 or time > self.tSig[-1]):
                     time = time - noise
                 # Create event
                 spikeTimes.append(time)
@@ -382,7 +385,8 @@ Examples:
                 # Apply noise
                 noise = np.random.uniform(low = -noiseVar, high = noiseVar)
                 time = time + noise
-                if(time < 0):
+                ## Delete noise if goes out from signal boundaries
+                if(time < 0 or time > self.tSig[-1]):
                     time = time - noise
                 # Create event
                 spikeTimes.append(time)
@@ -400,6 +404,21 @@ Examples:
         coreDests = [coreDest]*len(spikeTimes)
         chipDests = [chipDest]*len(spikeTimes)
         
+        # If last spike is before end of signal, try to add a dummy one to fill the gap,
+        # otherwise raise a warning
+        if(spikeTimes[-1] < self.tSig[-1]):
+            if self.dummyNeuron is not None:
+                spikeTimes.append(self.tSig[-1] / 1e6)
+                virtualSourceCoreIds.append(self.dummyNeuron[0])
+                spikeAddresses.append(self.dummyNeuron[1])
+                coreDests.append(0)
+                chipDests.append(0)
+            else:
+                warnString = "Warning while converting events for pattern {}: ".format(self.name)
+                warnString += "Last spike is not matched with signal lenght: add a dummy neuron for\
+                                filling the missing delay"
+                warnings.warn(warnString)
+                
         self.multiple_events(virtualSourceCoreIds, spikeAddresses, coreDests,
                              absTimes = spikeTimes, chipDest = chipDests)
 
@@ -497,7 +516,7 @@ Note:
         
         # Plot signal shape
         if plotSig:
-            if  len(self.tSig) != []:
+            if  len(self.tSig) != 0:
                 handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
             handles.extend(handle)
         
@@ -540,7 +559,7 @@ Returns:
             time = time + event.time * self.isiRatio
         
         if retSigTime:
-            if len(self.tSig) != []:
+            if len(self.tSig) != 0:
                 time = self.tSig[-1]
 
         return time

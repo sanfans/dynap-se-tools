@@ -56,7 +56,7 @@ Note:
     return pattern
 
 ### ===========================================================================
-def plot_spikes(*inputPatternList, ax = None):
+def plot_spikes(*inputPatternList, ax = None, plotSig = False):
     """Plot the spike stimuli
     
 Parameters:
@@ -110,11 +110,17 @@ Examples:
     sumPattern = InputPattern(name = "sumPattern", isiBase = inputPatternList[0].isiBase)
     
     # Sweep over the patterns and add events to the sumPattern
+    cumulativeDuration = 0
     for pattern in inputPatternList:
         sumPattern.eventList = np.append(sumPattern.eventList, pattern.eventList)
+        if(plotSig):
+            if(len(pattern.tSig) != []):
+                sumPattern.tSig = np.concatenate((sumPattern.tSig, pattern.tSig + cumulativeDuration))
+                sumPattern.ySig = np.concatenate((sumPattern.ySig, pattern.ySig))
+            cumulativeDuration += pattern.evaluate_duration(retSigTime = True)
 
     # Plot
-    fig, ax, handles = sumPattern.plot_spikes(timeShift = 0, ax = ax)
+    fig, ax, handles = sumPattern.plot_spikes(timeShift = 0, ax = ax, plotSig = plotSig)
     
     return fig, ax, handles
 
