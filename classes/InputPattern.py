@@ -510,14 +510,14 @@ Note:
             decodedEvent = InputEvent(address = address, time = 0)
             label = "Virtual Neuron C{}N{}".format(decodedEvent.virtualSourceCoreId,
                                            decodedEvent.neuronAddress)
-            handle = ax.vlines(x = times, ymin = 0, ymax = arrowDim, colors = "C" + str(idx),
+            handle = ax.vlines(x = times/1e6, ymin = 0, ymax = arrowDim, colors = "C" + str(idx),
                               label = label)
             handles.append(handle)
         
         # Plot signal shape
         if plotSig:
             if  len(self.tSig) != 0:
-                handle = ax.plot(self.tSig + timeShift, self.ySig, 'k', label = self.name)
+                handle = ax.plot((self.tSig + timeShift)/1e6, self.ySig, 'k', label = self.name)
             handles.extend(handle)
         
         return fig, ax, handles
